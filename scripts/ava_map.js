@@ -44,14 +44,20 @@ avaMapJS={
     var gmap;
     if ( document.addEventListener ){
       //gmap = new OpenLayers.Layer.Google("Google Satellite", {type: google.maps.MapTypeId.SATELLITE});
-      gmap = new OpenLayers.Layer.Bing({
-          name: "My layer",
+      bingOrtho = new OpenLayers.Layer.Bing({
+          name: "Ortho layer",
           type: "Aerial",
-          key: "AptDfQo9QmK9LCVmDIVMyaqe75u-fzTzFuNinm4V7KLbbL8mvI3BdbGOD8gpjjSw"
+          key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
+        });
+      bingStreet = new OpenLayers.Layer.Bing({
+          name: "Street layer",
+          type: "Road",
+          key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
         });
     } else {
       //gmap = new OpenLayers.Layer.Google("Google", {});
-      gmap = new OpenLayers.Layer.Bing("Bing", {});
+      bingStreet = new OpenLayers.Layer.Bing("Bing Street", {});
+      bingOrtho = new OpenLayers.Layer.Bing("Bing Ortho", {});
     }
 
     var navControl = avaMapJS.map.getControlsByClass('OpenLayers.Control.Navigation');
@@ -71,7 +77,7 @@ avaMapJS={
 
     // Add layers
    	//avaMapJS.map.addLayers([gmap,wmsLayer]);
-   	avaMapJS.map.addLayers([gmap]);
+   	avaMapJS.map.addLayers([bingOrtho,bingStreet]);
     //avaMapJS.map.zoomToExtent(new OpenLayers.Bounds(-13625920,6283000,-13941007,6458623));
     if(!avaMapJS.map.size) {
       window.location.reload(true);
@@ -102,6 +108,12 @@ avaMapJS={
     // Add layer
    	avaMapJS.map.addLayer(avaMapJS.curLayer);
   },
+
+  setStreetView: function(){
+    // Add layer
+    avaMapJS.map.layers[1].setVisibility(true);
+  },
+
 
   setMapControls: function(newControls){
     if(!(avaMapJS.curControls.length==0)){
