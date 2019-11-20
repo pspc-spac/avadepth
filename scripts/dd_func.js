@@ -1,5 +1,6 @@
 /**
  * Created by wsiddall on 26/08/2014.
+ * Modified by mwongrm on 20/11/2019.
  */
 
 // Daily Depths Object
@@ -197,7 +198,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
 
         // Update values and apply to Detail Window
         showDetail: function(period) {
-            var self = this;
+        var self = this;
             var $condition = $('input[name="condition"]:checked');
 
             //avaIFaceJS.detailWindow.show();
