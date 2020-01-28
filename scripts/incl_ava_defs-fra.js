@@ -921,7 +921,19 @@ var padZero = function(num){
         'formParam':
           [{tag:'text', child: ["Pour voir l'analyse du remplissage et de l'affouillement du chenal cliquez sur une zone en surbrillance."]}],
         'reportBody':
-          [],
+          [
+            {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
+              {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
+                {tag:'thead',child:[
+                  {tag:'tr',child:[
+                    {tag:'th',child:['Filename']},
+                    {tag:'th',child:['Year']}
+                  ]}
+                ]},
+                {tag:'tbody'}
+              ]}
+            ]}
+          ],
         'reportDetail':
           []
       }

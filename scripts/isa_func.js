@@ -27,7 +27,36 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             //document.getElementById('pBarContainer').style.display = 'none'; 
             document.getElementById('submit').style.display = 'none'; 
 
-        },      
+        },
+        update: function(tileName) {
+            $.getJSON(getAPI('/api3/isa/' + tileName + '.json','api3/isa/' + tileName + '.json'), function(data){
+                console.log(data);
+                var ISAs = data.ISAs;
+                avaIFaceJS.reportWindow.addTitle("Search Results", "", "");
+                avaIFaceJS.isa_func.tableReport || (avaIFaceJS.isa_func.tableReport = $('#report_tbl').DataTable({
+                    bPaginate: false,
+                    bInfo: false,
+                    bSort: false,
+                    bFilter: false
+                }));
+
+                avaIFaceJS.isa_func.tableReport.clear();
+                $('#report_tbl tbody tr').remove();
+
+                $.each(ISAs, function() {
+                    avaIFaceJS.isa_func.tableReport.row.add([
+                        "<a href='https://avadepth.ccg-gcc.gc.ca/Data/" +
+                            "channel_infill_pdfs/" +
+                            this.Filename + "' target='_blank'>" +
+                            this.Filename + "</a>",
+                        this.Year
+                    ]);
+                });
+                    
+                avaIFaceJS.isa_func.tableReport.draw();
+                avaIFaceJS.reportWindow.show();
+            });
+        }
     };
 } else if (!(typeof avaMapJS === 'undefined')) {
     /*** Map Interaction functions ***/
@@ -127,18 +156,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             if (tileName.indexOf('/') >= 0) {
                 parent.window.open("http://www2.pac.dfo-mpo.gc.ca" + tileName, '_blank');
             } else {
-                if (tileName == 'AnnievilleChannel') {
-                    window.open("/data/channel_infill_pdfs/2017_annieville_analysis.pdf");
-                }
-                else if (tileName == 'Sandheads') {
-                    window.open("/data/channel_infill_pdfs/2017_sandheads_analysis.pdf");
-                }
-                else if (tileName == 'SandheadsReach') {
-                    window.open("/data/channel_infill_pdfs/2017_sandheadsreach_analysis.pdf");
-                }
-                else if (tileName == 'StevestonCut') {
-                    window.open("/data/channel_infill_pdfs/2017_stevestoncut_analysis.pdf");
-                }
+                parent.avaIFaceJS.isa_func.update(tileName); // refresh page from updated parameters
             }
         },
 
@@ -259,3 +277,5 @@ function assert(condition, message) {
         throw message;
     }
 }
+
+//# sourceURL=isa_func.js
