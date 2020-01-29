@@ -33,15 +33,15 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 console.log(data);
                 var ISAs = data.ISAs;
                 avaIFaceJS.reportWindow.addTitle("Search Results", "", "");
-                avaIFaceJS.isa_func.tableReport || (avaIFaceJS.isa_func.tableReport = $('#report_tbl').DataTable({
-                    bPaginate: false,
-                    bInfo: false,
-                    bSort: false,
-                    bFilter: false
+                avaIFaceJS.isa_func.tableReport || (avaIFaceJS.isa_func.tableReport = $('#isas').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "searching": false,
+                    "info": false,
                 }));
 
                 avaIFaceJS.isa_func.tableReport.clear();
-                $('#report_tbl tbody tr').remove();
+                $('#isas tbody tr').remove();
 
                 $.each(ISAs, function() {
                     avaIFaceJS.isa_func.tableReport.row.add([

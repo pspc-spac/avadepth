@@ -47,7 +47,7 @@ avaMapJS={
       gmap = new OpenLayers.Layer.Bing({
           name: "My layer",
           type: "Aerial",
-          key: "AptDfQo9QmK9LCVmDIVMyaqe75u-fzTzFuNinm4V7KLbbL8mvI3BdbGOD8gpjjSw"
+          key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
         });
     } else {
       //gmap = new OpenLayers.Layer.Google("Google", {});

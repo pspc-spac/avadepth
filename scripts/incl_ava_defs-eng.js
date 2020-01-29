@@ -918,8 +918,8 @@ var padZero = function(num){
             [{tag:'text', child: ["To view channel infill & scour analysi click on a highlighted area."]}],
           'reportBody':
             [
-              {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-                {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
+              {tag:'section',attr:{'style':'padding-left:25%; padding-right:25%'},child:[
+                {tag:'table',attr:{id:'isas',style:"text-align:center"},child:[
                   {tag:'thead',child:[
                     {tag:'tr',child:[
                       {tag:'th',child:['Filename']},
