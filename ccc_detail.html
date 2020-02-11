@@ -97,8 +97,8 @@
 						if(innerValDate == outterValDate){
 							if (this.Plan.slice(0, 2) != "FR") {
 								combinedData.push({date: innerVal.date, plan: this.Plan});
-								combinedData[combinedData.length-1]["outterChannel"] = new channelItem(outterVal);
-								combinedData[combinedData.length-1]["innerChannel"] = new channelItem(innerVal);
+								combinedData[combinedData.length-1].outterChannel = new channelItem(outterVal);
+								combinedData[combinedData.length-1].innerChannel = new channelItem(innerVal);
 							}
 
 							return false;
