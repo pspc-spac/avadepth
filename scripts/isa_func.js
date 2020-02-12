@@ -141,7 +141,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 return;
             }
 
-            var obj = incl_ava_defs.locDefs[waterway]['Sections'][channel].Coords;
+            var obj = incl_ava_defs.locDefs[waterway].Sections[channel].Coords;
             if (debug) {
                 console.log("void setChannelExtents(): minLat=" + obj.Lat.min);
                 console.log("void setChannelExtents(): channel=" + channel);
@@ -278,14 +278,14 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                     temp = true;
                 }
             }
-            return temp && (feat.data.waterway == avaMapJS.isa_func.curWaterway)
+            return temp && (feat.data.waterway == avaMapJS.isa_func.curWaterway);
         }
     };
 } else if (!(typeof avaMapDetJS === 'undefined')) {
     avaMapDetJS.isa_func = {
         init: function() {}
     };
-};
+}
 
 function assert(condition, message) {
     if(!condition) {
