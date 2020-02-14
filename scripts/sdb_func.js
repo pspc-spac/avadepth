@@ -78,7 +78,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             $('#location option').remove();
             $('#channel option').remove();
             //$('#channel').append('<option></option>');
-            return $.each(incl_ava_defs.locDefs[$('#sdb_waterway').val()]['Sections'], function() {
+            return $.each(incl_ava_defs.locDefs[$('#sdb_waterway').val()].Sections, function() {
                 return $('#channel').append("<option value='" + this.Form.Key + "'>" + this.Form.Title + "</option>");
             });
         },
@@ -93,8 +93,8 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 console.log("void fillLocation(): channel=" + $('#channel').val());
             }
             try {
-                return $.each(incl_ava_defs.locDefs[$('#sdb_waterway').val()]['Sections'][$('#channel').val()]['Locations'], function() {
-                    return $('#location').append("<option value='" + this["Name"] + "'>" + this["Name"] + "</option>");
+                return $.each(incl_ava_defs.locDefs[$('#sdb_waterway').val()].Sections[$('#channel').val()].Locations, function() {
+                    return $('#location').append("<option value='" + this.Name + "'>" + this.Name + "</option>");
                 });
             } catch (err) {
                 if (debug) console.log("void fillLocation(): No location defined for channel " + $('#channel').val());
@@ -137,24 +137,24 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 var channelVal = $('#channel').val();
                 var locationVal = $('#location').val();
                 var tile;
-                var channelStruct = incl_ava_defs.locDefs[riverVal]["Sections"][channelVal];
+                var channelStruct = incl_ava_defs.locDefs[riverVal].Sections[channelVal];
                 //if a location hasn't been selected, get all drawings listed under channel 
                 if(location == "")
                 {
                     //if the channel has its own tile, query for drawings under that tile
-                    if(channelStruct["Form"].hasOwnProperty("Tile") && channelStruct["Form"]["Tile"] != null)
+                    if(channelStruct.Form.hasOwnProperty("Tile") && channelStruct.Form.Tile != null)
                     {
-                        tile = channelStruct["Form"]["Tile"];
+                        tile = channelStruct.Form.Tile;
                         apiParams.push("Tile=", tile);
                     }
                     //else, query for all drawings under selected river-channel 
                     else apiParams.push("River=", wat, "&Channel=", chann);
                 }
                 //else, if a location has been selected and the channel contains locations in the local definition...
-                else if(channelStruct["Locations"] != "")
+                else if(channelStruct.Locations != "")
                 {
                     //find the location's tile and query drawings under that tile
-                    $.each(channelStruct["Locations"], function(index, location){
+                    $.each(channelStruct.Locations, function(index, location){
                         if(location.Name == locationVal)
                         {
                             tile = location.Tile;
@@ -239,7 +239,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                     
                     // (4) Display the number of results on the page.
                     $("#reportCount").empty();
-                    $("#reportCount").text("Number of Results: " + data.length)
+                    $("#reportCount").text("Number of Results: " + data.length);
 
                 }).done(function() {
                     $('.spinner').hide();
@@ -253,7 +253,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
         updateParameters: (function(jsonData) {
             if(debug) console.log("void updateParameters: ");
             console.log(jsonData);
-            var data = jsonData.data
+            var data = jsonData.data;
             switch (data.waterway) {
                 case "FRMA":
                 case "FRMA_SC":
@@ -355,7 +355,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 return;
             }
 
-            var obj = incl_ava_defs.locDefs[waterway]['Sections'][channel].Coords;
+            var obj = incl_ava_defs.locDefs[waterway].Sections[channel].Coords;
             // if (debug) {
                 // console.log("void setChannelExtents(): minLat=" + obj.Lat.min);
                 // console.log("void setChannelExtents(): maxLat=" + obj.Lat.max);
@@ -467,7 +467,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             this.checkRemainingFeaturesOnLayer();
             if (channel != "") {
                 var featureToSelect = this.getFeaturesByChannel(channel);
-                 if (featureToSelect != -1) this.HLFeat.select(featureToSelect)
+                 if (featureToSelect != -1) this.HLFeat.select(featureToSelect);
                 // else parent.avaIFaceJS.sdb_func.update();
             }
             // else parent.avaIFaceJS.sdb_func.update();
@@ -570,14 +570,14 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                     temp = true;
                 }
             }
-            return temp && (feat.data.waterway == avaMapJS.sdb_func.curWaterway)
+            return temp && (feat.data.waterway == avaMapJS.sdb_func.curWaterway);
         }
     };
 } else if (!(typeof avaMapDetJS === 'undefined')) {
     avaMapDetJS.sdb_func = {
         init: function() {}
     };
-};
+}
 
 function assert(condition, message) {
     if(!condition) {
