@@ -26,19 +26,25 @@ var translate_flow = function() {
         flow = "Défini par l'utilisateur";
         break;
       default:
-        flow = "N/A"
+        flow = "N/A";
         break;
     }
   } else if ($("#flowType").val() === "UserDefined"){
     flow = "User-defined";
   } else {
-    flow = $("#flowType").val()
+    flow = $("#flowType").val();
   }
 
   return flow;
-}
+};
+
 $(function() {
-  $('.datepicker').datepicker({dateFormat: 'yy-mm-dd', altFormat: 'MM d, yy', altField: '#alt-date'});
+  $('.datepicker').datepicker({
+    dateFormat: 'yy-mm-dd',
+    altFormat: 'MM d, yy',
+    altField: '#alt-date'
+  });
+
   $('#date').datepicker("setDate", new Date());
 });
 

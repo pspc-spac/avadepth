@@ -16,7 +16,7 @@ avadepth.util = {
             $.each(data.Flowrates, function (idx, itm) {
                 s += '<option value=' + itm + '>' + itm + '</option>';
             });
-            $('option', selectList).remove()
+            $('option', selectList).remove();
             selectList.append(s);
 
 			// populates 'Actual' flow rate
@@ -31,7 +31,7 @@ avadepth.util = {
               $("#selected_radio").prop('checked', true);
             }
 
-            if (thisCallback) { callback(data); };
+            if (thisCallback) { callback(data); }
         });
     },
     getSelectedFlow: function () {
@@ -44,14 +44,14 @@ avadepth.util = {
           Selected: function() {
             return $('#selected_discharge').val();
           },
-		  Defined: function() {
+          Defined: function() {
             return $('#defined_discharge').val();
           }
-        }
+        };
 
         flow.flowRate = getFlowRate[flow.flowType]();
         if (flow.flowType == "Defined"){
-         flow.flowType = "UserDefined"
+         flow.flowType = "UserDefined";
         }
         return flow;
     },
@@ -66,4 +66,4 @@ avadepth.util = {
             }
         }
     }
-}
+};
