@@ -32,7 +32,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
 
             // Colour and resize map extents when waterway field changes
             $sdb_waterway.change(function() {
-                var $this = $(this).val();
+                var $this = $(this);
 
                 avaIFaceJS.mapJS.sdb_func.setExtents($this.val());
                 avaIFaceJS.sdb_func.fillChannel();
@@ -46,7 +46,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
 
             // Colour and resize map, and fill location drop down when channel field changes
             $('#channel').change(function() {
-                var $this = $(this).val();
+                var $this = $(this);
 
                 if ($this.val() !== "GLOBAL"){
                     avaIFaceJS.mapJS.sdb_func.refreshLocation("");
