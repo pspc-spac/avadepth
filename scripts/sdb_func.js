@@ -9,7 +9,9 @@ var locException = [];
 if (!(typeof avaIFaceJS === 'undefined')) {
 
     avaIFaceJS.sdb_func = {
+        $sdb_waterway: null,
         init: function() {
+            $sdb_waterway = $('#sdb_waterway');
 
             $('#report_body').css({marginTop: '+=30px'});
             locException.push({ riverCode: "FSD",
@@ -19,7 +21,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
 
             /** Event Handlers **/
             // Load and fill channel drop down
-            $('#sdb_waterway').change(function(){
+            $sdb_waterway.change(function(){
                 avaIFaceJS.setMapOpen(avaIFaceJS.MapState.Open);
                 //avaIFaceJS.sdb_func.fillChannel();
                 // avaIFaceJS.sdb_func.update();
@@ -29,24 +31,28 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             // $('#channel').change(avaIFaceJS.sdb_func.fillLocation);
 
             // Colour and resize map extents when waterway field changes
-            $('#sdb_waterway').change(function() {
-                avaIFaceJS.mapJS.sdb_func.setExtents($(this).val());
+            $sdb_waterway.change(function() {
+                var $this = $(this).val();
+
+                avaIFaceJS.mapJS.sdb_func.setExtents($this.val());
                 avaIFaceJS.sdb_func.fillChannel();
                 avaIFaceJS.sdb_func.fillLocation();
-                if ($('#channel').val() !== "GLOBAL") 
-                    avaIFaceJS.mapJS.sdb_func.setChannelExtents($(this).val(), $('#channel').val());
+                if ($('#channel').val() !== "Select a channel") 
+                    avaIFaceJS.mapJS.sdb_func.setChannelExtents($this.val(), $('#channel').val());
                 else
-                    avaIFaceJS.mapJS.sdb_func.setExtents($(this).val());
+                    avaIFaceJS.mapJS.sdb_func.setExtents($this.val());
                 return $('#map').css("min-height", "400px");
             });
 
             // Colour and resize map, and fill location drop down when channel field changes
             $('#channel').change(function() {
-                if ($(this).val() !== "GLOBAL"){
+                var $this = $(this).val();
+
+                if ($this.val() !== "GLOBAL"){
                     avaIFaceJS.mapJS.sdb_func.refreshLocation("");
                     //avaIFaceJS.mapJS.sdb_func.refreshChannel($('#channel :selected').text());
                     // console.profile("channel change event");
-                    avaIFaceJS.mapJS.sdb_func.setChannelExtents($('#sdb_waterway').val(), $(this).val()); // Broken?
+                    avaIFaceJS.mapJS.sdb_func.setChannelExtents($sdb_waterway.val(), $this.val()); // Broken?
                     avaIFaceJS.sdb_func.fillLocation();
                     // console.profileEnd();
                     return $('#map').css("min-height", "400px");
@@ -77,8 +83,8 @@ if (!(typeof avaIFaceJS === 'undefined')) {
         fillChannel: function() {
             $('#location option').remove();
             $('#channel option').remove();
-            //$('#channel').append('<option></option>');
-            return $.each(incl_ava_defs.locDefs[$('#sdb_waterway').val()].Sections, function() {
+            $('#channel').append('<option>Select a channel</option>');
+            return $.each(incl_ava_defs.locDefs[$sdb_waterway.val()].Sections, function() {
                 return $('#channel').append("<option value='" + this.Form.Key + "'>" + this.Form.Title + "</option>");
             });
         },
@@ -86,14 +92,16 @@ if (!(typeof avaIFaceJS === 'undefined')) {
         // Load and fill location drop down
         fillLocation: function() {
             locationDropdownFilled = true;
+            var locations = incl_ava_defs.locDefs[$sdb_waterway.val()].Sections[$('#channel').val()].Locations;
             $('#location option').remove();
             //$('#location').append('<option></option>');
             if (debug) {
-                console.log("void fillLocation(): sdb_waterway=" + $('#sdb_waterway').val());
+                console.log("void fillLocation(): sdb_waterway=" + $sdb_waterway.val());
                 console.log("void fillLocation(): channel=" + $('#channel').val());
             }
             try {
-                return $.each(incl_ava_defs.locDefs[$('#sdb_waterway').val()].Sections[$('#channel').val()].Locations, function() {
+
+                return $.each(incl_ava_defs.locDefs[$sdb_waterway.val()].Sections[$('#channel').val()].Locations, function() {
                     return $('#location').append("<option value='" + this.Name + "'>" + this.Name + "</option>");
                 });
             } catch (err) {
@@ -133,7 +141,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             // else, a regular channel has been selected
             else
             {
-                var riverVal = $('#sdb_waterway').val();
+                var riverVal = $sdb_waterway.val();
                 var channelVal = $('#channel').val();
                 var locationVal = $('#location').val();
                 var tile;
@@ -263,21 +271,21 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 case "FRSA":
                 case "FRSA_SC":
                 case "FRUR":
-                    $('#sdb_waterway').val("FR");
+                    $sdb_waterway.val("FR");
                     break;
                 case "FSD":
-                    $('#sdb_waterway').val("FR");
+                    $sdb_waterway.val("FR");
                     avaIFaceJS.sdb_func.fillChannel();
                     $('#channel').val("FRSA");
                     avaIFaceJS.sdb_func.fillLocation();
                     $('#location').val(data.location);
                     return;
                 default:
-                    $('#sdb_waterway').val("CWC");
+                    $sdb_waterway.val("CWC");
             }
-            if ((/WS*/).test(data.waterway)) $('#sdb_waterway').val("WS");
-            if ((/IN*/).test(data.waterway)) $('#sdb_waterway').val("IW");
-            if ((/POV*/).test(data.waterway)) $('#sdb_waterway').val("POV");
+            if ((/WS*/).test(data.waterway)) $sdb_waterway.val("WS");
+            if ((/IN*/).test(data.waterway)) $sdb_waterway.val("IW");
+            if ((/POV*/).test(data.waterway)) $sdb_waterway.val("POV");
 
             avaIFaceJS.sdb_func.fillChannel();
             $('#channel').val(data.waterway);
