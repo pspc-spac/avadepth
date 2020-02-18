@@ -9,11 +9,14 @@ var locException = [];
 if (!(typeof avaIFaceJS === 'undefined')) {
 
     avaIFaceJS.sdb_func = {
-        $sdb_waterway: null,
         $channel: null,
+        $location: null,
+        $sdb_waterway: null,
+
         init: function() {
-            $sdb_waterway = $('#sdb_waterway');
             $channel = $('#channel');
+            $location = $('#location');
+            $sdb_waterway = $('#sdb_waterway');
 
             $('#report_body').css({marginTop: '+=30px'});
             locException.push({ riverCode: "FSD",
@@ -75,7 +78,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
 
             // Submit form
             $("#submit").click(function() {
-                avaIFaceJS.mapJS.sdb_func.refreshLocation($('#location').val());   // Colour map tile of location selected.
+                avaIFaceJS.mapJS.sdb_func.refreshLocation($location.val());   // Colour map tile of location selected.
                 return avaIFaceJS.sdb_func.update();
             });
 
@@ -83,8 +86,8 @@ if (!(typeof avaIFaceJS === 'undefined')) {
 
         // Load and fill channel drop down
         fillChannel: function() {
-            $('#location option').remove();
-            $('#channel option').remove();
+            $location.find('option').remove();
+            $channel.find('option').remove();
             $channel.append('<option>Select a channel</option>');
             return $.each(incl_ava_defs.locDefs[$sdb_waterway.val()].Sections, function() {
                 return $channel.append("<option value='" + this.Form.Key + "'>" + this.Form.Title + "</option>");
@@ -96,7 +99,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             locationDropdownFilled = true;
             if($channel.val() != "Select a channel"){
                 var locations = incl_ava_defs.locDefs[$sdb_waterway.val()].Sections[$channel.val()].Locations;
-                $('#location option').remove();
+                $location.find('option').remove();
                 //$('#location').append('<option></option>');
                 if (debug) {
                     console.log("void fillLocation(): sdb_waterway=" + $sdb_waterway.val());
@@ -105,7 +108,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 try {
 
                     return $.each(incl_ava_defs.locDefs[$sdb_waterway.val()].Sections[$channel.val()].Locations, function() {
-                        return $('#location').append("<option value='" + this.Name + "'>" + this.Name + "</option>");
+                        return $location.append("<option value='" + this.Name + "'>" + this.Name + "</option>");
                     });
                 } catch (err) {
                     if (debug) console.log("void fillLocation(): No location defined for channel " + $channel.val());
@@ -123,7 +126,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             var header, wat, chann, location, type;
             wat = $sdb_waterway.find(':selected').text();
             chann = $channel.find(':selected').text();
-            location = $('#location :selected').text();
+            location = $location.find(':selected').text();
             type = $('#type :selected').text(); 
 
             var apiBase = "/api2/SurveyDrawings?";
@@ -148,7 +151,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             {
                 var riverVal = $sdb_waterway.val();
                 var channelVal = $channel.val();
-                var locationVal = $('#location').val();
+                var locationVal = $location.val();
                 var tile;
                 var channelStruct = incl_ava_defs.locDefs[riverVal].Sections[channelVal];
                 //if a location hasn't been selected, get all drawings listed under channel 
@@ -283,7 +286,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                     avaIFaceJS.sdb_func.fillChannel();
                     $channel.val("FRSA");
                     avaIFaceJS.sdb_func.fillLocation();
-                    $('#location').val(data.location);
+                    $location.val(data.location);
                     return;
                 default:
                     $sdb_waterway.val("CWC");
@@ -296,7 +299,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             $channel.val(data.waterway);
             avaIFaceJS.sdb_func.fillLocation();
             // $('#location').text(data.location);
-            $('#location').val(data.location);
+            $location.val(data.location);
         }),
     };
 } else if (!(typeof avaMapJS === 'undefined')) {
