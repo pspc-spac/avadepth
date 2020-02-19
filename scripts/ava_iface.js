@@ -9,18 +9,23 @@ Current Conditions: cc-ca.js, soundings-sondages.js
 
 // Load def JS File
 var loadJS = function(name, callback) {
-    $.getScript('scripts/' + name + '.js', callback);
+    $.getScript('scripts/' + name + '.js')
+        .done(callback)
+        .fail(function(jqxhr, settings, exception){
+            console.error(exception);
+            console.error('failed to load script: ' + name);
+        });
 };
 
 // Create global variables
 var page_lang = $('html').attr('lang');
 
 // Create avaIFace
-var avaIFaceJS;
-avaIFaceJS = {
+/** @namespace */
+var avaIFaceJS = {};
 
     // Internal Object for handling the detail window
-    detailWindow: {
+    avaIFaceJS.detailWindow = {
         useMap: false,
         mapColorKey: null,
         detailContent: null,
@@ -80,7 +85,7 @@ avaIFaceJS = {
 
             $('#cboxClose').unbind('click').click(avaIFaceJS.detailWindow.hide);
             $('button[name="print"]').unbind('click').click(function() {
-                window.print()
+                window.print();
             });
         },
 
@@ -143,10 +148,10 @@ avaIFaceJS = {
             $('<style>@media print { #report_body { display: block; } }</style>').appendTo('head');
             $("#detail_print").html("");
         }
-    },
+    }
 
     // Internal Object for handling the report window
-    reportWindow: {
+    avaIFaceJS.reportWindow = {
         isInit: false,
         title1: "",
         title2: "",
@@ -337,14 +342,14 @@ avaIFaceJS = {
             avaIFaceJS.reportWindow.setTitle();
 
             $('button[name="print"]').unbind('click').click(function() {
-                window.print()
+                window.print();
             });
         },
 
         // Adds strings to fit into Report Title Template
         addTitle: function(repTitle1, repTitle2, subT1, subT2) {
             if (!avaIFaceJS.reportWindow.isInit) {
-                avaIFaceJS.reportWindow.init()
+                avaIFaceJS.reportWindow.init();
             }
             if (repTitle1 != undefined) {
                 avaIFaceJS.reportWindow.title1 = repTitle1;
@@ -373,7 +378,7 @@ avaIFaceJS = {
         // Applies report layout to report window
         addContent: function(content) {
             if (!avaIFaceJS.reportWindow.isInit) {
-                avaIFaceJS.reportWindow.init()
+                avaIFaceJS.reportWindow.init();
             }
             avaIFaceJS.reportWindow.repContent = $.extend([], content);
         },
@@ -386,7 +391,7 @@ avaIFaceJS = {
             $('#report_content').show();
 
             if (!avaIFaceJS.reportWindow.isInit) {
-                avaIFaceJS.reportWindow.init()
+                avaIFaceJS.reportWindow.init();
             }
 
             avaIFaceJS.reportWindow.repWrapper.trigger('resize').show();
@@ -403,10 +408,10 @@ avaIFaceJS = {
         clear: function() {
             avaIFaceJS.reportWindow.repBodyElem.innerHTML = "";
         }
-    },
+    };
 
     // Internal Object for Parameters Window
-    paramWindow: {
+    avaIFaceJS.paramWindow = {
         linkBtn: null,
         paramForm: null,
         isInit: false,
@@ -420,7 +425,7 @@ avaIFaceJS = {
 
         useParam: function(state) {
             if (!avaIFaceJS.paramWindow.isInit) {
-                avaIFaceJS.paramWindow.init()
+                avaIFaceJS.paramWindow.init();
             }
             if (state) {
                 avaIFaceJS.paramWindow.show();
@@ -457,7 +462,7 @@ avaIFaceJS = {
 
         addForm: function(content) {
             if (!avaIFaceJS.paramWindow.isInit) {
-                avaIFaceJS.paramWindow.init()
+                avaIFaceJS.paramWindow.init();
             }
             var pgParam = $.extend([], content);
             if (window.location.href.indexOf("fra") > -1) {
@@ -562,14 +567,14 @@ avaIFaceJS = {
 
         isOpen: function() {
             if (!avaIFaceJS.paramWindow.isInit) {
-                avaIFaceJS.paramWindow.init()
+                avaIFaceJS.paramWindow.init();
             }
             // return (!(document.getElementById('paramButton').innerText == "Parameters"))
         }
-    },
+    };
 
     // side navigation panel for results
-    sideNavPanel: {
+    avaIFaceJS.sideNavPanel = {
         navTitle: $("#side_nav .panel-heading .panel-title"),
         navBody: $("#side_nav .panel-body"),
         Title: "",
@@ -620,10 +625,10 @@ avaIFaceJS = {
             navBody.empty();
             this.hide();
         }
-    },
+    };
 
     // Initiate avaIFaceJS Object/add Event Triggers and load page elements
-    init: function() {
+    avaIFaceJS.init = function() {
         // console.clear();
         // Clear and nullify objects
         avaIFaceJS.mapJS = null;
@@ -637,17 +642,17 @@ avaIFaceJS = {
             $(window).unbind('resize').resize(function() {
                 var hgt = $('#wb-core').width() * 8.5 / 15;
                 if (hgt < 680) {
-                    hgt = 680
+                    hgt = 680;
                 }
                 $('#embed_map').height(hgt);
             });
             $('#ref_map_link').click(function() {
                 var hgt = $('#wb-core').width() * 8.5 / 15;
                 if (hgt < 680) {
-                    hgt = 680
+                    hgt = 680;
                 }
                 $('#embed_map').height(hgt);
-            })
+            });
         }
         // avaIFaceJS.setMapOpen(avaIFaceJS.MapState.Open);
 
@@ -655,11 +660,11 @@ avaIFaceJS = {
         if (querystring('page').length > 0) {
             avaIFaceJS.loadPage(querystring('page'));
         }
-    },
+    };
 
     /*** General Functions ***/
     // Change page for new report
-    loadPage: function(page_name) {
+    avaIFaceJS.loadPage = function(page_name) {
 
         // Load Embedded Map
         avaIFaceJS.mapJS.map.updateSize();
@@ -671,9 +676,9 @@ avaIFaceJS = {
         } else {
             avaIFaceJS.getPage();
         }
-    },
+    };
 
-    getPage: function() {
+    avaIFaceJS.getPage = function() {
         var pg_entry = incl_ava_defs.avaPages[avaIFaceJS.currentPage];
 
         // Set Title
@@ -711,14 +716,15 @@ avaIFaceJS = {
         // Close Report Window
         avaIFaceJS.reportWindow.hide();
 
-    },
+    };
 
     // Open/Close Map when needed
-    MapState: {
+    avaIFaceJS.MapState = {
         Close: false,
         Open: true
-    },
-    setMapOpen: function(state, callback, arg) {
+    };
+
+    avaIFaceJS.setMapOpen = function(state, callback, arg) {
         // console.log("state: " + state + ", arg: " + arg 
         //             + ", isMapOpen: " + this.isMapOpen());
         var mapLink = $('#ref_map_link');
@@ -733,40 +739,39 @@ avaIFaceJS = {
         var embedMap = $('#embed_map');
         var hgt = $('#wb-core').width() * 8.5 / 15;
         if (hgt < 680) {
-            hgt = 680
+            hgt = 680;
         }
         embedMap.height(hgt);
         $('#map').height(hgt);
         var ifr = $('iframe');
         var mp = $('#ava_map_ref', ifr.contents());
         mp.height(hgt);
-        (this.isMapOpen() ? $('#map_wrapper').className = "print_show" : $('#map_wrapper').className = "print_hide");
         ifr.height(hgt+50);
-    },
+    };
 
-    isMapOpen: function() {
+    avaIFaceJS.isMapOpen = function() {
         return document.getElementById('ref_map_det').clientHeight > 50;
-    },
+    };
 
     // Parse incoming JSON struct to DOM for Form, Report, and Detail layouts
-    getElements: function(arr) {
+    avaIFaceJS.getElements = function(arr) {
         var res = [];
         if ($.isArray(arr)) {
             for (var a = 0; a < arr.length; a++) {
                 if ($.type(arr[a]) === 'object') {
-                    var t = $('<' + arr[a]['tag'] + '></' + arr[a]['tag'] + '>');
+                    var t = $('<' + arr[a].tag + '></' + arr[a].tag + '>');
                     if ('attr' in arr[a]) {
                         if ('className' in arr[a].attr) {
                             t.addClass(arr[a].attr.className);
                             delete arr[a].attr.className;
                         }
-                        t.attr(arr[a].attr)
+                        t.attr(arr[a].attr);
                     }
                     if ('ref' in arr[a]) {
-                        var tagUsed = arr[a]['ref']['tag'];
-                        var oArr = arr[a]['ref']['values'];
+                        var tagUsed = arr[a].ref.tag;
+                        var oArr = arr[a].ref.values;
                         if (typeof oArr == 'function') {
-                            oArr = oArr()
+                            oArr = oArr();
                         }
                         var r = [];
                         for (var k in oArr) {
@@ -776,17 +781,17 @@ avaIFaceJS = {
                                 child: [oArr[k].value]
                             };
                             if ('key' in oArr[k]) {
-                                v.attr.value = oArr[k].key
+                                v.attr.value = oArr[k].key;
                             }
                             if ('select' in oArr[k]) {
-                                v.attr.selected = "selected"
+                                v.attr.selected = "selected";
                             }
                             r.push(v);
                         }
                         arr[a].child = r;
                     }
                     if ('child' in arr[a]) {
-                        t.append(avaIFaceJS.getElements(arr[a]['child']));
+                        t.append(avaIFaceJS.getElements(arr[a].child));
                     }
                     res.push(t);
                 } else {
@@ -795,8 +800,8 @@ avaIFaceJS = {
             }
         }
         return res;
-    }
-};
+    };
+
 if (window.location.href.indexOf("fra") > -1) {
     //If url contains 'fra'	use 
     loadJS('incl_ava_defs-fra', function() {});
@@ -833,17 +838,17 @@ function pBarToggle() {
         document.getElementById('map_parameters').style.display = 'none';
         //document.getElementById('pBarContainer').style.opacity = '0.8';
         //document.getElementById('pBarContainer').style.filter = 'Alpha(opacity=80)';
-        document.getElementById('pBarButton').innerText = "+"
+        document.getElementById('pBarButton').innerText = "+";
     } else {
         document.getElementById('map_parameters').style.display = 'block';
         //document.getElementById('pBarContainer').style.opacity = '1';
         //document.getElementById('pBarContainer').style.filter = 'Alpha(opacity=100)';
-        document.getElementById('pBarButton').innerText = "-"
+        document.getElementById('pBarButton').innerText = "-";
     }
-};
+}
 
 // takes the user to specified selector
 function NavigateTo(selector){
     var elemLocation = $(selector).offset();
     window.scrollTo(elemLocation.left,elemLocation.top);
-};
+}
