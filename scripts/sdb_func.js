@@ -4,6 +4,12 @@
  */
 var debug = true;
 var locException = [];
+avaIFaceJS.sdb_tmp = {
+    init: function(){
+        console.log("test");
+    }
+};
+
 
 /*** Interface functions ***/
 if (!(typeof avaIFaceJS === 'undefined')) {
@@ -13,6 +19,11 @@ if (!(typeof avaIFaceJS === 'undefined')) {
         $location: null,
         $sdb_waterway: null,
 
+        /**
+         * Initializes sdb_func object. Sets $channel, $location and
+         * $sdb_waterway jQuery objects. Sets event handlers for
+         * waterway, channel and type dropdown event handlers. 
+         */
         init: function() {
             $channel = $('#channel');
             $location = $('#location');
