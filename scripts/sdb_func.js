@@ -347,7 +347,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
             });
 
             // Sets extents of map
-            avaMapJS.sdb_func.setExtents("FR");
+            avaMapJS.sdb_func.setExtents(Object.keys(incl_ava_defs.locDefs)[0]);
         },
 
         /*** Page-specific functions ***/
