@@ -97,9 +97,14 @@ if (!(typeof avaIFaceJS === 'undefined')) {
         // Load and fill location drop down
         fillLocation: function() {
             locationDropdownFilled = true;
+            if($channel.val() == "Select All"){
+                $location.find('option').remove();
+            }
             if($channel.val() != "Select a channel"){
                 var locations = incl_ava_defs.locDefs[$sdb_waterway.val()].Sections[$channel.val()].Locations;
                 $location.find('option').remove();
+                $location.append('<option>Select a location</option>');
+                $location.append('<option value=\'GLOBAL\'>Select All</option>');
                 //$('#location').append('<option></option>');
                 if (debug) {
                     console.log("void fillLocation(): sdb_waterway=" + $sdb_waterway.val());
@@ -155,7 +160,7 @@ if (!(typeof avaIFaceJS === 'undefined')) {
                 var tile;
                 var channelStruct = incl_ava_defs.locDefs[riverVal].Sections[channelVal];
                 //if a location hasn't been selected, get all drawings listed under channel 
-                if(location == "")
+                if(location == "Select All")
                 {
                     //if the channel has its own tile, query for drawings under that tile
                     if(channelStruct.Form.hasOwnProperty("Tile") && channelStruct.Form.Tile != null)
