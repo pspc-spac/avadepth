@@ -25,6 +25,7 @@ var padZero = function(num){
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':true,
+        'hasMapFunc': true,
         'longReport':false,
         'landscapeReport':false,
         'formParam':[
@@ -157,6 +158,7 @@ var padZero = function(num){
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':false,
         'landscapeReport':false,
         'formParam': [
@@ -359,6 +361,7 @@ var padZero = function(num){
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':false,
         'landscapeReport':false,
         'formParam':[
@@ -544,6 +547,7 @@ var padZero = function(num){
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': true,
         'longReport':true,
         'formParam':
           [
@@ -676,6 +680,7 @@ var padZero = function(num){
         'mapInitState':false,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':false,
         'landscapeReport':true,
         'formParam':[
@@ -715,6 +720,7 @@ var padZero = function(num){
         'mapInitState':false,
         'hasParameters':false,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':true,
         'landscapeReport':false,
         'formParam':[
@@ -856,6 +862,7 @@ var padZero = function(num){
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': true,
         'longReport':true,
         'landscapeReport':false,
         'formParam':
@@ -880,7 +887,7 @@ var padZero = function(num){
               {tag:'select',attr:{id:'type',name:'type'},ref:{tag:'option',values:
                 function() {
                   var res = [];
-                  var oArr = ["", "Composite", "Annual", "Monitor", "Recon", "Investigation", "Dredging", "Structure", "Photograph"];
+                  var oArr = ["Select All", "Composite", "Annual", "Monitor", "Recon", "Investigation", "Dredging", "Structure", "Photograph"];
                   for (var k in oArr) {
                     res.push({key: oArr[k], value: oArr[k]});
                   }
@@ -916,6 +923,7 @@ var padZero = function(num){
         'mapInitState':true,
         'hasParameters':false,
         'hasAnimate':false,
+        'hasMapFunc': true,
         'longReport':true,
         'landscapeReport':false,
         'formParam':

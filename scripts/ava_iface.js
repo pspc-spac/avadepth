@@ -25,130 +25,130 @@ var page_lang = $('html').attr('lang');
 var avaIFaceJS = {};
 
     // Internal Object for handling the detail window
-    avaIFaceJS.detailWindow = {
-        useMap: false,
-        mapColorKey: null,
-        detailContent: null,
-        map: null,
+avaIFaceJS.detailWindow = {
+    useMap: false,
+    mapColorKey: null,
+    detailContent: null,
+    map: null,
 
-        // Add inner content to Detail Window (uses JSON struct format for layout)
-        addContent: function(content) {
-            if (content.length > 0) {
-                var detCont = [{
+    // Add inner content to Detail Window (uses JSON struct format for layout)
+    addContent: function(content) {
+        if (content.length > 0) {
+            var detCont = [{
+                tag: 'div',
+                attr: {
+                    id: 'detail_content'
+                },
+                child: [{
                     tag: 'div',
                     attr: {
-                        id: 'detail_content'
+                        className: 'print_holder'
                     },
                     child: [{
-                        tag: 'div',
+                        tag: 'button',
                         attr: {
-                            className: 'print_holder'
+                            name: 'print',
+                            className: 'button button-accent print_button print_hide'
                         },
-                        child: [{
-                            tag: 'button',
-                            attr: {
-                                name: 'print',
-                                className: 'button button-accent print_button print_hide'
-                            },
-                            child: ['Print']
-                        }]
-                    }, {
-                        tag: 'div',
-                        child: [$.extend({}, content[0])]
-                    }, {
-                        tag: 'div',
-                        attr: {
-                            className: 'page-break'
-                        }
-                    }, {
-                        tag: 'div',
-                        attr: {
-                            className: 'print_holder'
-                        },
-                        child: [{
-                            tag: 'button',
-                            attr: {
-                                name: 'print',
-                                className: 'button button-accent print_button print_hide'
-                            },
-                            child: ['Print']
-                        }]
+                        child: ['Print']
                     }]
-                }];
-            }
-            avaIFaceJS.detailWindow.detailContent = avaIFaceJS.getElements(detCont);
-        },
-
-        // Load Detail layout with empty template
-        loadLayout: function() {
-            $('#rep_detail_info').html('').append(avaIFaceJS.detailWindow.detailContent).show();
-
-            $('#cboxClose').unbind('click').click(avaIFaceJS.detailWindow.hide);
-            $('button[name="print"]').unbind('click').click(function() {
-                window.print();
-            });
-        },
-
-        // Displays Detail Window
-        show: function() {
-            var repDet = $('#report_detail');
-
-            // PWL detail map removal
-            /*if (avaIFaceJS.detailWindow.useMap) {
-        $('#rep_detail_map').hide().show().css('width','100%');
-        avaIFaceJS.detailWindow.mapJS.renderMap();
-      } else {
-        $('#rep_detail_map').hide();
-      }*/
-            $('#rep_detail_map').hide();
-            $('#report_map').css('width', '100%');
-
-            // detail report position parameters
-            repDet.show().css('left', ($( document ).width() - repDet.width()) / 2);
-            repDet.show().css('top', ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 50));
-            repDet.show().css('position', 'fixed');
-
-            /* 
-             * set dynamic detail report size
-             */
-            // detail report size parameters
-            var dataHeight = $('#rep_detail_map').height() + $('#rep_detail_info').height();
-            var windowHeight = window.innerHeight - ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 80);
-
-            if ((avaIFaceJS.currentPage == 'ccc') || (dataHeight >= windowHeight)) { // amount of data in detail report is greater than length of screen, or special case for current channel conditions
-                $('#cboxLoadedContent').css('height', windowHeight);
-            } else {
-                $('#cboxLoadedContent').css('height', dataHeight);
-            }
-            $('#cboxLoadedContent').css('width', '103%'); // prevents needless horizontal scroll bar
-
-            $('#report_det_cover').show().css('height', (repDet.height() + repDet.offset().top + 50 < $(document).height() ? $(document).height() : repDet.height() + repDet.offset().top + 50));
-
-            /*
-             * generates detial_print div html and css from current detail display window
-             */
-            $('<style>@media print { #report_body { display: none; } }</style>').appendTo('head');
-
-            var printReport = $("#detail_content").clone();
-            printReport.find("#print_remove").remove(); // specific to handle ccc radio buttons
-            $("#detail_print").html(printReport);
-            // see pwl_func.js goToGraph function for canvas printing fix
-        },
-
-        // Hides Detail Window
-        hide: function() {
-            if (avaIFaceJS.detailWindow.useMap) {
-                $('#rep_detail_map').hide();
-                avaIFaceJS.detailWindow.useMap = false;
-            }
-            $('#report_det_cover').hide();
-            $('#report_detail').hide();
-
-            // hide report window printing div from print css
-            $('<style>@media print { #report_body { display: block; } }</style>').appendTo('head');
-            $("#detail_print").html("");
+                }, {
+                    tag: 'div',
+                    child: [$.extend({}, content[0])]
+                }, {
+                    tag: 'div',
+                    attr: {
+                        className: 'page-break'
+                    }
+                }, {
+                    tag: 'div',
+                    attr: {
+                        className: 'print_holder'
+                    },
+                    child: [{
+                        tag: 'button',
+                        attr: {
+                            name: 'print',
+                            className: 'button button-accent print_button print_hide'
+                        },
+                        child: ['Print']
+                    }]
+                }]
+            }];
         }
+        avaIFaceJS.detailWindow.detailContent = avaIFaceJS.getElements(detCont);
+    },
+
+    // Load Detail layout with empty template
+    loadLayout: function() {
+        $('#rep_detail_info').html('').append(avaIFaceJS.detailWindow.detailContent).show();
+
+        $('#cboxClose').unbind('click').click(avaIFaceJS.detailWindow.hide);
+        $('button[name="print"]').unbind('click').click(function() {
+            window.print();
+        });
+    },
+
+    // Displays Detail Window
+    show: function() {
+        var repDet = $('#report_detail');
+
+        // PWL detail map removal
+        /*if (avaIFaceJS.detailWindow.useMap) {
+    $('#rep_detail_map').hide().show().css('width','100%');
+    avaIFaceJS.detailWindow.mapJS.renderMap();
+    } else {
+    $('#rep_detail_map').hide();
+    }*/
+        $('#rep_detail_map').hide();
+        $('#report_map').css('width', '100%');
+
+        // detail report position parameters
+        repDet.show().css('left', ($( document ).width() - repDet.width()) / 2);
+        repDet.show().css('top', ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 50));
+        repDet.show().css('position', 'fixed');
+
+        /* 
+            * set dynamic detail report size
+            */
+        // detail report size parameters
+        var dataHeight = $('#rep_detail_map').height() + $('#rep_detail_info').height();
+        var windowHeight = window.innerHeight - ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 80);
+
+        if ((avaIFaceJS.currentPage == 'ccc') || (dataHeight >= windowHeight)) { // amount of data in detail report is greater than length of screen, or special case for current channel conditions
+            $('#cboxLoadedContent').css('height', windowHeight);
+        } else {
+            $('#cboxLoadedContent').css('height', dataHeight);
+        }
+        $('#cboxLoadedContent').css('width', '103%'); // prevents needless horizontal scroll bar
+
+        $('#report_det_cover').show().css('height', (repDet.height() + repDet.offset().top + 50 < $(document).height() ? $(document).height() : repDet.height() + repDet.offset().top + 50));
+
+        /*
+            * generates detial_print div html and css from current detail display window
+            */
+        $('<style>@media print { #report_body { display: none; } }</style>').appendTo('head');
+
+        var printReport = $("#detail_content").clone();
+        printReport.find("#print_remove").remove(); // specific to handle ccc radio buttons
+        $("#detail_print").html(printReport);
+        // see pwl_func.js goToGraph function for canvas printing fix
+    },
+
+    // Hides Detail Window
+    hide: function() {
+        if (avaIFaceJS.detailWindow.useMap) {
+            $('#rep_detail_map').hide();
+            avaIFaceJS.detailWindow.useMap = false;
+        }
+        $('#report_det_cover').hide();
+        $('#report_detail').hide();
+
+        // hide report window printing div from print css
+        $('<style>@media print { #report_body { display: block; } }</style>').appendTo('head');
+        $("#detail_print").html("");
     }
+};
 
     // Internal Object for handling the report window
     avaIFaceJS.reportWindow = {
@@ -671,8 +671,8 @@ var avaIFaceJS = {};
 
         // Retrieve Page Definition
         avaIFaceJS.currentPage = page_name;
-        if (!avaIFaceJS[page_name + '_func']) {
-            loadJS(page_name + '_func', avaIFaceJS.getPage);
+        if (!avaIFaceJS[page_name + '_pg_func']) {
+            loadJS(page_name + '_pg_func', avaIFaceJS.getPage);
         } else {
             avaIFaceJS.getPage();
         }
@@ -704,7 +704,10 @@ var avaIFaceJS = {};
         avaIFaceJS.reportWindow.loadReport();
 
         // Retrieve Page Elements and initiate Page code
-        avaIFaceJS.mapJS.setPageActivity(avaIFaceJS.currentPage);
+        if(pg_entry.hasMapFunc){
+            avaIFaceJS.mapJS.setPageActivity(avaIFaceJS.currentPage);
+        }
+
         avaIFaceJS[avaIFaceJS.currentPage + "_func"].init();
 
         // Open Parameters Tab, Map Window
