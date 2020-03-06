@@ -272,21 +272,18 @@ avaMapJS.sdb_func = {
     // checkTileRefresh: checks if the tile's attributes match the currently selected values
     checkTileRefresh: function(feat) {
         var temp;
-        if (window.location.href.indexOf("fra") > -1) {
-            //If url contains 'fra' use
-            if (avaMapJS.sdb_func.curLocation.length > 0 && avaMapJS.sdb_func.curLocation != " - Aperçu du chenal") {
-                temp = feat.data.location == avaMapJS.sdb_func.curLocation;
-            } else {
-                temp = true;
-            }
+        var channelOverviewTxt = (window.location.href.indexOf("fra") > -1) 
+            ? " - Aperçu du chenal"
+            : "Channel Overview";
+
+        if (avaMapJS.sdb_func.curLocation.length > 0 && avaMapJS.sdb_func.curLocation != channelOverviewTxt) {
+            temp = feat.data.location == avaMapJS.sdb_func.curLocation;
         } else {
-            //If url does not contain 'fra' use
-            if (avaMapJS.sdb_func.curLocation.length > 0 && avaMapJS.sdb_func.curLocation != "Channel Overview") {
-                temp = feat.data.location == avaMapJS.sdb_func.curLocation;
-            } else {
-                temp = true;
-            }
+            temp = true;
         }
+
+        console.log("From CheckTileRefresh: " + channelOverviewTxt);
+
         return temp && (feat.data.waterway == avaMapJS.sdb_func.curWaterway);
     }
 };
