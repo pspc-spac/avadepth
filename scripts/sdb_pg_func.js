@@ -10,6 +10,7 @@ avaIFaceJS.sdb_func = {
     $channel: null,
     $location: null,
     $sdb_waterway: null,
+    $submit: null,
 
     /**
      * Initializes sdb_func object. Sets $channel, $location and
@@ -20,6 +21,7 @@ avaIFaceJS.sdb_func = {
         $channel = $('#channel');
         $location = $('#location');
         $sdb_waterway = $('#sdb_waterway');
+        $submit = $('#submit');
 
         $('#report_body').css({marginTop: '+=30px'});
         locException.push({ riverCode: "FSD",
@@ -68,7 +70,8 @@ avaIFaceJS.sdb_func = {
         });
 
         $('#location').change(function() {
-            return $("#sel_loc_opt").remove();
+            $("#sel_loc_opt").remove();
+            return $submit.prop("disabled", "");
         });
 
         $('#type').change(function() {
@@ -76,11 +79,12 @@ avaIFaceJS.sdb_func = {
         });
 
         // Submit form
-        $("#submit").click(function() {
+        $submit.click(function() {
             avaIFaceJS.mapJS.sdb_func.refreshLocation($location.val());   // Colour map tile of location selected.
             return avaIFaceJS.sdb_func.update();
         });
 
+        $submit.prop("disabled", "disabled");
     },
 
     // Load and fill channel drop down
@@ -107,8 +111,10 @@ avaIFaceJS.sdb_func = {
             if(locations.length !== 0){
                 $location.append('<option id=\'sel_loc_opt\'>Select a location</option>');
                 $location.append('<option value=\'GLOBAL\'>Select All</option>');
+                $submit.prop("disabled", "disabled");
             } else {
                 //enable submit;
+                $submit.prop("disabled", "");
             }
 
             if (debug) {
@@ -146,6 +152,7 @@ avaIFaceJS.sdb_func = {
         if(tileName != undefined)
         {
             apiParams.push("Tile=", tileName);
+            $submit.prop("disabled", "");
         }
         // if no channel selected, query all drawings under selected waterway
         else if(chann == "")
