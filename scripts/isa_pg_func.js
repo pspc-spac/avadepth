@@ -26,9 +26,12 @@ avaIFaceJS.isa_func = {
 
     },
     update: function(tileName) {
-        $.getJSON(getAPI('/api3/isa/' + tileName + '.json','api3/isa/' + tileName + '.json'), function(data){
-            console.log(data);
-            var ISAs = data.ISAs;
+        $.getJSON(
+            getAPI(
+                'api2/isas?location=' + tileName,
+                '/api/isa/' + tileName + '.json'))
+        .then(function(ISAs){
+            console.log(ISAs);
             avaIFaceJS.reportWindow.addTitle("Search Results", "", "");
             avaIFaceJS.isa_func.tableReport || (avaIFaceJS.isa_func.tableReport = $('#isas').DataTable({
                 "paging": false,
