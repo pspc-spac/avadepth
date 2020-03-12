@@ -7,6 +7,15 @@ var padZero = function(num){
     return s.substr(s.length-2);
   };
   
+  /**
+   * Utility used to ease development.
+   * Will select between two APIs based on the environment.
+   * @param {string} extURL - API to be used when accessing the site externally.
+   * example - 'api2/isas?location=StevestonCut'
+   * 
+   * @param {string} intURL - API to be used when accessing the site from localhost.
+   * example - '/api/isa/StevestonCut.json'
+   */
   function getAPI(extURL, intURL){
       // console.log(extURL);
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
@@ -143,8 +152,7 @@ var padZero = function(num){
           'reportDetail':[]
         },
         'dd': {
-          'title_e': "Available Depth Report for Fraser River South Arm",
-          'title_f': "Rapport sur les profondeurs disponibles",
+          'title': "Available Depth Report for Fraser River South Arm",
           'mapInitState':true,
           'hasParameters':true,
           'hasAnimate':false,

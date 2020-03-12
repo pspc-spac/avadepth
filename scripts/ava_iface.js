@@ -356,7 +356,14 @@ avaIFaceJS.detailWindow = {
             });
         },
 
-        // Adds strings to fit into Report Title Template
+        /**
+         * Adds strings to fit into Report Title Template
+         * @param {string} repTitle1 - Main title for report. Appears inside <h2> tag
+         * @param {string} repTitle2 - Second part of title for report.  Appears in <h3> tag
+         * @param {string} subT1 - First subtitle for report. Appears in <p> tag
+         * @param {string} subT2 - Second subtitle for report. Appears in same <p> tag
+         * as subT2 but broken to a new line with a <br /> tag
+         **/
         addTitle: function(repTitle1, repTitle2, subT1, subT2) {
             if (!avaIFaceJS.reportWindow.isInit) {
                 avaIFaceJS.reportWindow.init();

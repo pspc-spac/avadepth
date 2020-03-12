@@ -6,7 +6,16 @@ var padZero = function(num){
     var s = "000" + num;
     return s.substr(s.length-2);
   };
-  
+   
+  /**
+   * Utility used to ease development.
+   * Will select between two APIs based on the environment.
+   * @param {string} extURL - API to be used when accessing the site externally.
+   * example - 'api2/isas?location=StevestonCut'
+   * 
+   * @param {string} intURL - API to be used when accessing the site from localhost.
+   * example - '/api/isa/StevestonCut.json'
+   */
   function getAPI(extURL, intURL){
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
       return intURL;
