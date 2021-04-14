@@ -160,6 +160,40 @@ var padZero = function(num){
         ],
         'reportDetail':[]
       },
+      "cbw": {
+        "title": "Carte Web de la bathymétrie du chenal",
+        "mapInitState": true,
+        "hasParameters": true,
+        "hasParametersApply": false,
+        "hasAnimate": false,
+        "hasMapFunc": true,
+        "longReport": false,
+        "landscapeReport": false,
+        "formParam": [
+          {tag: "div", attr: {classname: "span-4"}, child: [
+              {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Couches:"]},
+              {tag: "div", child: [
+                  {tag: "input", attr: {type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked"}},
+                  "sondages",
+                  {tag: "br"},
+                  {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
+                  "chenal", {tag: "br"},
+                  {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
+                  "surfaces:", {tag: "br"},
+                  {tag: "div", attr: {style: "margin-left: 25px"}, child: [
+                      {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
+                      "bathymetrique", {tag: "br"},
+                      {tag: "input", attr: {type: "radio", name: "surface", value: "difference"}},
+                      "différence", {tag: "br"},
+                      {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
+                      "conformité", {tag: "br"}
+                    ]}
+                ]}
+            ]}
+        ],
+        "reportBody": [],
+        "reportDetail": [],
+      },
       'dd': {
         'title': "Rapport sur les profondeurs disponibles",
         'mapInitState':true,

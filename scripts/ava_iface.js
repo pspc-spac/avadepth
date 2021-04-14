@@ -487,7 +487,7 @@ avaIFaceJS.detailWindow = {
             }
         },
 
-        addForm: function(content) {
+        addForm: function(content, showApply) {
             if (!avaIFaceJS.paramWindow.isInit) {
                 avaIFaceJS.paramWindow.init();
             }
@@ -495,8 +495,8 @@ avaIFaceJS.detailWindow = {
             var applyButtonText = (window.location.href.indexOf("fra") > -1)
                 ? 'Appliquer'
                 : 'Apply';
-            
-            pgParam.push({
+
+            if(showApply === undefined || showApply) pgParam.push({
                 tag: 'button',
                 attr: {
                     id: 'submit',
@@ -701,7 +701,7 @@ avaIFaceJS.detailWindow = {
 
         // Page Form Parameters
         avaIFaceJS.paramWindow.hasAnimate = pg_entry.hasAnimate;
-        avaIFaceJS.paramWindow.addForm(pg_entry.formParam);
+        avaIFaceJS.paramWindow.addForm(pg_entry.formParam, pg_entry.hasParametersApply);
 
         // Add Content layout for Detail Window
         avaIFaceJS.detailWindow.addContent(pg_entry.reportDetail);
