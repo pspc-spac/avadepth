@@ -183,6 +183,7 @@ var padZero = function(num){
                   {tag: "div", attr: {class: "optionIndent"}, child: [
                       {tag: "label", attr: {for: "surfTrans"}, child: ["transparence"]},
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
+                      "type de surface:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                         {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
                         "bathymetrique", {tag: "br"},
