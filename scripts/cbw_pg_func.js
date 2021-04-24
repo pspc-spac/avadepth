@@ -24,7 +24,15 @@ avaIFaceJS.cbw_func = {
     images:[],
     selected_zone:1,
 
+    setOpacity: function(ev) {
+        let newOpacity = Math.max(10, ev.target.value) / 100;
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.conformance.setOpacity(newOpacity);
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.combined.setOpacity(newOpacity);
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.difference.setOpacity(newOpacity);
+    },
+
     init: function() {
-        addWatch()
+        addWatch();
+        document.getElementById("surfTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity)
     }
 };

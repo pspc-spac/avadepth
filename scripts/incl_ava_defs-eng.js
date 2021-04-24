@@ -162,22 +162,27 @@ var padZero = function(num){
           "landscapeReport": false,
           "formParam": [
             {tag: "div", attr: {classname: "span-4"}, child: [
-                {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers:"]},
+                {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers"]},
                 {tag: "div", child: [
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked"}},
-                    "Soundings",
+                    " Soundings",
                     {tag: "br"},
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
-                    "Channel", {tag: "br"},
+                    " Channel", {tag: "br"},
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
-                    "Surface:", {tag: "br"},
-                    {tag: "div", attr: {style: "margin-left: 25px"}, child: [
-                        {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
-                        "Bathymetry", {tag: "br"},
-                        {tag: "input", attr: {type: "radio", name: "surface", value: "difference"}},
-                        "Difference", {tag: "br"},
-                        {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
-                        "Conformance", {tag: "br"}
+                    " Surface:",
+                    {tag: "div", attr: {class: "optionIndent"}, child: [
+                      {tag: "label", attr: {for: "surfTrans"}, child: ["Layer Transparency"]},
+                      {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
+                      "Surface Type:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
+                          " Bathymetry", {tag: "br"},
+                          {tag: "input", attr: {type: "radio", name: "surface", value: "difference"}},
+                          " Difference", {tag: "br"},
+                          {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
+                          " Conformance", {tag: "br"}
+                        ]}
                     ]}
                 ]}
             ]}

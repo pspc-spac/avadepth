@@ -312,6 +312,10 @@ a#toggleLink,summary#ref_map_link{
 	padding-top:10px;
 }
 
+#map_parameters .optionIndent {
+    margin-left: 25px;
+}
+
 
 #detail_print{
 	visibility: hidden;
