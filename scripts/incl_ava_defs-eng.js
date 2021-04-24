@@ -182,7 +182,24 @@ var padZero = function(num){
                           " Difference", {tag: "br"},
                           {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
                           " Conformance", {tag: "br"}
-                        ]}
+                      ]},
+                      "Surface Details:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {id: "surf_combined", name: "surfDetails"}, child: [
+                            "Surface generated ",
+                            {tag: "span", attr: {name: "srfDateCur"}}
+                          ]},
+                          {tag: "div", attr: {id: "surf_conformance", name: "surfDetails"}, child: [
+                            "Conformance generated ",
+                            {tag: "span", attr: {name: "srfDateCur"}}
+                          ]},
+                          {tag: "div", attr: {id: "surf_difference", name: "surfDetails"}, child: [
+                            "Difference generated of ",
+                            {tag: "span", attr: {name: "srfDateCur"}},
+                            " from ",
+                            {tag: "span", attr: {name: "srfDatePrev"}}
+                          ]},
+                      ]}
                     ]}
                 ]}
             ]}
