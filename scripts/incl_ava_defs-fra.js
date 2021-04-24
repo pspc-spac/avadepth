@@ -192,7 +192,23 @@ var padZero = function(num){
                         {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
                         " conformité", {tag: "br"}
                       ]},
-                      {tag: "div", attr: {id: "surfaceDetails"}}
+                      "détails:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {id: "surf_combined", name: "surfDetails"}, child: [
+                              "surface généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}}
+                            ]},
+                          {tag: "div", attr: {id: "surf_conformance", name: "surfDetails"}, child: [
+                              "conformité généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}}
+                            ]},
+                          {tag: "div", attr: {id: "surf_difference", name: "surfDetails"}, child: [
+                              "différence généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}},
+                              " du surface généré ",
+                              {tag: "span", attr: {name: "srfDatePrev"}}
+                            ]},
+                        ]}
                   ]}
                 ]}
             ]}
