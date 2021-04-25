@@ -45,7 +45,7 @@ avaIFaceJS.cbw_func = {
             "name": "combined",
             legend: {
                 en: '<table><tbody><tr><th>Depth</th><th>Colour</th></tr>' +
-                    '<tr><td>0.1</td><td><div class="surface_legend" style="background-color:#980056"></div></td></tr>' +
+                    '<tr><td>0</td><td><div class="surface_legend" style="background-color:#980056"></div></td></tr>' +
                     '<tr><td>1.8</td><td><div class="surface_legend" style="background-color:#fe0000"></div></td></tr>' +
                     '<tr><td>8.2</td><td><div class="surface_legend" style="background-color:#ffff00"></div></td></tr>' +
                     '<tr><td>13.3</td><td><div class="surface_legend" style="background-color:#00ff00"></div></td></tr>' +
@@ -54,7 +54,7 @@ avaIFaceJS.cbw_func = {
                     '<tr><td>25</td><td><div class="surface_legend" style="background-color:#74007a"></div></td></tr>' +
                     '</tbody></table>',
                 fr: '<table><tbody><tr><th>profondeur</th><th>couleur</th></tr>' +
-                    '<tr><td>0.1</td><td><div class="surface_legend" style="background-color:#980056"></div></td></tr>' +
+                    '<tr><td>0</td><td><div class="surface_legend" style="background-color:#980056"></div></td></tr>' +
                     '<tr><td>1.8</td><td><div class="surface_legend" style="background-color:#fe0000"></div></td></tr>' +
                     '<tr><td>8.2</td><td><div class="surface_legend" style="background-color:#ffff00"></div></td></tr>' +
                     '<tr><td>13.3</td><td><div class="surface_legend" style="background-color:#00ff00"></div></td></tr>' +
