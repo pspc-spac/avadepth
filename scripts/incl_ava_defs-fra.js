@@ -208,7 +208,11 @@ var padZero = function(num){
                               " du surface généré ",
                               {tag: "span", attr: {name: "srfDatePrev"}}
                             ]},
-                        ]}
+                        ]},
+                      "légende:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {id: "surfLegend"}}
+                      ]}
                   ]}
                 ]}
             ]}

@@ -199,6 +199,10 @@ var padZero = function(num){
                             " from ",
                             {tag: "span", attr: {name: "srfDatePrev"}}
                           ]},
+                      ]},
+                      "Surface Legend:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {id: "surfLegend"}}
                       ]}
                     ]}
                 ]}
