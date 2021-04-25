@@ -3,6 +3,10 @@
 	width: 50%;
 }
 
+body.noscroll {
+    overflow: hidden;
+}
+
 #cn-content h2 {
   background:#555 url('/images/h-square.gif') no-repeat left top;
   color:#FFF;
@@ -333,7 +337,6 @@ div.surface_legend {
     width:30px;
     margin: auto;
 }
-
 
 #detail_print{
 	visibility: hidden;
