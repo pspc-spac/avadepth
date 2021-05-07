@@ -140,7 +140,7 @@ avaIFaceJS.cbw_func = {
         addWatch();
         document.getElementById("surfTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity);
         document.getElementById("surfLegend").innerHTML = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === "combined").legend[page_lang];
-        fetch("/dates.json", {method: "GET"})
+        fetch("https://ava-proto.com/dates.json", {method: "GET"})
             .then(r => r.json())
             .then(r => {
                 let curDate = toDateString(parseDateString(r.current_date));
