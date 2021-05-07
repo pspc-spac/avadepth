@@ -34,7 +34,9 @@ function parseDateString(input_date){
 }
 
 function toDateString(input_date){
-    return input_date.getDate().toString().padStart(2, "0") + "-" + input_date.getMonth().toString().padStart(2, "0") + "-" + input_date.getFullYear().toString();
+    return input_date.getDate().toString()
+        .padStart(2, "0") + "-" + input_date.getMonth().toString()
+        .padStart(2, "0") + "-" + input_date.getFullYear().toString();
 }
 
 avaIFaceJS.cbw_func = {
