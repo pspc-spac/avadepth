@@ -38,14 +38,10 @@ var componentName = "wb-tableparser",
 			colgroupFrame = [],
 			columnFrame = [],
 			uidElem = 0,
-			currentRowLevel = 0,
 			currentRowPos = 0,
 			spannedRow = [],
 			tableCellWidth = 0,
 			headerRowGroupCompleted = false,
-			summaryRowGroupEligible = false,
-			currentRowHeader = [],
-			currentTbodyID,
 			theadRowStack = [],
 			stackRowHeader = false,
 
@@ -308,8 +304,8 @@ var componentName = "wb-tableparser",
 			var i, iLen, j, jLen, m, mLen,
 				tmpStack = [], tmpStackCurr, tmpStackCell,
 				dataColgroup, dataColumns, colgroup, col,
-				hcolgroup, lstRealColgroup, currColPos,
-				currColgroupStructure, colFrmId, bigTotalColgroupFound,
+				hcolgroup, currColPos,
+				currColgroupStructure, bigTotalColgroupFound,
 				theadRSNext, theadRSNextCell, cell, gzCol, theadRS;
 
 			if ( groupZero.colgrouphead || rowgroupheadercalled ) {
@@ -587,7 +583,6 @@ var componentName = "wb-tableparser",
 				// -----------------------------------------------------
 				//
 				// List of real colgroup
-				lstRealColgroup = [];
 				currColPos = (
 					colgroupHeaderColEnd === 0 ?
 						1 :
@@ -606,7 +601,6 @@ var componentName = "wb-tableparser",
 					type: 2
 				};
 				currColgroupStructure = [];
-				colFrmId = 0;
 				bigTotalColgroupFound = false;
 
 				$.each( colgroupFrame, function() {
@@ -615,8 +609,6 @@ var componentName = "wb-tableparser",
 						cgrp,
 						parentHeader,
 						summaryAttached;
-
-					colFrmId += 1;
 
 					if ( bigTotalColgroupFound || groupZero.colgrp[ 0 ] ) {
 						$obj.trigger( {
@@ -1153,9 +1145,7 @@ var componentName = "wb-tableparser",
 				colKeyCell,
 				i,
 				j,
-				isDataCell,
-				isDataColgroupType,
-				createGenericColgroup;
+				isDataColgroupType;
 
 			$( elem ).data().tblparser = row;
 
@@ -1564,9 +1554,7 @@ var componentName = "wb-tableparser",
 
 						// Remove any rowgroup header found.
 						rowgroupHeaderRowStack = [];
-						currentRowHeader = [];
 
-						currentTbodyID += 1;
 						finalizeRowGroup();
 
 						currentRowGroupElement = undefined;
@@ -1598,9 +1586,7 @@ var componentName = "wb-tableparser",
 
 						// Remove any rowgroup header found.
 						rowgroupHeaderRowStack = [];
-						currentRowHeader = [];
 
-						currentTbodyID += 1;
 						finalizeRowGroup();
 
 						currentRowGroupElement = undefined;
@@ -1785,7 +1771,6 @@ var componentName = "wb-tableparser",
 					row.datacell = [];
 				}
 				for ( i = lastHeadingColPos; i < row.cell.length; i += 1 ) {
-					isDataCell = true;
 					isDataColgroupType = true;
 
 					for ( j = ( lastHeadingColPos === 0 ? 0 : 1 ); j < colgroupFrame.length; j += 1 ) {
@@ -1837,11 +1822,6 @@ var componentName = "wb-tableparser",
 							}
 						}
 					}
-				}
-
-				createGenericColgroup = ( colgroupFrame.length === 0 );
-				if ( colgroupFrame.length === 0 ) {
-					createGenericColgroup = false;
 				}
 
 				// Add the cell in his appropriate column
@@ -1901,9 +1881,7 @@ var componentName = "wb-tableparser",
 						}
 					}
 				}
-				summaryRowGroupEligible = true;
 			}
-			currentRowLevel += 1;
 
 			// Add the row to the groupZero
 			if ( !groupZero.row ) {
@@ -1934,9 +1912,9 @@ var componentName = "wb-tableparser",
 					currCell = currRow.cell[ j ];
 
 					if ( ( currCell.type === 1 || currCell.type === 7 ) && (
-							!( j > 0 && currCell.uid === currRow.cell[ j - 1 ].uid ) &&
+						!( j > 0 && currCell.uid === currRow.cell[ j - 1 ].uid ) &&
 							!( i > 0 && currCell.uid === tblparser.theadRowStack[ i - 1 ].cell[ j ].uid )
-						) ) {
+					) ) {
 
 						// Imediate header
 						currCell.header = currCell.header || [];
@@ -2205,9 +2183,7 @@ var componentName = "wb-tableparser",
 
 				spannedRow = []; /* Cleanup of any spanned row */
 				rowgroupHeaderRowStack = []; /* Remove any rowgroup header found. */
-				currentRowHeader = [];
 
-				currentTbodyID += 1;
 			} else if ( nodeName === "tr" ) {
 
 				// This are suppose to be a simple table

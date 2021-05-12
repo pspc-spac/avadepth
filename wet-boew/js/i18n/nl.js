@@ -1,12 +1,13 @@
 /*
- * Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
- * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
- */
+* Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
+* wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+*/
 /*
 ----- Dutch dictionary (il8n) ---
- */
+*/
 ( function( wb ) {
 "use strict";
+
 /* main index */
 wb.i18nDict = {
 	"lang-code": "nl",
@@ -53,7 +54,7 @@ wb.i18nDict = {
 	"prv-l": "Vorige (linkse pijlen-toets)",
 	first: "Eerste",
 	last: "Laatste",
-	page: "Page",
+	page: "Jump to: Page",
 	"srch-menus": "Zoeken en menu's",
 	email: "E-mail",
 	"menu-close": "Sluit het menu",
@@ -71,6 +72,7 @@ wb.i18nDict = {
 	"tab-pnl-end2": "Terug naar de lijst met tabs",
 	"tab-pnl-end3": "of om met de rest van de pagina door te gaan.",
 	"tab-play": "Afspelen",
+
 	/* Multimedia player */
 	"mmp-play": "Afspelen",
 	pause: "Pauze",
@@ -92,6 +94,7 @@ wb.i18nDict = {
 	},
 	pos: "Huidige positie:",
 	dur: "Totale afspeelduur:",
+
 	/* Share widget */
 	"shr-txt": "Deel",
 	"shr-pg": " deze pagina",
@@ -99,14 +102,18 @@ wb.i18nDict = {
 	"shr-aud": " dit audiobestand",
 	"shr-hnt": " met {s} ",
 	"shr-disc": "Er wordt hier geen goedkeuring van producten of diensten uitgedrukt.",
+
 	/* Form validation */
 	"frm-nosubmit": "Het formulier kon niet worden verwerkt omdat ",
 	"errs-fnd": " er zijn fouten opgetreden.",
 	"err-fnd": " er is een fout opgetreden.",
+	"err-correct": "(Correct and resubmit)",
+
 	/* Date picker */
 	"date-hide": "Kalender verbergen",
 	"date-show": "Kies een kalenderdatum voor het veld:",
 	"date-sel": "Geselecteerd",
+
 	/* Calendar */
 	days: [
 		"Zondag",
@@ -141,13 +148,17 @@ wb.i18nDict = {
 	"cal-goToBtn": "Ga",
 	prvMnth: "Vorige maand: ",
 	nxtMnth: "Volgende maand: ",
+
 	/* Lightbox */
 	"lb-curr": "Onderdeel %curr% van een totaal van %total%",
 	"lb-xhr-err": "De inhoud is niet geladen",
 	"lb-img-err": "Het beeld is niet geladen",
+
 	/* Charts widget */
 	"tbl-txt": "Tabel",
 	"tbl-dtls": "Grafiek. Meer details in volgende tabel",
+	"chrt-cmbslc": "Combined slice",
+
 	/* Session timeout */
 	"st-to-msg-bgn": "Uw sessie zal automatisch vervallen in #min# min. #sec# sec.",
 	"st-to-msg-end": "Kies \"Doorgaan sessie\" om uw sessie te verlengen",
@@ -155,12 +166,14 @@ wb.i18nDict = {
 	"st-alrdy-to-msg": "Excuses, uw sessie is verlopen. Log opnieuw in.",
 	"st-btn-cont": "Doorgaan sessie",
 	"st-btn-end": "Einde sessie nu",
+
 	/* Toggle details */
 	"td-toggle": "Alles tuimelen",
 	"td-open": "Alles uitvouwen",
 	"td-close": "Alles invouwen",
 	"td-ttl-open": "Alle onderdelen van de inhoud tonen",
 	"td-ttl-close": "Alle onderdelen van de inhoud verbergen",
+
 	/* Table enhancement */
 	sortAsc: ": activeren voor oplopende sortering",
 	sortDesc: ": activeren voor aflopende sortering",
@@ -171,6 +184,7 @@ wb.i18nDict = {
 	info1000: "&#160;",
 	lenMenu: "Toon _MENU_ lemma's",
 	filter: "Artikelen filteren",
+
 	/* Geomap */
 	"geo-mapctrl": "@geo-mapctrl@",
 	"geo-zmin": "Inzoomen",
@@ -184,14 +198,15 @@ wb.i18nDict = {
 	"geo-allyttl": "Instructies: Kaartnavigatie",
 	"geo-tgllyr": "Tuimel de weergave van de laag",
 	"geo-hdnlyr": "Deze laag is momenteel verborgen.",
-	"geo-bmapurl": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-bmap-url": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer/WMTS/",
+	"geo-bmap-matrix-set": "default028mm",
 	"geo-bmapttl": "BaseMaps_CBMT3978",
-	"geo-bmapurltxt": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
-	"geo-attrlnk": "http://geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
+	"geo-bmapurltxt": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-attrlnk": "//geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
 	"geo-attrttl": "GeoGratis - Canada basiskaart (Engels of Frans)",
 	"geo-sel": "Selecteren",
 	"geo-lblsel": "Vink het element aan om het op de kaart te selecteren",
-	"geo-locurl-geogratis": "http://geogratis.gc.ca/services/geolocation/en/locate",
+	"geo-locurl-geogratis": "//geogratis.gc.ca/services/geolocation/en/locate",
 	"geo-loc-placeholder": "Vermeld de naam van de locatie&#44; postcode&#44; adres (post)&#44; het aantal NTS ...",
 	"geo-loc-label": "Plaats",
 	"geo-aoi-north": "Noorden",
@@ -199,24 +214,45 @@ wb.i18nDict = {
 	"geo-aoi-south": "Zuiden",
 	"geo-aoi-west": "Westen",
 	"geo-aoi-instructions": "Bakenen een gebied op de kaart of voer de onderstaande informatie in en klik op de \"Toevoegen\" button.",
+	"geo-aoi-title": "Draw box on map or enter coordinates",
 	"geo-aoi-btndraw": "Trekken",
 	"geo-aoi-btnclear": "Verwijderen",
 	"geo-geoloc-btn": "Zoomen naar onderdeel",
 	"geo-geoloc-fail": "Locatie mislukt. Zorg ervoor dat locatiediensten zijn ingeschakeld.",
 	"geo-geoloc-uncapable": "Lokalisatie wordt niet ondersteund door uw browser.",
 	"geo-lgnd-grphc": "Legende grafische kaart voor laag.",
+
 	/* Disable/enable WET plugins and polyfills */
-	"wb-disable": "Versie in basis-HTML",
-	"wb-enable": "Standaardversie",
+	"wb-disable": "Switch to basic HTML version",
+	"wb-enable": "Switch to standard version",
+	"disable-notice-h": "Notice: Basic HTML",
+	"disable-notice": "You are viewing Basic HTML view. Some features may be disabled.",
+	"skip-prefix": "Skip to:",
+
 	/* Dismissable content */
 	"dismiss": "Dismiss",
+
 	/* Template */
-	"tmpl-signin": "Aanmelden"
+	"tmpl-signin": "Aanmelden",
+
+	/* Filter */
+	"fltr-lbl": "Filter<span class=\"wb-inv\"> content: results appear below as you type.</span>",
+	"fltr-info": "Showing _NBITEM_ filtered from _TOTAL_ total entries"
 };
 
 } )( wb );
 
 wb.doc.one( "formLanguages.wb", function() {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: NL (Dutch; Nederlands, Vlaams)
@@ -239,6 +275,7 @@ $.extend( $.validator.messages, {
 	range: $.validator.format( "Vul hier een waarde in van minimaal {0} en maximaal {1}." ),
 	max: $.validator.format( "Vul hier een waarde in kleiner dan of gelijk aan {0}." ),
 	min: $.validator.format( "Vul hier een waarde in groter dan of gelijk aan {0}." ),
+	step: $.validator.format( "Vul hier een veelvoud van {0} in." ),
 
 	// For validations in additional-methods.js
 	iban: "Vul hier een geldig IBAN in.",
@@ -250,6 +287,17 @@ $.extend( $.validator.messages, {
 	giroaccountNL: "Vul hier een geldig gironummer in.",
 	bankorgiroaccountNL: "Vul hier een geldig bank- of gironummer in."
 } );
+return $;
+}));
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
 
 /*
  * Localized default methods for the jQuery validation plugin.
@@ -258,7 +306,11 @@ $.extend( $.validator.messages, {
 $.extend( $.validator.methods, {
 	date: function( value, element ) {
 		return this.optional( element ) || /^\d\d?[\.\/\-]\d\d?[\.\/\-]\d\d\d?\d?$/.test( value );
+	},
+	number: function( value, element ) {
+		return this.optional( element ) || /^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/.test( value );
 	}
 } );
-
+return $;
+}));
 });

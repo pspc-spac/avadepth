@@ -1,12 +1,13 @@
 /*
- * Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
- * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
- */
+* Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
+* wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+*/
 /*
 ----- Turkish dictionary (il8n) ---
- */
+*/
 ( function( wb ) {
 "use strict";
+
 /* main index */
 wb.i18nDict = {
 	"lang-code": "tr",
@@ -53,7 +54,7 @@ wb.i18nDict = {
 	"prv-l": "Bir önceki (sol ok tuşu)",
 	first: "İlk",
 	last: "Son",
-	page: "Page",
+	page: "Jump to: Page",
 	"srch-menus": "Arama ve menüler",
 	email: "E-posta",
 	"menu-close": "Menüyü kapatmak",
@@ -71,6 +72,7 @@ wb.i18nDict = {
 	"tab-pnl-end2": "Tab listesine dön",
 	"tab-pnl-end3": "ya da geri kalan sayfa devam etmektedir.",
 	"tab-play": "Oynat",
+
 	/* Multimedia player */
 	"mmp-play": "Oynat",
 	pause: "Duraklat",
@@ -92,6 +94,7 @@ wb.i18nDict = {
 	},
 	pos: "Geçerli pozisyon:",
 	dur: "Toplam zaman:",
+
 	/* Share widget */
 	"shr-txt": "Paylaş",
 	"shr-pg": " bu sayfayı",
@@ -99,14 +102,18 @@ wb.i18nDict = {
 	"shr-aud": " bu ses dosyası",
 	"shr-hnt": " ile {s} ",
 	"shr-disc": "Herhangi bir ürün veya hizmet yok onaylandığı ifade ya da ima edilir.",
+
 	/* Form validation */
 	"frm-nosubmit": "Form gönderilemiyor, çünkü ",
 	"errs-fnd": " hatalar bulundu.",
 	"err-fnd": " hata bulundu.",
+	"err-correct": "(Correct and resubmit)",
+
 	/* Date picker */
 	"date-hide": "Takvimi gizle",
 	"date-show": "Alan için takvimden bir tarih seçiniz:",
 	"date-sel": "Seçilmiş",
+
 	/* Calendar */
 	days: [
 		"Pazar",
@@ -141,13 +148,17 @@ wb.i18nDict = {
 	"cal-goToBtn": "Git",
 	prvMnth: "Önceki ay: ",
 	nxtMnth: "Sonraki ay: ",
+
 	/* Lightbox */
 	"lb-curr": "%total% de %curr% inci madde",
 	"lb-xhr-err": "İçerik yükleme hatası.",
 	"lb-img-err": "İmaj yükleme hatası.",
+
 	/* Charts widget */
 	"tbl-txt": "Tablo",
 	"tbl-dtls": "Grafik. Detaylar takip eden tablodadır.",
+	"chrt-cmbslc": "Combined slice",
+
 	/* Session timeout */
 	"st-to-msg-bgn": "Oturumunuz #min# dk #sec# sn otomatik olarak sona erecek.",
 	"st-to-msg-end": "turum uzatmak için \"oturum devam\" seçin.",
@@ -155,12 +166,14 @@ wb.i18nDict = {
 	"st-alrdy-to-msg": "Üzgünüz oturumu zaten doldu. Lütfen tekrar giriş yapın.",
 	"st-btn-cont": "oturumu devam",
 	"st-btn-end": "Şimdi oturumu bitirmek",
+
 	/* Toggle details */
 	"td-toggle": "Tüm geçiş",
 	"td-open": "Hepsini aç",
 	"td-close": "Hepsini kapa",
 	"td-ttl-open": "Içeriğin tüm bölümleri aç",
 	"td-ttl-close": "Içeriğin tüm bölümleri aç",
+
 	/* Table enhancement */
 	sortAsc: ": sıralama Artan için etkinleştirmek",
 	sortDesc: ": sıralama azalan için etkinleştirmek",
@@ -171,6 +184,7 @@ wb.i18nDict = {
 	info1000: ",",
 	lenMenu: "_MENU_ girdileri göster",
 	filter: "Maddeleri filtrele",
+
 	/* Geomap */
 	"geo-mapctrl": "@geo-mapctrl@",
 	"geo-zmin": "Yakınlaştır",
@@ -184,14 +198,15 @@ wb.i18nDict = {
 	"geo-allyttl": "Talimatlar: Harita navigasyon",
 	"geo-tgllyr": "Katmanı ekran değişikliği",
 	"geo-hdnlyr": "Bu katman şu anda gizli olduğu.",
-	"geo-bmapurl": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-bmap-url": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer/WMTS/",
+	"geo-bmap-matrix-set": "default028mm",
 	"geo-bmapttl": "BaseMaps_CBMT3978",
-	"geo-bmapurltxt": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
-	"geo-attrlnk": "http://geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
+	"geo-bmapurltxt": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-attrlnk": "//geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
 	"geo-attrttl": "GeoGratis - Kanada temel harita (İngilizce veya Fransızca sadece)",
 	"geo-sel": "Seçmek",
 	"geo-lblsel": "Harita üzerinde öğe seçmek için kontrol edin",
-	"geo-locurl-geogratis": "http://geogratis.gc.ca/services/geolocation/en/locate",
+	"geo-locurl-geogratis": "//geogratis.gc.ca/services/geolocation/en/locate",
 	"geo-loc-placeholder": "Konumu&#44; posta kodu&#44; adres (posta)&#44; NTS sayısının adını belirtin ...",
 	"geo-loc-label": "Konum",
 	"geo-aoi-north": "Kuzey",
@@ -199,24 +214,45 @@ wb.i18nDict = {
 	"geo-aoi-south": "Güney",
 	"geo-aoi-west": "Batı",
 	"geo-aoi-instructions": "Harita üzerinde kutusu çizmek ya da aşağıdaki koordinatları girin ve \"Ekle\" düğmesine tıklayın.",
+	"geo-aoi-title": "Draw box on map or enter coordinates",
 	"geo-aoi-btndraw": "Çizmek",
 	"geo-aoi-btnclear": "Kaldırmak",
 	"geo-geoloc-btn": "Geçerli konuma yakınlaştırma",
 	"geo-geoloc-fail": "Yer başarısız oldu. Yer hizmetleri etkin olduğundan emin olun.",
 	"geo-geoloc-uncapable": "Yerelleştirme tarayıcınız tarafından desteklenmiyor.",
 	"geo-lgnd-grphc": "Harita katmanı için efsane grafik.",
+
 	/* Disable/enable WET plugins and polyfills */
-	"wb-disable": "Basit HTML sürümü",
-	"wb-enable": "Standart sürüm",
+	"wb-disable": "Switch to basic HTML version",
+	"wb-enable": "Switch to standard version",
+	"disable-notice-h": "Notice: Basic HTML",
+	"disable-notice": "You are viewing Basic HTML view. Some features may be disabled.",
+	"skip-prefix": "Skip to:",
+
 	/* Dismissable content */
 	"dismiss": "Dismiss",
+
 	/* Template */
-	"tmpl-signin": "Giriş Yapın"
+	"tmpl-signin": "Giriş Yapın",
+
+	/* Filter */
+	"fltr-lbl": "Filter<span class=\"wb-inv\"> content: results appear below as you type.</span>",
+	"fltr-info": "Showing _NBITEM_ filtered from _TOTAL_ total entries"
 };
 
 } )( wb );
 
 wb.doc.one( "formLanguages.wb", function() {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: TR (Turkish; Türkçe)
@@ -233,14 +269,16 @@ $.extend( $.validator.messages, {
 	creditcard: "Lütfen geçerli bir kredi kartı giriniz.",
 	equalTo: "Lütfen aynı değeri tekrar giriniz.",
 	extension: "Lütfen geçerli uzantıya sahip bir değer giriniz.",
+	phone: "Lütfen geçerli bir telefon numarası giriniz.",
 	maxlength: $.validator.format( "Lütfen en fazla {0} karakter uzunluğunda bir değer giriniz." ),
 	minlength: $.validator.format( "Lütfen en az {0} karakter uzunluğunda bir değer giriniz." ),
 	rangelength: $.validator.format( "Lütfen en az {0} ve en fazla {1} uzunluğunda bir değer giriniz." ),
 	range: $.validator.format( "Lütfen {0} ile {1} arasında bir değer giriniz." ),
 	max: $.validator.format( "Lütfen {0} değerine eşit ya da daha küçük bir değer giriniz." ),
 	min: $.validator.format( "Lütfen {0} değerine eşit ya da daha büyük bir değer giriniz." ),
-	require_from_group: "Lütfen bu alanların en az {0} tanesini doldurunuz."
+	require_from_group: $.validator.format( "Lütfen bu alanların en az {0} tanesini doldurunuz." )
 } );
-
+return $;
+}));
 
 });
