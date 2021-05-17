@@ -121,12 +121,11 @@ avaMapJS.cbw_func = {
         }
     },
 
-    changeSurface: function(evt){
-        let layerName = evt.target.value;
+    changeSurface: function(layerName){
         if(layerName === avaMapJS.cbw_func.currentSurface)return;
+        avaMapJS.cbw_func.wmts_layers[layerName].setVisibility(true);
         avaMapJS.cbw_func.wmts_layers[avaMapJS.cbw_func.currentSurface].setVisibility(false);
         avaMapJS.cbw_func.currentSurface = layerName;
-        avaMapJS.cbw_func.wmts_layers[avaMapJS.cbw_func.currentSurface].setVisibility(true);
     },
 
     /*** Page-specific functions ***/

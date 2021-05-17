@@ -24,10 +24,12 @@ var avaMapJS = {};
 
     loadJS(avaDefsScript).then(function(){
       // Map Options and constructor
-      var opNav = new OpenLayers.Control.Navigation({'zoomWheelEnabled':false});
       var options = {
         maxExtent: new OpenLayers.Bounds(-13625920,6283000,-13941007,6458623),//-125,49,-121,50),
-        controls:[new oscar.Control.PanZoomBar,  new OpenLayers.Control.MousePosition, new OpenLayers.Control.ScaleLine, opNav],
+        controls:[
+          new oscar.Control.PanZoomBar,  new OpenLayers.Control.MousePosition,
+          new OpenLayers.Control.ScaleLine
+        ],
         projection: new OpenLayers.Projection("EPSG:3857"),
         displayProjection: new OpenLayers.Projection("EPSG:4326"),
         units:"m",
@@ -102,6 +104,7 @@ var avaMapJS = {};
             type: "Road",
             key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
           });
+        bingStreet.setVisibility(false);
       } else {
         //bingAerial = new OpenLayers.Layer.Google("Google", {});
         bingAerial = new OpenLayers.Layer.Bing("Bing", {});
@@ -109,23 +112,6 @@ var avaMapJS = {};
 
       var baseLayer = bingAerial;
 
-      var navControl = avaMapJS.map.getControlsByClass('OpenLayers.Control.Navigation');
-      for (var i = 0; i < navControl.length; i++){
-        navControl[i].disableZoomWheel();
-      }
-
-      // WMS Avadepth Bathymetry Layer
-      var wmsLayer = new OpenLayers.Layer.WMS(
-        "Bathymetry",
-        "http://www2.pac.dfo-mpo.gc.ca/spatialfusionserver/services/ows/wms/avadepth",
-        {layers: "Avadepth_surfaces",transparent:true,isBaseLayer:false,format:'image/png'},
-        //"http://localhost:8080/spatialfusionserver/services/ows/wms/bdb",
-        //{layers: "sample_depth",transparent:true,isBaseLayer:false,format:'image/png'},
-        {alpha:true}
-      );
-
-      baseLayer = bingAerial;
-      bingStreet.setVisibility(false);
       // Add layers
       //avaMapJS.map.addLayers([bingAerial,wmsLayer]);
       avaMapJS.map.addLayers([baseLayer]);

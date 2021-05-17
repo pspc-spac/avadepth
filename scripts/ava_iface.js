@@ -17,6 +17,16 @@ var loadJS = function(name, callback) {
         });
 };
 
+let body = document.getElementsByTagName("body")[0];
+let mapEl = document.getElementById("map");
+
+mapEl.addEventListener("mouseenter", ev => {
+    body.classList.add("noscroll");
+}, false);
+mapEl.addEventListener("mouseleave", ev => {
+    body.classList.remove("noscroll");
+}, false);
+
 // Create global variables
 var page_lang = $('html').attr('lang');
 
