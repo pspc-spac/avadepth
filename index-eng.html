@@ -1,13 +1,5 @@
 <!--#include virtual="/includes/header-eng.html" -->
 <!-- MainContentStart -->
-<script>
-  $(function() {
-    $.getJSON("db_last_modified.pl", function(data) {
-      $('#last_modified').html(data.last_updated)
-    });
-  });
-</script>
-
 <aside class="prm-flpr">
 <div class="container">
 <div class="row">
@@ -158,5 +150,5 @@ channel depths change rapidly due to river flow conditions.</p>
 </div>
 </aside>
 <br>
-<p style="float:right;margin-bottom:-10px">Database last updated: <span id="last_modified"></span> PST</p>
+<p style="float:right;margin-bottom:-10px">Database last updated: <!--#include virtual="/Data/updated.inc" --> PST</p>
 <!--#include virtual="/includes/footer-eng.html" -->
