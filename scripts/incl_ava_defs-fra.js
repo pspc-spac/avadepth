@@ -777,7 +777,7 @@ var padZero = function(num){
         reportBody:[
           {tag:'div',attr:{id:'conditions'},child:[
             {tag:'div',attr:{id:'soundings-header'},child:[
-              {tag:'table',attr:{className:'print-margin-0',style:'margin: 0 auto; width: 950px;'},child:[
+              {tag:'table',attr:{className:'print-margin-0',style:'margin: 0 auto; width: 950px; font-size: 15px'},child:[
                 {tag:'thead',child:[
                 {tag:'tr',child:[
                   {tag:'td',attr:{className:'align-left'},child:["Remarque : Toutes les profondeurs et tous les sondages sont relatifs au niveau d’eau basse local."]}
@@ -806,7 +806,7 @@ var padZero = function(num){
             ]},
             {tag:'div',attr:{className:'clear'}},
             {tag:'br'},
-            {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0', style:'width: 800px'},child:[
+            {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0', style:'width: 800px; font-size: 15px'},child:[
               {tag:'thead',child:[
                 {tag:'tr',attr:{className:'first-row'},child:[
                   {tag:'th',attr:{colspan:3,style:'background-color: white;'}},
