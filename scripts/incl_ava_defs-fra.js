@@ -174,20 +174,46 @@ var padZero = function(num){
               {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Couches:"]},
               {tag: "div", child: [
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked"}},
-                  "sondages",
+                  " sondages",
                   {tag: "br"},
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
-                  "chenal", {tag: "br"},
+                  " chenal", {tag: "br"},
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
-                  "surfaces:", {tag: "br"},
-                  {tag: "div", attr: {style: "margin-left: 25px"}, child: [
-                      {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
-                      "bathymetrique", {tag: "br"},
-                      {tag: "input", attr: {type: "radio", name: "surface", value: "difference"}},
-                      "différence", {tag: "br"},
-                      {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
-                      "conformité", {tag: "br"}
-                    ]}
+                  " surfaces:", {tag: "br"},
+                  {tag: "div", attr: {class: "optionIndent"}, child: [
+                      {tag: "label", attr: {for: "surfTrans"}, child: ["transparence"]},
+                      {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
+                      "type de surface:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                        {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
+                        " bathymetrique", {tag: "br"},
+                        {tag: "input", attr: {type: "radio", name: "surface", value: "difference"}},
+                        " différence", {tag: "br"},
+                        {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
+                        " conformité", {tag: "br"}
+                      ]},
+                      "détails:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {id: "surf_combined", name: "surfDetails"}, child: [
+                              "surface généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}}
+                            ]},
+                          {tag: "div", attr: {id: "surf_conformance", name: "surfDetails"}, child: [
+                              "conformité généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}}
+                            ]},
+                          {tag: "div", attr: {id: "surf_difference", name: "surfDetails"}, child: [
+                              "différence généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}},
+                              " du surface généré ",
+                              {tag: "span", attr: {name: "srfDatePrev"}}
+                            ]},
+                        ]},
+                      "légende:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {id: "surfLegend"}}
+                      ]}
+                  ]}
                 ]}
             ]}
         ],

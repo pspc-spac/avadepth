@@ -3,6 +3,10 @@
 	width: 50%;
 }
 
+body.noscroll {
+    
+}
+
 #cn-content h2 {
   background:#555 url('/images/h-square.gif') no-repeat left top;
   color:#FFF;
@@ -312,6 +316,27 @@ a#toggleLink,summary#ref_map_link{
 	padding-top:10px;
 }
 
+#map_parameters .optionIndent {
+    margin-left: 25px;
+}
+
+#surfLegend table tr {
+    font-size: small;
+}
+
+#surfLegend table td,#surfLegend table th {
+    padding: 2px;
+    margin: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+div.surface_legend {
+    display:block;
+    height:13px;
+    width:30px;
+    margin: auto;
+}
 
 #detail_print{
 	visibility: hidden;
