@@ -187,8 +187,6 @@ var padZero = function(num){
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                         {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
                         " bathymetrique", {tag: "br"},
-                        {tag: "input", attr: {type: "radio", name: "surface", value: "difference"}},
-                        " différence", {tag: "br"},
                         {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
                         " conformité", {tag: "br"}
                       ]},
