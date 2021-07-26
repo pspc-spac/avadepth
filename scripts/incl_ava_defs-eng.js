@@ -164,23 +164,26 @@ var padZero = function(num){
             {tag: "div", attr: {classname: "span-4"}, child: [
                 {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers"]},
                 {tag: "div", child: [
-                    {tag: "input", attr: {type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked"}},
-                    " Soundings",
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
+                    {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
                     {tag: "br"},
-                    {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
-                    " Channel", {tag: "br"},
-                    {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
-                    " Surface:",
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" }},
+                    {tag: "div", attr: { class: "popup" }, child: [" Channel", { tag: "span", attr: { class: "popuptext" }, child: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"] }] },
+                    {tag: "br" },
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
+                    {tag: "div", attr: { class: "popup" }, child: [" Surface:", { tag: "span", attr: { class: "popuptext" }, child: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"] }] },
                     {tag: "div", attr: {class: "optionIndent"}, child: [
                       {tag: "label", attr: {for: "surfTrans"}, child: ["Layer Transparency"]},
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "Surface Type:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
-                          " Bathymetry", {tag: "br"},
-                          {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
-                          " Conformance", {tag: "br"}
-                      ]},
+                          {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
+                          {tag: "div", attr: { class: "popup" }, child: [" Bathymetry", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"] }] },
+                          {tag: "br" },
+                          {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
+                          {tag: "div", attr: { class: "popup" }, child: [" Conformance", { tag: "span", attr: { class: "popuptext" }, child: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"] }] },
+                          {tag: "br" }
+                        ]},
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                           {tag: "div", attr: {id: "surf_combined", name: "surfDetails"}, child: [

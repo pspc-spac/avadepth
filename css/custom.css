@@ -573,6 +573,32 @@ div#report_body table tr td {
     }
 }
 
+.popup {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.5em;
+}
+
+    .popup .popuptext {
+        visibility: hidden;
+        width: 200px;
+        border-style: solid;
+        background: white;
+        border-color: #0e4164;
+        border-width: thin;
+        color: black;
+        text-align: center;
+        padding: 5px 0;
+        position: absolute;
+        top: -5px;
+        margin-left: 0.5em;
+        z-index: 1;
+    }
+
+    .popup:hover .popuptext {
+        visibility: visible;
+    }
+
 /* everything below adds thick blue borders to the local nav and map border */
 /*
 #wb-main details summary {
