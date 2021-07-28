@@ -2,6 +2,8 @@
 
 Welcome to the project. This repository is responsible for hosting code related to Avadepth, a reporting application that helps mariners + shipping companies navigate the Fraser River South Arm Channel.
 
+---
+
 ## Setting up your dev environment
 
 ### Prerequisites
@@ -10,10 +12,11 @@ Welcome to the project. This repository is responsible for hosting code related 
 ### Getting up and running (using an http server)
 - Download and install [the latest version of WAMP](https://www.wampserver.com/en/)
   - default installation options should be sufficient for running avadepth
-- Start your WAMP server and create a listening port:
+- Start your WAMP server and confirm that the listening port assigned to Apache is available (microsoft uses port 80 on our gov laptops so you'll likely have to change the port):
   - A "W" wamp icon should appear in your taskbar (click arrow at bottom right corner of your screen) once Wamp is installed and running
-  - Right-click the wamp icon in your taskbar > tools > ports used by Apache > Add listen port for Apache > Enter desired port number (e.g. 3000, 8081)
-  - Right-click the wamp icon in your taskbar > tools > ports used by Apache > Use a port other than 80 > Enter the port number you entered in the previouse step
+  - To test if the default apache port is working, right-click the wamp icon in your taskbar > tools > ports used by Apache > Test port used. If the test fails, do the following:
+	- Right-click the wamp icon in your taskbar > tools > ports used by Apache > Add listen port for Apache > Enter desired port number (e.g. 3000, 8081)
+	- Right-click the wamp icon in your taskbar > tools > ports used by Apache > Use a port other than 80 > Enter the port number you entered in the previouse step
 - Configure web server to work with Avadepth:
   - left-click the wamp icon in your taskbar > Apache > httpd-vhosts.conf. Open the file.
   - Replace the contents of the file with the following (**make sure you replace the content in square [ ] brackets with your own ports/directory paths**):
@@ -46,13 +49,15 @@ Welcome to the project. This repository is responsible for hosting code related 
 - Left-click the Wamp icon in your taskbar > Restart All Services (Wamp server icon should turn green if everything is working as intended)
 - Open `http://localhost:<insert-apache-port-number>` to view Avadepth 
 
+---
+
 ## Contribution guidelines
 
 We follow the standard workflow of  `adopt a jira issue > branch off master > commit changes > create pull request`  
 
 ### Opening issues/Pull Requests
 
-- All issues are managed in [jira](https://jira.tpsgc-pwgsc.gc.ca/projects/AVA/issues/)
+- All issues are managed in [jira](https://jira.tpsgc-pwgsc.gc.ca/projects/AVD/issues/)
 - When creating an issue, choose the type (bug vs feature) and priority, then fill in the description
 - For bug descriptions, please include steps to replicate
 - For feature descriptions, please include context/the problem being solved + requirements (bonus points for possible solutions)
@@ -61,7 +66,7 @@ We follow the standard workflow of  `adopt a jira issue > branch off master > co
 ### Creating and committing to a branch
 
 - Update the status of your jira issue to `In Progress`
-- Use [your jira issue's](https://jira.tpsgc-pwgsc.gc.ca/projects/AVA/issues/) "create branch" feature, and select the appropriate branch type (bug vs feature). Make sure to branch from master (unless you need to branch from another branch currently being reviewed).
-- All branch names should include jira issue keys (e.g. feature/AVA-50, bugfix/AVA-30, etc)
-- All commits should include the jira issue key of the branch (e.g. `git commit -m "AVA-30: Fixed bug X by doing Y"`)
+- Use [your jira issue's](https://jira.tpsgc-pwgsc.gc.ca/projects/AVD/issues/) "create branch" feature, and select the appropriate branch type (bug vs feature). Make sure to branch from master (unless you need to branch from another branch currently being reviewed).
+- All branch names should include jira issue keys (e.g. feature/AVD-50, bugfix/AVD-30, etc)
+- All commits should include the jira issue key of the branch (e.g. `git commit -m "AVD-30: Fixed bug X by doing Y"`)
 - When you are finished your issue, create a pull request and change your jira issue status to `In Review`
