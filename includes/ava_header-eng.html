@@ -70,32 +70,22 @@ wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licenc
 </li>
 </ul>
 
-<header role="banner" class="print_hide">
+<header>
 <div id="wb-bnr" class="container">
-<section id="wb-lng" class="visible-md visible-lg text-right">
+<section id="wb-lng" class="text-right">
 <h2 class="wb-inv">Language selection</h2>
-<div class="row">
-<div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <li><a href="/language.asp" lang="fr">Français</a></li>
 </ul>
-</div>
-</div>
 </section>
 <div class="row">
-<div class="brand col-xs-8 col-sm-9 col-md-6">
-<a href="http://www.canada.ca/en/index.html"><object type="image/svg+xml" tabindex="-1" data="/GCWeb/assets/sig-blk-en.svg">Government of Canada</object><span class="wb-inv"> Government of Canada</span></a>
+<div class="brand col-xs-5 col-md-4">
+<a href="https://www.canada.ca/en.html"><img src="./GCWeb/assets/sig-blk-en.svg" alt=""><span class="wb-inv"> Government of Canada / <span lang="fr">Gouvernement du Canada</span></span></a>
 </div>
-<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn">
-<h2>Search and menus</h2>
-<ul class="list-inline text-right chvrn">
-<li><a href="#mb-pnl" title="Search and menus" aria-controls="mb-pnl" class="overlay-lnk" role="button"><span class="glyphicon glyphicon-search"><span class="glyphicon glyphicon-th-list"><span class="wb-inv">Search and menus</span></span></span></a></li>
-</ul>
-<div id="mb-pnl"></div>
-</section>
-<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<section id="wb-srch" class="col-lg-8 text-right visible-md visible-lg">
 <h2>Search</h2>
-<form action="https://www.canada.ca/en/sr.html" method="get" name="cse-search-box" role="search" class="form-inline">
+<form action="#" method="post" name="cse-search-box" role="search" class="form-inline">
+<div class="form-group">
 <input name="st" value="s" type="hidden" />
 <input name="s5bm3ts21rch" value="x" type="hidden" />
 <input name="num" value="10" type="hidden" />
@@ -103,9 +93,8 @@ wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licenc
 <input name="langs" value="en" type="hidden" />
 <input name="cdn" value="canada" type="hidden" />
 <input name="hq" type="hidden" />
-<div class="form-group">
-<label for="wb-srch-q" class="wb-inv">Search website</label>
-<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="27" maxlength="150" placeholder="Search Canada.ca" />
+<label for="wb-srch-q" class="wb-inv">Search Canada.ca</label>
+<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="34" maxlength="170" placeholder="Search Canada.ca" />
 <datalist id="wb-srch-q-ac">
 <!--[if lte IE 9]><select><![endif]-->
 <!--[if lte IE 9]></select><![endif]-->
@@ -118,35 +107,30 @@ wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licenc
 </section>
 </div>
 </div>
-<nav role="navigation" id="wb-sm" data-ajax-replace="https://cdn.canada.ca/gcweb-cdn-live/sitemenu/sitemenu-en.html" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
-<div class="container nvbar">
-<h2>Topics menu</h2>
-<div class="row">
-<ul class="list-inline menu">
-<li><a href="http://www.esdc.gc.ca/en/jobs/index.page">Jobs</a></li>
-<li><a href="http://www.cic.gc.ca/english/index.asp">Immigration</a></li>
-<li><a href="http://travel.gc.ca">Travel</a></li>
-<li><a href="http://www.canada.ca/en/services/business/index.html">Business</a></li>
-<li><a href="http://www.canada.ca/en/services/benefits/index.html">Benefits</a></li>
-<li><a href="http://healthycanadians.gc.ca/index-eng.php">Health</a></li>
-<li><a href="http://www.canada.ca/en/services/taxes/index.html">Taxes</a></li>
-<li><a href="http://www.canada.ca/en/services/index.html">More services</a></li>
-</ul>
-</div>
-</div>
-</nav>
-<nav role="navigation" id="wb-bc" property="breadcrumb">
-<h2>You are here:</h2>
-<div class="container">
-<div class="row">
-  <ol class="breadcrumb">
-    <li><a href="https://www.canada.ca/en.html">Canada.ca</a></li>
-    <li><a href="https://www.ccg-gcc.gc.ca/index-eng.html">Canadian Coast Guard</a></li>
-    <li><a href="https://www.ccg-gcc.gc.ca/navigation/index-eng.html">Navigation</a></li>
-    <li><a href="/index-eng.html">Avadepth</a></li>
-  </ol>
-</div>
-</div>
+language for the button. It's the invisible complementary text.
+
+<nav class="gcweb-menu" typeof="SiteNavigationElement">
+  <div class="container">
+    <h2 class="wb-inv">Menu</h2>
+    <button type="button" aria-haspopup="true" aria-expanded="false"><span class="wb-inv">Main </span>Menu <span class="expicon glyphicon glyphicon-chevron-down"></span></button>
+    <ul role="menu" data-ajax-replace="https://www.canada.ca/content/dam/canada/sitemenu/sitemenu-v2-en.html">
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/jobs.html">Jobs and the workplace</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/immigration-citizenship.html">Immigration and citizenship</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://travel.gc.ca/">Travel and tourism</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/business.html">Business and industry</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/benefits.html">Benefits</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/health.html">Health</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/taxes.html">Taxes</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/environment.html">Environment and natural resources</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/defence.html">National security and defence</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/culture.html">Culture, history and sport</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/policing.html">Policing, justice and emergencies</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/transport.html">Transport and infrastructure</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://international.gc.ca/world-monde/index.aspx?lang=eng">Canada and the world</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/finance.html">Money and finances</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/science.html">Science and innovation</a></li>
+    </ul>
+  </div>
 </nav>
 </header>
 
@@ -187,6 +171,6 @@ wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licenc
 </div>
 
 <input type="hidden"
-  id="lang"
-  name="lang"
-  value="eng" />
+id="lang"
+name="lang"
+value="eng" />
