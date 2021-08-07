@@ -11719,23 +11719,26 @@ a.shr-opn, a.shr-opn:hover {
 .home .gcweb-menu {
   border-top: 1px solid #ddd;
   color: #284162;
-  margin-left: 0px; }
-
-.home .gcweb-menu button[aria-haspopup=true] {
-  background-color: #fff;
-  border-color: #fff;
-  color: #284162; }
-  .home .gcweb-menu button[aria-haspopup=true]:hover {
-    background-color: #444;
-    color: #fff; }
-
-/*
+  margin-left: 0px;
+}
+  .home .gcweb-menu button[aria-haspopup=true] {
+    background-color: #26374a;
+    border: 1px solid #26374a;
+    color: #fff;
+    margin-left: 0;
+    padding: .5em 1em;
+    text-transform: uppercase
+  }
+    .home .gcweb-menu button[aria-haspopup=true]:hover {
+      background-color: #444;
+      color: #fff;
+      /*
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
  * GCWeb v5 (gcweb-menu)
  *
  */
-.gcweb-menu {
+      .gcweb-menu {
   /*
 	 * Level 0 - button menu
 	 */
