@@ -285,20 +285,20 @@ a#toggleLink,summary#ref_map_link{
 	left:10000px;
 	margin-bottom: 50px;
 }
-#pBar{
-	border: 2px solid #1a568c;
-	background-color: #ffffff;
-	width: 300px;
-	float: right;
-	z-index:105;
+#pBar {
+  border: 2px solid #26374a;
+  background-color: #ffffff;
+  width: 300px;
+  float: right;
+  z-index: 105;
 }
 
-#pBarHeaderContainer{
-	width: 300px;
-	background-color:#1a568c;
-	color:#ffffff;
-	float:left;
-	cursor: pointer;
+#pBarHeaderContainer {
+  width: 300px;
+  background-color: #26374a;
+  color: #ffffff;
+  float: left;
+  cursor: pointer;
 }
 
 #pBarHeader{
