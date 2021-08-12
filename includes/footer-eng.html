@@ -1,41 +1,28 @@
 <div class="clear"></div>
 <!-- MainContentEnd -->
 </div>
+<div class="pagedetails">
+  <div class="row">
+    <div class="col-sm-6 col-md-5 col-lg-4">
+      <details class="brdr-0">
+        <summary class="btn btn-default text-center">Report a problem on this page</summary>
+        <div class="well row">
+
+          <!-- Report a probleme inline form code here -->
+
+        </div>
+      </details>
+    </div>
+    <!-- Share button -->
+    <div class="wb-share col-sm-4 col-md-3 col-sm-offset-2 col-md-offset-4 col-lg-offset-5" data-wb-share='{"lnkClass": "btn btn-default btn-block"}'></div>
+    <!-- END Share button -->
+  </div>
+  <dl id="wb-dtmd">
+    <dt>Date modified: </dt>
+    <dd><time property="dateModified">YYYY-MM-DD</time></dd>
+  </dl>
+</div>
 </main>
-
-<div class="container print_hide">
-<div class="row pagedetails">
-<div class="col-sm-5 col-xs-12 datemod">
-<dl id="wb-dtmd">
-<dt>Date modified:&#32;</dt>
-<dd><time property="dateModified" id="dateModified">
-<script>
-var dateLast = Date(document.lastModified);
-var format = { month : 'numeric', day : 'numeric', year: 'numeric' };
-var dateConvert = new Date(dateLast).toLocaleDateString('en-CA', format);
-document.write(dateConvert);
-</script>
-</time></dd>
-</dl>
-</div>
-<div class="clear visible-xs"></div>
-<div class="col-sm-4 col-xs-6">
-<a href="http://www.canada.ca/en/contact/feedback.html" class="btn btn-default"><span class="glyphicon glyphicon-comment mrgn-rght-sm"></span>Feedback<span class="wb-inv"> about this web site</span></a>
-</div>
-<div class="col-sm-3 col-xs-6 text-right">
-<div class="wb-share" data-wb-share='{"lnkClass": "btn btn-default"}'></div>
-</div>
-<div class="clear visible-xs"></div>
-</div>
-</div>
-
-<aside class="gc-nttvs container print_hide">
-<h2>Government of Canada activities and initiatives</h2>
-<div class="wb-eqht row mrgn-bttm-md" data-ajax-replace="https://cdn.canada.ca/gcweb-cdn-live/features/features-en.html">
-    <p><ul><li><a href="http://www.canada.ca/en/">Visit the Canada.ca home page to see activities and initiatives in the Government of Canada.</a></li></ul></p>
-</div>
-</aside>
-
 <div id="wb-foot"><div id="wb-foot-in">
 
 <footer id="wb-info">
