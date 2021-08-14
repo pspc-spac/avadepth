@@ -2,77 +2,82 @@
 <!-- MainContentEnd -->
 </div>
 <div class="pagedetails">
-<div class="row">
-<div class="col-sm-6 col-md-5 col-lg-4">
-<details class="brdr-0">
-<summary class="btn btn-default text-center">Report a problem on this page</summary>
-<div class="well row">
+  <div class="container">
+  <div class="row">
+    <div class="col-sm-6 col-md-5 col-lg-4">
+      <details class="brdr-0">
+        <summary class="btn btn-default text-center">Report a problem on this page</summary>
+        <div class="well row">
 
-<!-- Report a probleme inline form code here -->
+          <!-- Report a probleme inline form code here -->
 
+        </div>
+      </details>
+    </div>
+    <!-- Share button -->
+    <div class="wb-share col-sm-4 col-md-3 col-sm-offset-2 col-md-offset-4 col-lg-offset-5" data-wb-share='{"lnkClass": "btn btn-default btn-block"}'></div>
+    <!-- END Share button -->
+  </div>
+  <dl id="wb-dtmd">
+    <dt>Date modified: </dt>
+    <dd>
+      <time property="dateModified">
+        <script>
+          var dateLast = Date(document.lastModified);
+          var format = { month: 'numeric', day: 'numeric', year: 'numeric' };
+          var dateConvert = new Date(dateLast).toLocaleDateString('en-CA', format);
+          document.write(dateConvert);
+        </script>
+      </time>
+    </dd>
+  </dl>
 </div>
-</details>
-</div>
-<!-- Share button -->
-<div class="wb-share col-sm-4 col-md-3 col-sm-offset-2 col-md-offset-4 col-lg-offset-5" data-wb-share='{"lnkClass": "btn btn-default btn-block"}'></div>
-<!-- END Share button -->
-</div>
-<dl id="wb-dtmd">
-<dt>Date modified: </dt>
-<dd>
-  <time property="dateModified">
-    <script>
-      var dateLast = Date(document.lastModified);
-      var format = { month: 'numeric', day: 'numeric', year: 'numeric' };
-      var dateConvert = new Date(dateLast).toLocaleDateString('en-CA', format);
-      document.write(dateConvert);
-</script>
-</time>
-</dd>
-</dl>
 </div>
 </main>
-<div id="wb-foot"><div id="wb-foot-in">
 
-<footer id="wb-info">
-<div class="landscape">
-<nav role="navigation" class="container wb-navcurr">
-<h2 class="wb-inv">About this site</h2>
-<ul class="list-unstyled colcount-sm-2 colcount-md-3">
-<li><a href="https://www.canada.ca/en/contact.html">Contact us</a></li>
-<li><a href="https://www.canada.ca/en/government/dept.html">Departments and agencies</a></li>
-<li><a href="https://www.canada.ca/en/government/publicservice.html">Public service and military</a></li>
-<li><a href="https://www.canada.ca/en/news.html">News</a></li>
-<li><a href="https://www.canada.ca/en/government/system/laws.html">Treaties, laws and regulations</a></li>
-<li><a href="https://www.canada.ca/en/transparency/reporting.html">Government-wide reporting</a></li>
-<li><a href="https://pm.gc.ca/en">Prime Minister</a></li>
-<li><a href="https://www.canada.ca/en/government/system.html">How government works</a></li>
-<li><a href="https://open.canada.ca/en">Open government</a></li>
-</ul>
-</nav>
+<div id="wb-foot">
+  <div id="wb-foot-in">
+    <footer id="wb-info">
+      <div class="landscape">
+        <nav role="navigation" class="container wb-navcurr">
+          <h2 class="wb-inv">About this site</h2>
+          <ul class="list-unstyled colcount-sm-2 colcount-md-3">
+            <li><a href="https://www.canada.ca/en/contact.html">Contact us</a></li>
+            <li><a href="https://www.canada.ca/en/government/dept.html">Departments and agencies</a></li>
+            <li><a href="https://www.canada.ca/en/government/publicservice.html">Public service and military</a></li>
+            <li><a href="https://www.canada.ca/en/news.html">News</a></li>
+            <li><a href="https://www.canada.ca/en/government/system/laws.html">Treaties, laws and regulations</a></li>
+            <li><a href="https://www.canada.ca/en/transparency/reporting.html">Government-wide reporting</a></li>
+            <li><a href="https://pm.gc.ca/en">Prime Minister</a></li>
+            <li><a href="https://www.canada.ca/en/government/system.html">How government works</a></li>
+            <li><a href="https://open.canada.ca/en">Open government</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="brand">
+        <div class="container">
+          <div class="row">
+            <nav class="col-md-9 col-lg-10 ftr-urlt-lnk">
+              <h2 class="wb-inv">About this site</h2>
+              <ul>
+                <li><a href="https://www.canada.ca/en/social.html">Social media</a></li>
+                <li><a href="https://www.canada.ca/en/mobile.html">Mobile applications</a></li>
+                <li><a href="https://www.canada.ca/en/government/about.html">About Canada.ca</a></li>
+                <li><a href="https://www.canada.ca/en/transparency/terms.html">Terms and conditions</a></li>
+                <li><a href="https://www.canada.ca/en/transparency/privacy.html">Privacy</a></li>
+              </ul>
+            </nav>
+            <div class="col-xs-6 visible-sm visible-xs tofpg"> <a href="#wb-cont">Top of page <span class="glyphicon glyphicon-chevron-up"></span></a> </div>
+            <div class="col-xs-6 col-md-3 col-lg-2 text-right"> <img src="/GCWeb/assets/wmms-blk.svg" alt="Symbol of the Government of Canada"> </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
 </div>
-<div class="brand">
-<div class="container">
-<div class="row">
-<nav class="col-md-9 col-lg-10 ftr-urlt-lnk">
-<h2 class="wb-inv">About this site</h2>
-<ul>
-<li><a href="https://www.canada.ca/en/social.html">Social media</a></li>
-<li><a href="https://www.canada.ca/en/mobile.html">Mobile applications</a></li>
-<li><a href="https://www.canada.ca/en/government/about.html">About Canada.ca</a></li>
-<li><a href="https://www.canada.ca/en/transparency/terms.html">Terms and conditions</a></li>
-<li><a href="https://www.canada.ca/en/transparency/privacy.html">Privacy</a></li>
-</ul>
-</nav>
-<div class="col-xs-6 visible-sm visible-xs tofpg"> <a href="#wb-cont">Top of page <span class="glyphicon glyphicon-chevron-up"></span></a> </div>
-<div class="col-xs-6 col-md-3 col-lg-2 text-right"> <img src="/GCWeb/assets/wmms-blk.svg" alt="Symbol of the Government of Canada"> </div>
-</div>
-</div>
-</div>
-</footer>
-</div>
-</div>
+
 <!--[if gte IE 9 | !IE ]><!-->
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
 <script src="/wet-boew/js/wet-boew.min.js"></script>
 <!--<![endif]-->
 <!--[if lt IE 9]>
