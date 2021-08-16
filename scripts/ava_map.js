@@ -66,7 +66,7 @@ var avaMapJS = {};
           var button = document.createElement('button');
           var textSpan = document.createElement('span');
 
-          textSpan.innerHTML = incl_ava_defs.ava_map.toggleLayerBtn.street;
+          textSpan.innerHTML = incl_ava_defs.ava_map.toggleLayerBtn.aerial;
           textSpan.setAttribute("id", "toggleButtonTxt");
           textSpan.setAttribute("style", "font: 140% helvetica,arial,clean,sans-serif;");
 
@@ -104,13 +104,13 @@ var avaMapJS = {};
             type: "Road",
             key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
           });
-        bingStreet.setVisibility(false);
+          bingAerial.setVisibility(false);
       } else {
         //bingAerial = new OpenLayers.Layer.Google("Google", {});
         bingAerial = new OpenLayers.Layer.Bing("Bing", {});
       }
 
-      var baseLayer = bingAerial;
+        var baseLayer = bingStreet;
 
       // Add layers
       //avaMapJS.map.addLayers([bingAerial,wmsLayer]);
