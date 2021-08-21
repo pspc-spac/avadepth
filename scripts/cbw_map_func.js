@@ -76,7 +76,7 @@ avaMapJS.cbw_func = {
                         format: "image/png",
                         isBaseLayer: false,
                         requestEncoding: 'REST',
-                        url: `${avadepthSFE}/1.0.0/Outline.Fraser_Outline_Cells/${SFETileFormat}`
+                        url: `${avadepthSFE}/1.0.0/FRSA_Channel_Cells.FRSA_Outline_Cells/${SFETileFormat}`
                     }),
                     channel_outline: format_cap.createLayer(capabilities, {
                         layer: "Outline.Fraser_Outline_Channel",
@@ -85,11 +85,12 @@ avaMapJS.cbw_func = {
                         format: "image/png",
                         isBaseLayer: false,
                         requestEncoding: 'REST',
-                        url: `${avadepthSFE}/1.0.0/Outline.Fraser_Outline_Channel/${SFETileFormat}`
+                        url: `${avadepthSFE}/1.0.0/FRSA_Channel_Outline.FRSA_Outline_Channel/${SFETileFormat}`
                     })
                 }
                 avaMapJS.cbw_func.wmts_layers.difference.setVisibility(false);
                 avaMapJS.cbw_func.wmts_layers.conformance.setVisibility(false);
+                avaMapJS.cbw_func.wmts_layers.channel_cells.setVisibility(false);
                 avaMapJS.map.addLayers([
                     avaMapJS.cbw_func.wmts_layers.combined,
                     avaMapJS.cbw_func.wmts_layers.difference,

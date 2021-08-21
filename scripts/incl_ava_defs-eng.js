@@ -168,7 +168,10 @@ var padZero = function(num){
                     " Soundings",
                     {tag: "br"},
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
-                    " Channel", {tag: "br"},
+                    " Channel&nbsp;&nbsp;",
+                    {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells"}},
+                    " Show Cells",
+                    {tag: "br"},
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
                     " Surface:",
                     {tag: "div", attr: {class: "optionIndent"}, child: [

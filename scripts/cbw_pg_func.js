@@ -1,7 +1,10 @@
 let elementIds = [
-    "chkLyrChannel",
     "chkLyrSounding",
     "chkLyrSurface"
+]
+let channelIds = [
+    "chkLyrChannel",
+    "chkLyrCells",
 ]
 
 function addWatch() {
@@ -12,6 +15,9 @@ function addWatch() {
             for(let lyr of elementIds){
                 let el = document.getElementById(lyr);
                 el.addEventListener('click', avaIFaceJS.mapJS.cbw_func.triggerLayer, false);
+            }
+            for(let lyr of channelIds){
+                document.getElementById(lyr).addEventListener("click", avaIFaceJS.cbw_func.toggleChannelCells, false);
             }
             for(let el of document.getElementsByName('surface')){
                 el.addEventListener('click', avaIFaceJS.cbw_func.changeSurface, false);
@@ -121,6 +127,14 @@ avaIFaceJS.cbw_func = {
             }
         }
     ],
+
+    toggleChannelCells: function(evt) {
+        let channels = document.getElementById("chkLyrChannel");
+        let cells = document.getElementById("chkLyrCells");
+        let wmtsLayers = avaIFaceJS.mapJS.cbw_func.wmts_layers;
+        wmtsLayers.channel_outline.setVisibility(channels.checked && !cells.checked);
+        wmtsLayers.channel_cells.setVisibility(channels.checked && cells.checked);
+    },
 
     changeSurface: function(evt) {
         let layerName = evt.target.value;
