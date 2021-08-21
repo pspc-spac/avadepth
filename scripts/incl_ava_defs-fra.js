@@ -178,7 +178,7 @@ var padZero = function(num){
                   {tag: "br"},
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
                   " chenal&nbsp;&nbsp;",
-                  {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells"}},
+                  {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
                   " montre cellules", {tag: "br"},
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
                   " surfaces:", {tag: "br"},
