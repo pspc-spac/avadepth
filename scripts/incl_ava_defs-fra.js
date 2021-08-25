@@ -1034,15 +1034,15 @@ var padZero = function(num){
   var mapStyle = {
   
       // Default Styles and map constants
-      wid1: '7.0',
+      wid1: '5.0',
       wid2: '2.0',
       col1: '#ffff00',
-      col2: '#28eafc',
+      col2: '#1d73b5',
       sel1: '#00ffff',
       black: '#000000',
       white: '#ffffff',
       op1: 0.2,
-      op2: 0.1,
+      op2: 0.3,
       op_sel: 0.5,
       callback_function: undefined,
       cl: function (feat, c1, c2) { return (mapStyle.callback_function(feat) ? c1 : c2) },
