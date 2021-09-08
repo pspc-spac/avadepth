@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Created by wsiddall on 14/07/2014.
  */
 
@@ -173,24 +173,28 @@ var padZero = function(num){
           {tag: "div", attr: {classname: "span-4"}, child: [
               {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Couches:"]},
               {tag: "div", child: [
-                  {tag: "input", attr: {type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked"}},
-                  " sondages",
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
+                  {tag: "div", attr: { class: "popup" }, child: [" sondages", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
                   {tag: "br"},
-                  {tag: "input", attr: {type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked"}},
-                  " chenal&nbsp;&nbsp;",
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" } },
+                  {tag: "div", attr: { class: "popup" }, child: [" chenal&nbsp;&nbsp;", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
-                  " montre cellules", {tag: "br"},
-                  {tag: "input", attr: {type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked"}},
-                  " surfaces:", {tag: "br"},
+                  " montre cellules",
+                  {tag: "br"},
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
+                  {tag: "div", attr: { class: "popup" }, child: [" surfaces:", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                  {tag: "br"},
                   {tag: "div", attr: {class: "optionIndent"}, child: [
                       {tag: "label", attr: {for: "surfTrans"}, child: ["transparence"]},
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "type de surface:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                        {tag: "input", attr: {type: "radio", name: "surface", value: "combined", checked: "checked"}},
-                        " bathymetrique", {tag: "br"},
-                        {tag: "input", attr: {type: "radio", name: "surface", value: "conformance"}},
-                        " conformité", {tag: "br"}
+                          {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
+                          {tag: "div", attr: { class: "popup" }, child: [" bathymetrique", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                          {tag: "br"},
+                          {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
+                          {tag: "div", attr: { class: "popup" }, child: [" conformité", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                          {tag: "br"}
                       ]},
                       "détails:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
