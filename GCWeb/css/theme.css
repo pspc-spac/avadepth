@@ -2,7 +2,7 @@
 /*!
  * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
  * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
- * v9.2.0 - 2021-03-15
+ * v9.4.1 - 2021-06-18
  *
  */
 /*
@@ -16,7 +16,7 @@
  */
 /* Headings font-sizes */
 /* Small font-size */
-/* Bold weight */
+/* Font weight */
 /*
 Left menu variables
 */
@@ -1232,22 +1232,22 @@ h6, .h6 {
     font-size: 75%; }
 
 h1, .h1 {
-  font-size: 34px; }
+  font-size: 1.9em; }
 
 h2, .h2 {
-  font-size: 26px; }
+  font-size: 1.8em; }
 
 h3, .h3 {
-  font-size: 22px; }
+  font-size: 1.2em; }
 
 h4, .h4 {
-  font-size: 18px; }
+  font-size: 1.1em; }
 
 h5, .h5 {
-  font-size: 16px; }
+  font-size: 1em; }
 
 h6, .h6 {
-  font-size: 14px; }
+  font-size: 0.95em; }
 
 p {
   margin: 0 0 11.5px; }
@@ -5912,7 +5912,8 @@ abbr[title] {
     border-bottom: 0;
     -webkit-text-decoration: underline dotted;
             text-decoration: underline dotted;
-    text-decoration-skip-ink: none; } }
+    -webkit-text-decoration-skip-ink: none;
+            text-decoration-skip-ink: none; } }
 
 /*
  *	Override the design of alerts and labels
@@ -6268,6 +6269,9 @@ mark {
   background-color: #ff0;
   color: #000;
   font-weight: 700; }
+
+[hidden] {
+  display: none !important; }
 
 /*
   WET-BOEW
@@ -7113,14 +7117,17 @@ q:before, q:after {
 
 .colcount-xxs-2 {
   -webkit-column-count: 2;
+     -moz-column-count: 2;
           column-count: 2; }
 
 .colcount-xxs-3 {
   -webkit-column-count: 3;
+     -moz-column-count: 3;
           column-count: 3; }
 
 .colcount-xxs-4 {
   -webkit-column-count: 4;
+     -moz-column-count: 4;
           column-count: 4; }
 
 .full-width {
@@ -8238,7 +8245,7 @@ body.wb-modal .modal-dialog summary {
 
 .wb-mm-cc:before, .wb-mm-cc div {
   display: table-cell;
-  height: 3em;
+  height: 2.875em;
   vertical-align: middle; }
 
 .wb-mltmd {
@@ -8269,8 +8276,8 @@ body.wb-modal .modal-dialog summary {
     width: 100%; }
   .wb-mltmd.cc_on .wb-mm-cc {
     display: table;
-    height: 4em;
-    padding: .5em; }
+    height: calc(2.875em + 1em);
+    padding: 0.5em; }
   .wb-mltmd.cc_on:not(.errmsg) .cc:after {
     border-bottom: 3px solid #4aafff;
     content: " ";
@@ -8293,6 +8300,10 @@ body.wb-modal .modal-dialog summary {
           color: #000; }
   .wb-mltmd .wb-share {
     text-align: right; }
+  .wb-mltmd summary,
+  .wb-mltmd details[open] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0; }
 
 .wb-mm-cc {
   background-color: #000;
@@ -10193,12 +10204,15 @@ details {
  */
   .colcount-xs-2 {
     -webkit-column-count: 2;
+       -moz-column-count: 2;
             column-count: 2; }
   .colcount-xs-3 {
     -webkit-column-count: 3;
+       -moz-column-count: 3;
             column-count: 3; }
   .colcount-xs-4 {
     -webkit-column-count: 4;
+       -moz-column-count: 4;
             column-count: 4; }
   /*
  * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
@@ -10248,12 +10262,15 @@ details {
  */
   .colcount-sm-2 {
     -webkit-column-count: 2;
+       -moz-column-count: 2;
             column-count: 2; }
   .colcount-sm-3 {
     -webkit-column-count: 3;
+       -moz-column-count: 3;
             column-count: 3; }
   .colcount-sm-4 {
     -webkit-column-count: 4;
+       -moz-column-count: 4;
             column-count: 4; }
   .pstn-lft-sm {
     position: absolute;
@@ -10292,12 +10309,15 @@ details {
  */
   .colcount-md-2 {
     -webkit-column-count: 2;
+       -moz-column-count: 2;
             column-count: 2; }
   .colcount-md-3 {
     -webkit-column-count: 3;
+       -moz-column-count: 3;
             column-count: 3; }
   .colcount-md-4 {
     -webkit-column-count: 4;
+       -moz-column-count: 4;
             column-count: 4; }
   .pstn-lft-md {
     position: absolute;
@@ -10382,12 +10402,15 @@ details {
  */
   .colcount-lg-2 {
     -webkit-column-count: 2;
+       -moz-column-count: 2;
             column-count: 2; }
   .colcount-lg-3 {
     -webkit-column-count: 3;
+       -moz-column-count: 3;
             column-count: 3; }
   .colcount-lg-4 {
     -webkit-column-count: 4;
+       -moz-column-count: 4;
             column-count: 4; }
   .pstn-lft-lg {
     position: absolute;
@@ -10496,12 +10519,15 @@ details {
  */
   .colcount-xl-2 {
     -webkit-column-count: 2;
+       -moz-column-count: 2;
             column-count: 2; }
   .colcount-xl-3 {
     -webkit-column-count: 3;
+       -moz-column-count: 3;
             column-count: 3; }
   .colcount-xl-4 {
     -webkit-column-count: 4;
+       -moz-column-count: 4;
             column-count: 4; } }
 
 /* Print view */
@@ -10584,7 +10610,7 @@ details {
   .mfp-content:before, .wb-overlay.open:before {
     content: attr(data-pgtitle);
     display: block;
-    font-size: 34px; }
+    font-size: 1.9em; }
   /*
  * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
  * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
@@ -10636,22 +10662,6 @@ details {
       max-height: none; }
   .wb-tabs > .tabpanels {
     overflow: visible !important; } }
-
-/* GCWeb Independant Component */
-/*
- * Global small component style
- *
- * Use this style sheet to define style for small component
- */
-/*
- * Redacted inline text style
- */
-.redacted {
-  display: inline-block;
-  line-break: anywhere;
-  overflow-wrap: break-word;
-  word-break: break-all;
-  word-wrap: break-word; }
 
 /*
  * GCWeb Theme
@@ -10742,7 +10752,7 @@ h1 {
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
   -webkit-font-variant-ligatures: no-common-ligatures;
           font-variant-ligatures: no-common-ligatures;
-  font-weight: 600; }
+  font-weight: 700; }
 
 .h3,
 .h4,
@@ -10752,6 +10762,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 
 /* Exclude temporary the form element from the font update, keep same style as before
  * - Rational: More testing and various adjustment need to be completed before to apply it
+ * - Fieldflow is brought to speed with the visual update with a clearly defined temporary class .gc-font-2019, but the class can be tried out on other forms
  */
 :not(#wb-srch) form, .checkbox, .checkbox-inline, .radio, .radio-inline, form .btn:not(.btn-call-to-action) {
   font-size: 16px;
@@ -10762,6 +10773,19 @@ form .btn:not(.btn-call-to-action), .form-control {
 
 legend {
   line-height: 1.65em; }
+
+.gc-font-2019, .gc-font-2019 label, .gc-font-2019 fieldset legend, .gc-font-2019 input[type="submit"], .gc-font-2019 select, .gc-font-2019 .wb-fieldflow-label ~ p, .gc-font-2019 + div, .gc-font-2019 + div label, .gc-font-2019 + div fieldset legend, .gc-font-2019 + div input[type="submit"], .gc-font-2019 + div select, .gc-font-2019 + div .wb-fieldflow-label ~ p {
+  font-size: 20px;
+  line-height: 1.65em; }
+
+.gc-font-2019 fieldset legend, .gc-font-2019 + div fieldset legend {
+  margin-bottom: 11.5px; }
+
+.gc-font-2019 input[type="checkbox"], .gc-font-2019 input[type="radio"], .gc-font-2019 + div input[type="checkbox"], .gc-font-2019 + div input[type="radio"] {
+  margin-top: 11px; }
+
+.gc-font-2019 [type="submit"], .gc-font-2019 select, .gc-font-2019 + div [type="submit"], .gc-font-2019 + div select {
+  padding: .54em 1em; }
 
 /* Force GCWeb release 4.0.29 font style
  *
@@ -10907,7 +10931,7 @@ aside.features {
     margin: 2em 0px; }
   .home .home-most-requested li {
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 26px;
     margin-top: 0px; }
   .home .home-your-gov {
@@ -11042,23 +11066,7 @@ a.figcaption {
   .pagedetails details {
     margin-bottom: 0; }
 
-h1, .h1 {
-  font-size: 1.9em; }
-
-h2, .h2 {
-  font-size: 1.8em; }
-
-h3, .h3 {
-  font-size: 1.2em; }
-
-h4, .h4 {
-  font-size: 1.1em; }
-
-h5, .h5 {
-  font-size: 1em; }
-
 h6, .h6 {
-  font-size: 0.95em;
   font-weight: 400; }
 
 /*
@@ -11067,9 +11075,15 @@ h6, .h6 {
 .wb-mltmd {
   margin-bottom: 10px;
   margin-top: 10px; }
+  .wb-mltmd.cc_on .wb-mm-cc {
+    height: calc(3.3em + 1em); }
 
 .wb-mltmd.video:not(.playing):not(.waiting) .display::after {
   line-height: 1.5em; }
+
+.wb-mm-cc:before,
+.wb-mm-cc div {
+  height: 3.3em; }
 
 .wb-mm-ctrls .wb-mm-txtonly p {
   white-space: nowrap; }
@@ -11095,6 +11109,21 @@ h6, .h6 {
       text-decoration: underline; }
   #archived-bnr .overlay-close {
     color: #000; }
+
+/*
+ * Global small component style
+ *
+ * Use this style sheet to define style for small component
+ */
+/*
+ * Redacted inline text style
+ */
+.redacted {
+  display: inline-block;
+  line-break: anywhere;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  word-wrap: break-word; }
 
 /*
  Banner
@@ -11286,6 +11315,8 @@ input.btn.btn-call-to-action {
 
 /*
  Details Summary Styling
+
+ There is no working example supporting those style
 */
 .dshbrd .cntrls li {
   padding-right: 0; }
@@ -11441,6 +11472,9 @@ header .brand {
 .margin-top-medium {
   margin-top: .75em !important; }
 
+/*
+ * Helper Classes
+ */
 #triangle-up {
   border-bottom: 10px solid #fff;
   border-left: 5px solid transparent;
@@ -11463,22 +11497,29 @@ header .brand {
  */
 main {
   position: relative; }
-  main .subtitle {
-    color: #555;
-    font-size: 1em;
-    font-weight: 300;
-    margin-bottom: 1em; }
-  main .departments .learnmore {
-    padding: 3em 0; }
-  main .priorities {
-    padding-top: 2em; }
-    main .priorities .thumbnail {
-      margin-bottom: 1.5em;
-      padding: 1em; }
-  main .gc-rms-lngth img {
-    background-color: #fff;
-    border: solid 1px #e1e4e7;
-    padding: 18px; }
+
+/*
+ * Main content area
+ */
+main .subtitle {
+  color: #555;
+  font-size: 1em;
+  font-weight: 300;
+  margin-bottom: 1em; }
+
+main .departments .learnmore {
+  padding: 3em 0; }
+
+main .priorities {
+  padding-top: 2em; }
+  main .priorities .thumbnail {
+    margin-bottom: 1.5em;
+    padding: 1em; }
+
+main .gc-rms-lngth img {
+  background-color: #fff;
+  border: solid 1px #e1e4e7;
+  padding: 18px; }
 
 /*
  * Overlay-specific overrides
@@ -11551,6 +11592,9 @@ main {
   margin-left: 0;
   margin-right: 5px; }
 
+input#wb-srch-q {
+  width: 100%; }
+
 .page-type-search label {
   font-weight: normal; }
 
@@ -11575,7 +11619,7 @@ main {
     background-color: #5e738b;
     color: #fff;
     display: inline-block;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1px;
     padding: 0 5px; }
 
@@ -11610,9 +11654,6 @@ main {
   line-height: 34px;
   padding-bottom: 8px;
   padding-top: 8px; }
-
-input#wb-srch-q {
-  width: 100%; }
 
 /*
  Secondary Navigation
@@ -11678,23 +11719,26 @@ a.shr-opn, a.shr-opn:hover {
 .home .gcweb-menu {
   border-top: 1px solid #ddd;
   color: #284162;
-  margin-left: 0px; }
-
-.home .gcweb-menu button[aria-haspopup=true] {
-  background-color: #fff;
-  border-color: #fff;
-  color: #284162; }
-  .home .gcweb-menu button[aria-haspopup=true]:hover {
-    background-color: #444;
-    color: #fff; }
-
-/*
+  margin-left: 0px;
+}
+  .home .gcweb-menu button[aria-haspopup=true] {
+    background-color: #26374a;
+    border: 1px solid #26374a;
+    color: #fff;
+    margin-left: 0;
+    padding: .5em 1em;
+    text-transform: uppercase
+  }
+    .home .gcweb-menu button[aria-haspopup=true]:hover {
+      background-color: #444;
+      color: #fff;
+      /*
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
  * GCWeb v5 (gcweb-menu)
  *
  */
-.gcweb-menu {
+      .gcweb-menu {
   /*
 	 * Level 0 - button menu
 	 */
@@ -11795,7 +11839,7 @@ a.shr-opn, a.shr-opn:hover {
     color: #0535d2; }
   .gcweb-menu [role=menu] [role=menu] li:first-child [role=menuitem] {
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: underline; }
   .gcweb-menu [role=menu] [role=menu] [role=menu] li:first-child [role=menuitem] {
     font-size: 18px;
@@ -12045,7 +12089,7 @@ a.shr-opn, a.shr-opn:hover {
       right: -1em; }
 
 /*
- Social Media Icons
+ Social Media Icons, follow-us
 */
 .followus .foursquare, .followus .youtube, .followus .twitter, .followus .flickr, .followus .facebook, .followus .pinterest, .followus .linkedin, .followus .instagram, .followus .googleplus, .followus .reddit, .followus .rss, .followus .periscope, .followus .email {
   background-position: center center;
@@ -12100,6 +12144,7 @@ a.shr-opn, a.shr-opn:hover {
   background-size: cover;
   content: "";
   height: 38px;
+  margin-right: 10px;
   min-width: 38px; }
 
 .provisional.gc-followus h2 {
@@ -12108,13 +12153,12 @@ a.shr-opn, a.shr-opn:hover {
 .provisional.gc-followus ul {
   display: block;
   font-size: 87%;
-  font-weight: 600;
+  font-weight: 700;
   list-style: none;
-  -webkit-margin-before: calc(1em + 6px);
-          margin-block-start: calc(1em + 6px);
-  -webkit-padding-start: 1em;
-     -moz-padding-start: 1em;
-          padding-inline-start: 1em; }
+  -webkit-margin-before: 1em;
+          margin-block-start: 1em;
+  -webkit-padding-start: calc(1em + 6px);
+          padding-inline-start: calc(1em + 6px); }
   .provisional.gc-followus ul li {
     margin-bottom: 21px; }
     .provisional.gc-followus ul li:last-child {
@@ -12135,7 +12179,6 @@ a.shr-opn, a.shr-opn:hover {
         text-decoration: underline; }
   .provisional.gc-followus ul.list-inline {
     -webkit-padding-start: 0;
-       -moz-padding-start: 0;
             padding-inline-start: 0; }
     .provisional.gc-followus ul.list-inline li {
       display: inline-block;
@@ -12150,19 +12193,19 @@ a.shr-opn, a.shr-opn:hover {
           outline: solid 2px #0535d2; }
 
 .provisional.gc-followus .facebook::before {
-  background-image: url("../assets/social-media-icons/facebook.svg"); }
+  background-image: url("../assets/gc-follow-us/facebook.svg"); }
 
 .provisional.gc-followus .twitter::before {
-  background-image: url("../assets/social-media-icons/twitter.svg"); }
+  background-image: url("../assets/gc-follow-us/twitter.svg"); }
 
 .provisional.gc-followus .youtube::before {
-  background-image: url("../assets/social-media-icons/youtube.svg"); }
+  background-image: url("../assets/gc-follow-us/youtube.svg"); }
 
 .provisional.gc-followus .instagram::before {
-  background-image: url("../assets/social-media-icons/instagram.svg"); }
+  background-image: url("../assets/gc-follow-us/instagram.svg"); }
 
 .provisional.gc-followus .linkedin::before {
-  background-image: url("../assets/social-media-icons/linkedin.svg"); }
+  background-image: url("../assets/gc-follow-us/linkedin.svg"); }
 
 .shr-pg a {
   background-image: none; }
@@ -12210,6 +12253,10 @@ a.shr-opn, a.shr-opn:hover {
 
 /*
 	Github addition Widget Format
+	Use in:
+	+ Event page
+	+ campaign
+	+ widgets
 */
 .fd-wdgt.panel {
   padding-left: 0;
@@ -12261,6 +12308,15 @@ a.shr-opn, a.shr-opn:hover {
   .lt-ie9 .fd-wdgt .panel-title .icon {
     padding-left: 0; }
 
+/* The blog page template was removed on Sep 27, 2016 and introduced in 2014
+ *
+ * Introduced commit: https://github.com/wet-boew/GCWeb/commit/9bf094b6b68413ceec05295644e7d82074754d50#diff-39233a6d1c9cb49f3a36b9e4884a205e719494c7f6cb415a1d358239a795de71
+ * Removal commit: https://github.com/wet-boew/GCWeb/commit/0c80ed18fdc901cda4bd9a6128b422d3cf1fd5c3
+ *
+ * We can presume this code bellow are unused and was forgotten to be removed along with the demoed template
+ * This style don't seem to be documented anywhere.
+ *
+ */
 .blog article .col-md-3,
 .blog article .col-md-9 {
   display: inline-block;
@@ -12333,9 +12389,12 @@ a.shr-opn, a.shr-opn:hover {
 /*
 Carousel
 */
-.carousel-s1 .wb-mltmd,
-.carousel-s2 .wb-mltmd {
-  margin-top: 0; }
+.carousel-s1,
+.carousel-s2 {
+  margin-bottom: 15px; }
+  .carousel-s1 .wb-mltmd,
+  .carousel-s2 .wb-mltmd {
+    margin-top: 0; }
 
 /*
  * Social media centre
@@ -12641,6 +12700,9 @@ Carousel
 
 /*
  * Campaign
+ *
+ * Seem it was designed to support a specific unique use case.
+ * Added by : https://github.com/wet-boew/GCWeb/commit/ac202aff53003b379cc616ae066fb9304be5e267#diff-f95a90ad02373165b1cb6349d5cde8c2d61ac3cd498631eefb562f5790ada4cf
  */
 .infostripe .btn-cnt {
   bottom: 5px;
@@ -12714,17 +12776,6 @@ button.bg-dark:hover, button.bg-dark:focus {
 
 .bg-gctheme {
   background-color: #355688; }
-  .bg-gctheme.well.header-rwd {
-    background-color: #26374a; }
-
-/*
- * Well header responsive
- */
-.well.header-rwd {
-  width: 100%; }
-
-.bg-darker.well.header-rwd h1 {
-  border-bottom-color: #6f6f6f; }
 
 /* H1 short bold red underline */
 h1.gc-thickline {
@@ -12894,14 +12945,6 @@ h1.gc-thickline {
   .gc-archv .mfp-close.overlay-close {
     color: #000; }
 
-/* Report a problem Thank you message */
-.gc-rprt-prblm-thnk {
-  padding-bottom: 25px; }
-
-/* Report a problem temporary fix for toggle : GH issue #1336 */
-.gc-rprt-prblm-frm.gc-rprt-prblm-tggl.show {
-  display: none !important; }
-
 /* Embedding a Fluid Survey */
 .gc-fld-srvy-container {
   -webkit-overflow-scrolling: touch;
@@ -12920,12 +12963,35 @@ h1.gc-thickline {
   width: 100%;
   zoom: 1; }
 
+/*
+ * CSS used for the legacy/obselete code
+ */
+/* Report a problem Thank you message */
+.gc-rprt-prblm-thnk {
+  padding-bottom: 25px; }
+
+/* Report a problem temporary fix for toggle : GH issue #1336 */
+.gc-rprt-prblm-frm.gc-rprt-prblm-tggl.show {
+  display: none !important; }
+
 /* Hide RAP textarea and Other : GH issue #1336 */
 .gc-rprt-prblm-frm .form-group {
   display: none !important; }
 
 .gc-rprt-prblm-frm label[for=problem6] {
   display: none !important; }
+
+/*
+ * Well header responsive
+ */
+.bg-gctheme.well.header-rwd {
+  background-color: #26374a; }
+
+.well.header-rwd {
+  width: 100%; }
+
+.bg-darker.well.header-rwd h1 {
+  border-bottom-color: #6f6f6f; }
 
 /*
 * News styles
@@ -12959,6 +13025,38 @@ table.nws-tbl > thead > tr > th {
   padding-bottom: 0;
   padding-top: 0; }
 
+.nws-tbl .tp-rail {
+  display: inline-block; }
+
+.nws-tbl details summary, .nws-tbl details[open] {
+  border: 0; }
+
+.nws-tbl .one-dot {
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  background: #000;
+  border-radius: 50%;
+  display: inline-block;
+  height: .5em;
+  vertical-align: middle;
+  width: .5em; }
+
+.nws-tbl .tp-rail.commit {
+  font-size: 1.15em;
+  font-weight: 600;
+  max-width: 67%;
+  min-width: 67%; }
+
+.largeview .nws-tbl .tp-rail.commit, .xlargeview .nws-tbl .tp-rail.commit {
+  max-width: 71%;
+  min-width: 71%; }
+
+table.dataTable.nws-tbl .label.label-success {
+  padding: .6em .6em .3em; }
+
+/*
+ * tbl-floatcolumn
+ */
 .table-columnfloat th:first-child {
   float: left; }
 
@@ -12991,6 +13089,114 @@ table.nws-tbl > thead > tr > th {
 
 .wb-fieldflow-form .input-group input[type=submit] {
   padding-bottom: 7px; }
+
+/*
+ *
+ * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+ * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ *
+ *
+ *	GC Checkboxes and radio buttons
+*/
+fieldset.gc-chckbxrdio {
+  border-top: 0;
+  padding-top: 0; }
+
+.gc-chckbxrdio label {
+  cursor: pointer;
+  display: block;
+  font-size: 20px; }
+
+.gc-chckbxrdio legend {
+  float: none;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  margin-top: 0; }
+
+.gc-chckbxrdio input[type="radio"],
+.gc-chckbxrdio input[type="checkbox"] {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+  .gc-chckbxrdio input[type="radio"][disabled] + label,
+  .gc-chckbxrdio input[type="checkbox"][disabled] + label {
+    cursor: not-allowed;
+    opacity: .5; }
+  .gc-chckbxrdio input[type="radio"] + label,
+  .gc-chckbxrdio input[type="checkbox"] + label {
+    display: inline-block;
+    line-height: 2;
+    margin-left: 36px;
+    width: auto; }
+  .gc-chckbxrdio input[type="radio"] + label::before,
+  .gc-chckbxrdio input[type="checkbox"] + label::before {
+    border: 4px solid #fff;
+    -webkit-box-shadow: 0 0 0 2px #000;
+            box-shadow: 0 0 0 2px #000;
+    content: "";
+    display: inline-block;
+    height: 36px;
+    left: 0;
+    position: absolute;
+    top: 2px;
+    width: 36px; }
+  .gc-chckbxrdio input[type="radio"] + label:hover::before,
+  .gc-chckbxrdio input[type="checkbox"] + label:hover::before {
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#e6e5e5), color-stop(50%, white));
+    background-image: linear-gradient(to bottom, #e6e5e5, white 50%); }
+  .gc-chckbxrdio input[type="radio"]:focus + label::before,
+  .gc-chckbxrdio input[type="checkbox"]:focus + label::before {
+    -webkit-box-shadow: 0 0 0 2px #000, 0 0 8px 4px #3b99fc;
+            box-shadow: 0 0 0 2px #000, 0 0 8px 4px #3b99fc; }
+
+.gc-chckbxrdio input[type="radio"] + label::before {
+  border-radius: 50%; }
+
+.gc-chckbxrdio input[type="radio"]:checked + label::before {
+  background: #444; }
+
+.gc-chckbxrdio.checkbox input[type="checkbox"] + label,
+.gc-chckbxrdio.checkbox input[type="checkbox"] + label + ul {
+  font-size: 17px;
+  min-height: 23px; }
+
+.gc-chckbxrdio.checkbox input[type="checkbox"] + label::before {
+  height: 24px;
+  left: 6px;
+  top: 4px;
+  width: 24px; }
+
+.gc-chckbxrdio.checkbox input[type="checkbox"]:checked + label::after {
+  border-width: 0 3px 3px 0;
+  height: 16px;
+  left: 14px;
+  top: 6px;
+  width: 9px; }
+
+.gc-chckbxrdio input[type="checkbox"]:checked + label::after {
+  border-color: #333;
+  border-style: solid;
+  border-width: 0 5px 5px 0;
+  content: "";
+  display: inline-block;
+  height: 26px;
+  left: 12px;
+  position: absolute;
+  top: 4px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  width: 13px; }
+
+.gc-chckbxrdio.form-inline .label-inline {
+  padding-right: 20px; }
+  .gc-chckbxrdio.form-inline .label-inline label {
+    padding-left: 10px; }
 
 /*
  * Provisional feature
@@ -13101,103 +13307,10 @@ table.nws-tbl > thead > tr > th {
     color: #fff; }
 
 .provisional {
-  /* Responsive table - part of design, not responsive part */
   /* Theme/topic decorative image */
   /* Contributors */ }
   .provisional.icon-warning-light, .provisional .icon-warning-light {
     color: #DF7200; }
-  .provisional.gc-chckbxrdio label {
-    cursor: pointer;
-    display: block;
-    font-size: 20px; }
-  .provisional.gc-chckbxrdio legend {
-    float: none;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    margin-top: 0; }
-  .provisional.gc-chckbxrdio input[type="radio"],
-  .provisional.gc-chckbxrdio input[type="checkbox"] {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px; }
-    .provisional.gc-chckbxrdio input[type="radio"][disabled] + label,
-    .provisional.gc-chckbxrdio input[type="checkbox"][disabled] + label {
-      cursor: not-allowed;
-      opacity: .5; }
-    .provisional.gc-chckbxrdio input[type="radio"] + label,
-    .provisional.gc-chckbxrdio input[type="checkbox"] + label {
-      display: inline-block;
-      line-height: 2;
-      margin-left: 36px;
-      width: auto; }
-    .provisional.gc-chckbxrdio input[type="radio"] + label::before,
-    .provisional.gc-chckbxrdio input[type="checkbox"] + label::before {
-      border: 4px solid #fff;
-      -webkit-box-shadow: 0 0 0 2px #000;
-              box-shadow: 0 0 0 2px #000;
-      content: "";
-      display: inline-block;
-      height: 36px;
-      left: 0;
-      position: absolute;
-      top: 2px;
-      width: 36px; }
-    .provisional.gc-chckbxrdio input[type="radio"] + label:hover::before,
-    .provisional.gc-chckbxrdio input[type="checkbox"] + label:hover::before {
-      background-image: -webkit-gradient(linear, left top, left bottom, from(#e6e5e5), color-stop(50%, white));
-      background-image: linear-gradient(to bottom, #e6e5e5, white 50%); }
-    .provisional.gc-chckbxrdio input[type="radio"]:focus + label::before,
-    .provisional.gc-chckbxrdio input[type="checkbox"]:focus + label::before {
-      -webkit-box-shadow: 0 0 0 2px #000, 0 0 8px 4px #3b99fc;
-              box-shadow: 0 0 0 2px #000, 0 0 8px 4px #3b99fc; }
-  .provisional.gc-chckbxrdio input[type="radio"] + label::before {
-    border-radius: 50%; }
-  .provisional.gc-chckbxrdio input[type="radio"]:checked + label::before {
-    background: #444; }
-  .provisional.gc-chckbxrdio.checkbox input[type="checkbox"] + label,
-  .provisional.gc-chckbxrdio.checkbox input[type="checkbox"] + label + ul {
-    font-size: 17px;
-    min-height: 23px; }
-  .provisional.gc-chckbxrdio.checkbox input[type="checkbox"] + label::before {
-    height: 24px;
-    left: 6px;
-    top: 4px;
-    width: 24px; }
-  .provisional.gc-chckbxrdio.checkbox input[type="checkbox"]:checked + label::after {
-    border-width: 0 3px 3px 0;
-    height: 16px;
-    left: 14px;
-    top: 6px;
-    width: 9px; }
-  .provisional.gc-chckbxrdio input[type="checkbox"]:checked + label::after {
-    border-color: #333;
-    border-style: solid;
-    border-width: 0 5px 5px 0;
-    content: "";
-    display: inline-block;
-    height: 26px;
-    left: 12px;
-    position: absolute;
-    top: 4px;
-    -webkit-transform: rotate(45deg);
-            transform: rotate(45deg);
-    width: 13px; }
-  .provisional.gc-chckbxrdio.form-inline .label-inline {
-    padding-right: 20px; }
-    .provisional.gc-chckbxrdio.form-inline .label-inline label {
-      padding-left: 10px; }
-  .provisional.gc-table caption {
-    text-align: left; }
-  .provisional.gc-table td ul {
-    -webkit-padding-start: 20px;
-       -moz-padding-start: 20px;
-            padding-inline-start: 20px; }
   .provisional.gc-topic-bg div {
     background: no-repeat;
     margin-left: -15px;
@@ -13212,11 +13325,10 @@ table.nws-tbl > thead > tr > th {
       margin-top: 0; }
     .provisional.gc-contributors ul {
       -webkit-padding-start: 0;
-         -moz-padding-start: 0;
               padding-inline-start: 0; }
       .provisional.gc-contributors ul li {
         display: inline-block;
-        font-weight: 600;
+        font-weight: 700;
         margin-right: .7em; }
 
 /*
@@ -13395,7 +13507,7 @@ table.nws-tbl > thead > tr > th {
   cursor: pointer; }
 
 .wb-chtwzrd-bubble-wrap .bubble {
-  background: #fff url("../assets/default-avatar.png") center no-repeat;
+  background: #fff url("../assets/wb-chtwzrd/default-avatar.png") center no-repeat;
   border-radius: 50%;
   bottom: 0;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
@@ -13784,6 +13896,62 @@ h1 ~ .provisional.gc-subway {
   border-top: none; }
 
 /*
+ * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+ * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ *
+ * GC Table provisional style
+ * -- Responsive table - part of design, not responsive part --
+ */
+.provisional.gc-table caption {
+  text-align: left; }
+
+.provisional.gc-table td ul {
+  -webkit-padding-start: 20px;
+          padding-inline-start: 20px; }
+
+/* Provisional featured link component */
+.provisional.gc-featured-link {
+  background-color: #355688;
+  opacity: .9;
+  padding-bottom: 15px;
+  padding-top: 15px; }
+  .provisional.gc-featured-link p, .provisional.gc-featured-link a {
+    color: #fff; }
+  .provisional.gc-featured-link p {
+    float: left !important;
+    margin-bottom: 0px; }
+
+/* Provisional most requested component */
+.provisional.gc-most-requested {
+  border: none; }
+  .provisional.gc-most-requested h2 {
+    font-size: 1.1em;
+    margin-top: 15px; }
+  .provisional.gc-most-requested ul {
+    margin-bottom: 15px;
+    margin-top: 15px; }
+    .provisional.gc-most-requested ul li {
+      font-family: "Lato", sans-serif;
+      font-size: 87%;
+      font-weight: 700;
+      line-height: 1.5em; }
+
+/* Well bold provisional */
+.provisional.well.well-bold {
+  font-weight: 700; }
+  .provisional.well.well-bold strong {
+    font-weight: 400; }
+
+/* Feeds plugin GC override */
+.provisional.gc-feeds {
+  border: none; }
+  .provisional.gc-feeds li {
+    line-height: 1.65em;
+    padding: 0px; }
+    .provisional.gc-feeds li a {
+      font-weight: 700; }
+
+/*
  * GCWeb custom iumplementation
  *
  * Copy and rename the folder "variant-default" to "variant".
@@ -13963,53 +14131,15 @@ h1 ~ .provisional.gc-subway {
     background-image: none; }
   /* PROVISIONAL features */
   .provisional {
-    /* Checkboxes and radios */
-    /* Contributors */
-    /* Responsive tables cards */ }
-    .provisional.gc-chckbxrdio.form-inline .label-inline {
-      margin-bottom: 20px;
-      padding-right: 20px; }
+    /* Contributors */ }
     .provisional.gc-contributors h2, .provisional.gc-contributors ul {
       display: block; }
     .provisional.gc-contributors ul {
       -webkit-padding-start: 20px;
-         -moz-padding-start: 20px;
               padding-inline-start: 20px; }
       .provisional.gc-contributors ul li {
         display: list-item;
         margin-right: 0; }
-    .provisional.gc-table .text-left {
-      clear: both;
-      display: block; }
-    .provisional.gc-table > tbody > tr > td:first-child,
-    .provisional.gc-table > tfoot > tr > td:first-child {
-      border-top: none; }
-    .provisional.gc-table tr {
-      border: 1px solid #ddd;
-      display: block;
-      margin-bottom: .625em;
-      padding: .35em; }
-    .provisional.gc-table caption {
-      font-size: 1.1em; }
-    .provisional.gc-table thead {
-      border: none;
-      clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
-      overflow: hidden;
-      padding: 0;
-      position: absolute;
-      width: 1px; }
-    .provisional.gc-table td {
-      display: block;
-      font-size: 1em;
-      text-align: right; }
-      .provisional.gc-table td::before {
-        content: attr(data-label);
-        float: left;
-        font-weight: bold; }
-      .provisional.gc-table td:last-child {
-        border-bottom: 0; }
   /*
  Banner (small view and under)
  */
@@ -14036,6 +14166,7 @@ h1 ~ .provisional.gc-subway {
  */
   #wb-info .ftr-urlt-lnk ul {
     -webkit-column-count: 2;
+       -moz-column-count: 2;
             column-count: 2; }
   #wb-info .ftr-urlt-lnk li {
     display: block;
@@ -14159,6 +14290,70 @@ h1 ~ .provisional.gc-subway {
   .provisional.gc-subway dt, .provisional.gc-subway li {
     max-width: initial; }
   /*
+ PROVISIONAL features: Responsive tables cards
+*/
+  .provisional.gc-table.table-bordered {
+    border: 0; }
+    .provisional.gc-table.table-bordered > thead > tr > th,
+    .provisional.gc-table.table-bordered > thead > tr > td,
+    .provisional.gc-table.table-bordered > tbody > tr > th,
+    .provisional.gc-table.table-bordered > tbody > tr > td,
+    .provisional.gc-table.table-bordered > tfoot > tr > th,
+    .provisional.gc-table.table-bordered > tfoot > tr > td {
+      border-bottom: 0;
+      border-left: 0;
+      border-right: 0; }
+  .provisional.gc-table.dataTable.no-footer {
+    border-bottom: 0; }
+  .provisional.gc-table .text-left {
+    clear: both;
+    display: block; }
+  .provisional.gc-table > tbody > tr > td:first-child,
+  .provisional.gc-table > tfoot > tr > td:first-child {
+    border-top: none; }
+  .provisional.gc-table tr {
+    border: 1px solid #ddd;
+    display: block;
+    margin-bottom: 0.625em;
+    padding: .35em; }
+  .provisional.gc-table > :last-child > tr:last-of-type {
+    margin-bottom: 0; }
+  .provisional.gc-table caption {
+    font-size: 1.1em; }
+  .provisional.gc-table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px; }
+  .provisional.gc-table tbody + tbody > tr:first-of-type {
+    margin-top: 0.625em; }
+  .provisional.gc-table td {
+    display: block;
+    font-size: 1em;
+    text-align: right; }
+    .provisional.gc-table td::before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-align: left; }
+    .provisional.gc-table td:last-child {
+      border-bottom: 0; }
+  /*
+ *
+ * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+ * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ *
+ *
+ *	GC Checkboxes and radio buttons - Small devices maximum
+*/
+  .gc-chckbxrdio.form-inline .label-inline {
+    margin-bottom: 20px;
+    padding-right: 20px; }
+  /*
   Variant - GCWeb custom implementation
   @title: Small view and under (screen only)
  */ }
@@ -14237,6 +14432,19 @@ h1 ~ .provisional.gc-subway {
   .well.header-rwd {
     width: 75%; }
   /*
+ *
+ * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+ * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ *
+ *
+ *	GC Checkboxes and radio buttons - Small devices minimum
+*/
+  .form-inline .gc-chckbxrdio.checkbox input[type="checkbox"] {
+    position: absolute; }
+  .form-inline.gc-chckbxrdio .radio input[type="radio"],
+  .form-inline.gc-chckbxrdio .checkbox input[type="checkbox"] {
+    position: absolute; }
+  /*
   WET-BOEW
   @title: Small view and over (screen only)
  */
@@ -14310,7 +14518,7 @@ h1 ~ .provisional.gc-subway {
     .gcweb-menu [role=menu] [role=menu] [role=menuitem][aria-haspopup=true]:hover {
       color: #000;
       font-size: 20px;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none; }
   .wb-disable .gcweb-menu [role=menu] > li {
     float: left;
@@ -14458,6 +14666,7 @@ h1 ~ .provisional.gc-subway {
  */
   #wb-info .ftr-urlt-lnk ul {
     -webkit-column-count: 1;
+       -moz-column-count: 1;
             column-count: 1; }
   #wb-info .brand object,
   #wb-info .brand img {
@@ -14641,6 +14850,9 @@ h1 ~ .provisional.gc-subway {
   .gc-nttvs {
     display: none; }
   /* Deprecated as v4.0.28 */
+  /*
+ * There is no working example, probably not used
+ */
   .jumbotron.pagebrand figcaption {
     position: static; }
   /*

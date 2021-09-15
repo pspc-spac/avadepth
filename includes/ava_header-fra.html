@@ -21,7 +21,6 @@ wet-boew.github.io/wet-boew4/License-eng.txt / wet-boew.github.io/wet-boew4/Lice
 <meta name="dcterms.language" lang="fr" title="ISO639-2" content="fra" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="keywords" content="HTML, CSS, XHTML, JavaScript" />
-<!-- <meta http-equiv="X-UA-Compatible" content="IE=9" /> -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <!-- Meta data-->
 
@@ -56,10 +55,11 @@ wet-boew.github.io/wet-boew4/License-eng.txt / wet-boew.github.io/wet-boew4/Lice
 <script>dataLayer1 = [];</script>
 <!-- End Google Tag Manager -->
 </head>
+
 <body class="home" vocab="http://schema.org/" typeof="WebPage">
 <!-- Google Tag Manager DO NOT REMOVE OR MODIFY - NE PAS SUPPRIMER OU MODIFIER -->
 <noscript><iframe title="Google Tag Manager" src="//www.googletagmanager.com/ns.html?id=GTM-TLGQ9K" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer1'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer1','GTM-TLGQ9K');</script>
+<script>(function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer1' ? '&l=' + l : ''; j.async = true; j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer1', 'GTM-TLGQ9K');</script>
 <!-- End Google Tag Manager -->
 <ul id="wb-tphp">
 <li class="wb-slc">
@@ -69,47 +69,35 @@ wet-boew.github.io/wet-boew4/License-eng.txt / wet-boew.github.io/wet-boew4/Lice
 <a class="wb-sl" href="#wb-info">Passer à «&#160;À propos de ce site&#160;»</a>
 </li>
 </ul>
-<header role="banner" class="print_hide">
+
+<header>
 <div id="wb-bnr" class="container">
-<section id="wb-lng" class="visible-md visible-lg text-right">
+<section id="wb-lng" class="text-right">
 <h2 class="wb-inv">Sélection de la langue</h2>
-<div class="row">
-<div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <li><a href="/language.asp" lang="en">English</a></li>
 </ul>
-</div>
-</div>
 </section>
 <div class="row">
-<div class="brand col-xs-8 col-sm-9 col-md-6">
-<a href="http://www.canada.ca/fr/index.html"><object type="image/svg+xml" tabindex="-1" data="/GCWeb/assets/sig-blk-fr.svg">Gouvernement du Canada</object><span class="wb-inv"> Gouvernement du Canada</span></a>
+<div class="brand col-xs-5 col-md-4">
+<a href="https://www.canada.ca/fr.html"><img src="./GCWeb/assets/sig-blk-fr.svg" alt=""><span class="wb-inv"> Government of Canada / <span lang="fr">Gouvernement du Canada</span></span></a>
 </div>
-<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn">
-<h2>Recherche et menus</h2>
-<ul class="list-inline text-right chvrn">
-<li><a href="#mb-pnl" title="Recherche et menus" aria-controls="mb-pnl" class="overlay-lnk" role="button"><span class="glyphicon glyphicon-search"><span class="glyphicon glyphicon-th-list"><span class="wb-inv">Recherche et menus</span></span></span></a></li>
-</ul>
-<div id="mb-pnl"></div>
-</section>
-<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<section id="wb-srch" class="col-lg-8 text-right visible-md visible-lg">
 <h2>Recherche</h2>
-<form action="https://www.canada.ca/fr/sr.html" method="get" name="cse-search-box" role="search" class="form-inline">
-<input name="st" value="s" type="hidden" />
-<input name="s5bm3ts21rch" value="x" type="hidden" />
-<input name="num" value="10" type="hidden" />
-<input name="st1rt" value="1" type="hidden" />
-<input name="langs" value="fr" type="hidden" />
-<input name="cdn" value="canada" type="hidden" />
-<input name="hq" type="hidden" />
-<div class="form-group">
-<label for="wb-srch-q" class="wb-inv">Recherchez le site Web</label>
-<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="27" maxlength="150" placeholder="Rechercher dans Canada.ca" />
-<datalist id="wb-srch-q-ac">
-<!--[if lte IE 9]><select><![endif]-->
-<!--[if lte IE 9]></select><![endif]-->
-</datalist>
-</div>
+<form action="https://www.canada.ca/fr/sr.html" method="post" name="cse-search-box" role="search" class="form-inline">
+  <div class="form-group">
+    <label for="wb-srch-q" class="wb-inv">Recherche dans Canada</label>
+    <input name="cdn" value="canada" type="hidden">
+    <input name="st" value="s" type="hidden">
+    <input name="num" value="10" type="hidden">
+    <input name="langs" value="en" type="hidden">
+    <input name="st1rt" value="1" type="hidden">
+    <input name="s5bm3ts21rch" value="x" type="hidden">
+    <label for="wb-srch-q" class="wb-inv">Recherche dans Canada.ca</label>
+    <input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="34" maxlength="170" placeholder="Recherche dans Canada.ca" />
+    <datalist id="wb-srch-q-ac">
+    </datalist>
+  </div>
 <div class="form-group submit">
 <button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">Recherche</span></button>
 </div>
@@ -117,39 +105,46 @@ wet-boew.github.io/wet-boew4/License-eng.txt / wet-boew.github.io/wet-boew4/Lice
 </section>
 </div>
 </div>
-<nav role="navigation" id="wb-sm" data-ajax-replace="https://cdn.canada.ca/gcweb-cdn-live/sitemenu/sitemenu-fr.html" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
-<div class="container nvbar">
-<h2>Menu des sujets</h2>
-<div class="row">
-<ul class="list-inline menu">
-<li><a href="http://www.edsc.gc.ca/fr/emplois/index.page">Emplois</a></li>
-<li><a href="http://www.cic.gc.ca/francais/index.asp">Immigration</a></li>
-<li><a href="http://voyage.gc.ca">Voyage</a></li>
-<li><a href="http://www.canada.ca/fr/services/entreprises/index.html">Entreprises</a></li>
-<li><a href="http://www.canada.ca/fr/services/prestations/index.html">Prestations</a></li>
-<li><a href="http://canadiensensante.gc.ca/index-fra.php">Santé</a></li>
-<li><a href="http://www.canada.ca/fr/services/impots/index.html">Impôts</a></li>
-<li><a href="http://www.canada.ca/fr/services/index.html">Autres services</a></li>
-</ul>
-</div>
-</div>
+<nav class="gcweb-menu" typeof="SiteNavigationElement">
+  <div class="container">
+    <h2 class="wb-inv">Menu</h2>
+    <button type="button" aria-haspopup="true" aria-expanded="false">Menu<span class="wb-inv"> principal</span> <span class="expicon glyphicon glyphicon-chevron-down"></span></button>
+    <ul role="menu" data-ajax-replace="https://www.canada.ca/content/dam/canada/sitemenu/sitemenu-v2-fr.html">
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/jobs.html">Emplois et milieu de travail</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/immigration-citizenship.html">Immigration et citoyenneté</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://voyage.gc.ca/">Voyage et tourisme</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/entreprises.html">Entreprises et industrie</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/benefits.html">Prestations</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/sante.html">Santé</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/impots.html">Impôts</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/environnement.html">Environnement et ressources naturelles</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/defense.html">Sécurité nationale et défense</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/culture.html">Culture, histoire et sport</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/police.html">Services de police, justice et urgences</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/en/services/transport.html">Transport et infrastructure</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://international.gc.ca/world-monde/index.aspx?lang=fra">Canada et le monde</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/finance.html">Argent et finances</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.canada.ca/fr/services/science.html">Science et innovation</a></li>
+    </ul>
+  </div>
+
+
 </nav>
-<nav role="navigation" id="wb-bc" property="breadcrumb">
-<h2>Vous êtes ici :</h2>
+<nav id="wb-bc" property="breadcrumb">
+  <h2>Vous êtes ici :</h2>
 <div class="container">
-<div class="row">
-  <ol class="breadcrumb">
-    <li><a href="https://www.canada.ca/fr.html">Canada.ca</a></li>
-    <li><a href="https://www.ccg-gcc.gc.ca/index-fra.html">Garde côtière canadienne</a></li>
-    <li><a href="https://www.ccg-gcc.gc.ca/navigation/index-fra.html">Navigation</a></li>
-    <li><a href="/index-fra.html">Avadepth</a></li>
-  </ol>
-</div>
+<ol class="breadcrumb">
+<li><a href="https://www.canada.ca/fr.html">Canada.ca</a></li>
+<li><a href="https://www.ccg-gcc.gc.ca/index-fra.html">Garde côtière canadienne</a></li>
+<li><a href="https://www.ccg-gcc.gc.ca/navigation/index-fra.html">Navigation</a></li>
+<li><a href="/index-fra.html">Avadepth</a></li>
+</ol>
 </div>
 </nav>
 </header>
 
-<main role="main" property="mainContentOfPage" class="container" id="wb-main">
+<main property="mainContentOfPage" class="container" id="wb-main">
+
 <div id="wb-main-in">
 
 <!-- local nav -->
@@ -186,6 +181,6 @@ wet-boew.github.io/wet-boew4/License-eng.txt / wet-boew.github.io/wet-boew4/Lice
 </div>
 
 <input type="hidden"
-  id="lang"
-  name="lang"
-  value="fra" />
+id="lang"
+name="lang"
+value="fra" />
