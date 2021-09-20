@@ -179,24 +179,24 @@ var padZero = function(num){
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "Surface Type:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "input", attr: { style: "margin: 0.5rem", type: "radio", name: "surface", value: "combined", checked: "checked" } },
+                          {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "combined", checked: "checked" } },
                           {tag: "div", attr: { class: "popup" }, child: [" Bathymetry", { tag: "span", attr: { class: "popuptext" }, child: ["Digital terrain model (DTM) generated from current soundings "] }] },
                           {tag: "br" },
-                          {tag: "input", attr: { style: "margin: 0.5rem", type: "radio", name: "surface", value: "conformance" } },
+                          {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "conformance" } },
                           {tag: "div", attr: { class: "popup" }, child: [" Conformance", { tag: "span", attr: { class: "popuptext" }, child: ["The relative difference above or below channel design grade"] }] },
                           {tag: "br" }
                         ]},
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {style: "margin: 0.5rem", id: "surf_combined", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
                             "Surface generated ",
                             {tag: "span", attr: {name: "srfDateCur"}}
                           ]},
-                          {tag: "div", attr: {style: "margin: 0.5rem", id: "surf_conformance", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [
                             "Conformance generated ",
                             {tag: "span", attr: {name: "srfDateCur"}}
                           ]},
-                          {tag: "div", attr: {style: "margin: 0.5rem", id: "surf_difference", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_difference", name: "surfDetails"}, child: [
                             "Difference generated of ",
                             {tag: "span", attr: {name: "srfDateCur"}},
                             " from ",
@@ -205,7 +205,7 @@ var padZero = function(num){
                       ]},
                       "Surface Legend:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {style: "margin: 0.75rem", id: "surfLegend"}}
+                          {tag: "div", attr: {style: "margin: 0.5em", id: "surfLegend"}}
                       ]}
                     ]}
                 ]}
