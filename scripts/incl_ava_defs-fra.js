@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Created by wsiddall on 14/07/2014.
  */
 
@@ -181,11 +181,9 @@ var padZero = function(num){
                   },
                   {tag: "br"},
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" } },
-                  {tag: "div", attr: { class: "popup" }, child: [
-                          " chenal", {tag: "span", attr: { class: "popuptext" }, child: [
-                                  " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]
-                          }]
-                  },
+                  {tag: "div", attr: { class: "popup" }, child: [" chenal&nbsp;&nbsp;", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                  {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
+                  " montre cellules",
                   {tag: "br"},
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
                   {tag: "div", attr: { class: "popup" }, child: [
@@ -205,32 +203,24 @@ var padZero = function(num){
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "type de surface:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
-                          {tag: "div", attr: { class: "popup" }, child: [
-                                  " bathymetrique", {tag: "span", attr: { class: "popuptext" }, child: [
-                                          " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]
-                              }]
-                          },
+                          {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "combined", checked: "checked" } },
+                          {tag: "div", attr: { class: "popup" }, child: [" bathymetrique", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
                           {tag: "br"},
-                          {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
-                          {tag: "div", attr: { class: "popup" }, child: [
-                                  " conformité", {tag: "span", attr: { class: "popuptext" }, child: [
-                                          " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]
-                                  }]
-                          },
+                          {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "conformance" } },
+                          {tag: "div", attr: { class: "popup" }, child: [" conformité", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
                           {tag: "br"}
                       ]},
                       "détails:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {id: "surf_combined", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
                               "surface généré ",
                               {tag: "span", attr: {name: "srfDateCur"}}
                             ]},
-                          {tag: "div", attr: {id: "surf_conformance", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [
                               "conformité généré ",
                               {tag: "span", attr: {name: "srfDateCur"}}
                             ]},
-                          {tag: "div", attr: {id: "surf_difference", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_difference", name: "surfDetails"}, child: [
                               "différence généré ",
                               {tag: "span", attr: {name: "srfDateCur"}},
                               " du surface généré ",
@@ -239,7 +229,7 @@ var padZero = function(num){
                         ]},
                       "légende:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {id: "surfLegend"}}
+                          {tag: "div", attr: {style: "margin: 0.5em", id: "surfLegend"}}
                       ]}
                   ]}
                 ]}
