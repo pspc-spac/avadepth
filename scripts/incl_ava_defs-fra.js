@@ -173,6 +173,14 @@ var padZero = function(num){
           {tag: "div", attr: {classname: "span-4"}, child: [
               {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Couches:"]},
               {tag: "div", child: [
+                  {tag: "label", attr: {for: "ddRiverName"}, child: ["réseaux"]},
+                  {tag: "select", attr: {name: "riverName", id: "ddRiverName"}, child: [
+                      {tag: "option", attr: {value: "FRSA", selected: "selected"}, child: ["Fraser River - chenal sud"]},
+                      {tag: "option", attr: {value: "FRNA"}, child: ["Fraser River - chenal nord"]},
+                      {tag: "option", attr: {value: "FRMA"}, child: ["Fraser River - chenal principal"]},
+                      {tag: "option", attr: {value: "FRSC"}, child: ["chenals du Fraser River - chenal sud"]},
+                      {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
+                    ]},
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
                   {tag: "div", attr: { class: "popup" }, child: [" sondages", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
                   {tag: "br"},

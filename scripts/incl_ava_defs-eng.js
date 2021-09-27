@@ -164,6 +164,14 @@ var padZero = function(num){
             {tag: "div", attr: {classname: "span-4"}, child: [
                 {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers"]},
                 {tag: "div", child: [
+                    {tag: "label", attr: {for: "ddRiverName"}, child: ["River Selection"]},
+                    {tag: "select", attr: {name: "riverName", id: "ddRiverName"}, child: [
+                      {tag: "option", attr: {value: "FRSA", selected: "selected"}, child: ["Fraser River South Arm"]},
+                      {tag: "option", attr: {value: "FRNA"}, child: ["Fraser River North Arm"]},
+                      {tag: "option", attr: {value: "FRMA"}, child: ["Fraser River Main Arm"]},
+                      {tag: "option", attr: {value: "FRSC"}, child: ["Fraser River South Arm Channels"]},
+                      {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
+                    ]},
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
                     {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: ["depths relative to local low water level (LLWL) chart datum"] }] },
                     {tag: "br"},
@@ -173,17 +181,24 @@ var padZero = function(num){
                     " Show Cells",
                     {tag: "br" },
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
-                    {tag: "div", attr: { class: "popup" }, child: [" Surface:", { tag: "span", attr: { class: "popuptext" }, child: ["bathymetry of recent PSPC soundings"] }] },
+                    {tag: "div", attr: { class: "popup" }, child: [
+                        " Surface:",
+                        { tag: "span", attr: { class: "popuptext" }, child: ["bathymetry of recent PSPC soundings"] }
+                    ] },
                     {tag: "div", attr: {class: "optionIndent"}, child: [
                         {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["slide to adjust colour intensity"] }] }]},
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "Surface Type:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                           {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
-                          {tag: "div", attr: { class: "popup" }, child: [" Bathymetry", { tag: "span", attr: { class: "popuptext" }, child: ["digital terrain model (DTM) generated from current soundings "] }] },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                              " Bathymetry",
+                              { tag: "span", attr: { class: "popuptext" }, child: ["digital terrain model (DTM) generated from current soundings "] }] },
                           {tag: "br" },
                           {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
-                          {tag: "div", attr: { class: "popup" }, child: [" Conformance", { tag: "span", attr: { class: "popuptext" }, child: ["the relative difference above or below channel design grade"] }] },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                              " Conformance",
+                              { tag: "span", attr: { class: "popuptext" }, child: ["the relative difference above or below channel design grade"] }] },
                           {tag: "br" }
                         ]},
                       "Surface Details:",
