@@ -1041,7 +1041,7 @@ var padZero = function(num){
       // Default Styles and map constants
       wid1: '5.0',
       wid2: '2.0',
-      col1: '#ffff00',
+      col1: '#ffa500',
       col2: '#1d73b5',
       sel1: '#00ffff',
       black: '#000000',
