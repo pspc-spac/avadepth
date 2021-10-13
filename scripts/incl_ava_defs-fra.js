@@ -17,12 +17,11 @@ var padZero = function(num){
    * example - '/api/isa/StevestonCut.json'
    */
   function getAPI(extURL, intURL){
-    //if(document.URL.split("/")[2].split(":")[0] === "localhost") {
-    //  return intURL;
-    //} else {
-    //  return extURL;
-    //}
-    return extURL;
+    if(document.URL.split("/")[2].split(":")[0] === "localhost") {
+      return intURL;
+    } else {
+      return extURL;
+    }
   }
   
   var currentDate = new Date();
