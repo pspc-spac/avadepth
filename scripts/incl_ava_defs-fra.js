@@ -997,11 +997,11 @@ var padZero = function(num){
                   {tag:'thead',child:[
                     {tag:'tr',child:[
                         {tag:'th',child:['Date']},
-                        {tag:'th',child:['Drawing']},
-                        {tag:'th',child:['Location']},
+                        {tag:'th',child:['Dessins']},
+                        {tag:'th',child:['Emplacement']},
                         {tag:'th',child:['Type']},
-                        {tag:'th',child:['Start']},
-                        {tag:'th',child:['End']}
+                        {tag:'th',child:['début']},
+                        {tag:'th',child:['fin']}
                     ]},
                     {tag:'tr',attr:{style:'background-color:#eee'},child:[
                         {tag:'td',attr:{colspan:2}},

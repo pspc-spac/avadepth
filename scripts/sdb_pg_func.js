@@ -227,7 +227,7 @@ avaIFaceJS.sdb_func = {
 
                 avaIFaceJS.reportWindow.addTitle(header, title, location);
 
-                avaIFaceJS.sdb_func.tableReport || (avaIFaceJS.sdb_func.tableReport = $('#soundings').DataTable({
+                avaIFaceJS.sdb_func.tableReport || (avaIFaceJS.sdb_func.tableReport = $('#report_tbl').DataTable({
                     bPaginate: false,
                     bInfo: false,
                     bSort: false,
