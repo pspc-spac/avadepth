@@ -975,24 +975,30 @@ var padZero = function(num){
                 }}
               ]}
             ],
-          'reportBody':
-            [
-              {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-                {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
-                  {tag:'thead',child:[
-                    {tag:'tr',child:[
-                      {tag:'th',child:['Date']},
-                      {tag:'th',child:['Drawing']},
-                      {tag:'th',child:['Location (km)']},
-                      {tag:'th',child:['Type']},
-                      {tag:'th',child:['Km Start']},
-                      {tag:'th',child:['Km End']}
-                    ]}
-                  ]},
-                  {tag:'tbody'}
+          'reportBody':[
+            {tag:'section',child:[
+                {tag:'table',attr:{id:'soundings',style:'font-size:15px;'},child:[
+                    {tag:'thead',child: [
+                        {tag:'tr',child:[
+                            {tag:'th',child:["Date"]},
+                            {tag:'th',child:["Drawing"]},
+                            {tag:'th',child:["Location"]},
+                            {tag:'th',child:["Type"]},
+                            {tag:'th',child:["Start"]},
+                            {tag:'th',child:["End"]}
+                        ]},
+                        {tag:'tr',child:[
+                            {tag:'th',attr:{colspan:2}},
+                            {tag:'th',child:["(km)"]},
+                            {tag:'th',attr:{colspan:1}},
+                            {tag:'th',child:["(km)"]},
+                            {tag:'th',child:["(km)"]}
+                        ]}
+                    ]},
+                    {tag:'tbody',attr:{style:'white-space:nowrap;'}}
                 ]}
-              ]}
-            ],
+            ]}
+          ],
           'reportDetail':
             [{tag:'p',child:['This tool does not support detailed search items']}]
         },

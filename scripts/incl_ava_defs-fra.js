@@ -990,22 +990,46 @@ var padZero = function(num){
                 }}
               ]}
           ],
-        'reportBody':
-          [
-            {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-              {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
-                {tag:'thead',child:[
-                  {tag:'tr',child:[
-                    {tag:'th',child:['Date']},
-                    {tag:'th',child:['Dessins']},
-                    {tag:'th',child:['Emplacement (km)']},
-                    {tag:'th',child:['Type']},
-                    {tag:'th',child:['Km début']},
-                    {tag:'th',child:['Km fin']}
-                  ]}
-                ]},
-                {tag:'tbody'}
-              ]}
+        //'reportBody':
+        //  [
+        //    {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
+        //      {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
+        //        {tag:'thead',child:[
+        //          {tag:'tr',child:[
+        //            {tag:'th',child:['Date']},
+        //            {tag:'th',child:['Dessins']},
+        //            {tag:'th',child:['Emplacement (km)']},
+        //            {tag:'th',child:['Type']},
+        //            {tag:'th',child:['Km début']},
+        //            {tag:'th',child:['Km fin']}
+        //          ]}
+        //        ]},
+        //        {tag:'tbody'}
+        //      ]}
+        //    ]}
+        //  ],
+        'reportBody':[
+            {tag:'section',child:[
+                {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0',style:'width:800px; font-size:15px'},child:[
+                    {tag: 'thead', child: [
+                        {tag:'tr',child:[
+                            {tag:'th',child:["Date"]},
+                            {tag:'th',child:["Drawing"]},
+                            {tag:'th',child:["Location"]},
+                            {tag:'th',child:["Type"]},
+                            {tag:'th',child:["Start"]},
+                            {tag:'th',child:["End"]}
+                        ]},
+                        {tag:'tr',child:[
+                            {tag:'th',attr:{colspan:2}},
+                            {tag:'th',child:["(km)"]},
+                            {tag:'th',attr:{colspan:1}},
+                            {tag:'th',child:["(km)"]},
+                            {tag:'th',child:["(km)"]}
+                        ]}
+                    ]},
+                    {tag:'tbody',attr:{style:'white-space:nowrap; width:1px;'}}
+                ]}
             ]}
           ],
         'reportDetail':
