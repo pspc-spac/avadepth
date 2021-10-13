@@ -998,8 +998,8 @@ var padZero = function(num){
                   ]},
                   {tag:'tbody',attr:{style:'white-space:nowrap'}}
                 ]}
-              ]}
-            ],
+            ]}
+          ],
           'reportDetail':
             [{tag:'p',child:['This tool does not support detailed search items']}]
         },

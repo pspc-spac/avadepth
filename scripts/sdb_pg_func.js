@@ -227,14 +227,14 @@ avaIFaceJS.sdb_func = {
 
                 avaIFaceJS.reportWindow.addTitle(header, title, location);
 
-                avaIFaceJS.sdb_func.tableReport || (avaIFaceJS.sdb_func.tableReport = $('#report_tbl').DataTable({
+                avaIFaceJS.sdb_func.tableReport || (avaIFaceJS.sdb_func.tableReport = $('#soundings').DataTable({
                     bPaginate: false,
                     bInfo: false,
                     bSort: false,
                     bFilter: false
                 }));
                 avaIFaceJS.sdb_func.tableReport.clear();
-                $('#report_tbl tbody tr').remove();
+                //$('#report_tbl tbody tr').remove();
                 $.each(data, function() {
                     avaIFaceJS.sdb_func.tableReport.row.add(
                         [moment(this.Date, old_date_format).format(new_date_format),
