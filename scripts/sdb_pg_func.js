@@ -211,7 +211,7 @@ avaIFaceJS.sdb_func = {
             return $.getJSON(getAPI(apiURL, ""), function(data) {
                 // set report title
                 var old_date_format = "YYYY-MM-DD\THH:mm:ss";
-                var new_date_format = "DD/MM/YYYY";
+                var new_date_format = "YYYY-MM-DD";
                 if (window.location.href.indexOf("fra") > -1) { //If url contains 'fra' use
                     header = "Enquêtes Résultats de la recherche";
                 } else {
@@ -250,8 +250,8 @@ avaIFaceJS.sdb_func = {
                         ]);
                 });
                 avaIFaceJS.sdb_func.tableReport.draw();
-                $('#report_tbl tbody tr td:nth-last-child(2), #report_tbl tbody tr td:nth-last-child(1)').each(function() {
-                    $(this).css('text-align', 'right');
+                $('#report_tbl tbody tr td').each(function () {
+                    $(this).css('text-align', 'center');
                 });
 
                 // (3) Add a button that allows the user to jump back to the map (a href=`${window.href.location} + #map`); - Last Update 2018-09-28
