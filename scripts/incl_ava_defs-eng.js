@@ -989,7 +989,7 @@ var padZero = function(num){
                       {tag:'th',child:['Km End']}
                     ]}
                   ]},
-                  {tag:'tbody'}
+                  {tag:'tbody',attr:{style:'white-space:nowrap;'}}
                 ]}
               ]}
             ],
