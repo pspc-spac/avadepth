@@ -993,7 +993,7 @@ var padZero = function(num){
         'reportBody':
             [
               {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-                {tag:'table',attr:{id:'report_tbl',style:'width:auto !important; font-size:15px'},className:"styled width-80",child:[
+                {tag:'table',attr:{id:'report_tbl',style:'width:auto; font-size:15px'},className:"styled width-80",child:[
                   {tag:'thead',child:[
                     {tag:'tr',child:[
                         {tag:'th',child:["Date"]},
