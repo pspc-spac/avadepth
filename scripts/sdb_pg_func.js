@@ -234,7 +234,7 @@ avaIFaceJS.sdb_func = {
                     bFilter: false
                 }));
                 avaIFaceJS.sdb_func.tableReport.clear();
-                //$('#report_tbl tbody tr').remove();
+                $('#report_tbl tbody tr').remove();
                 $.each(data, function() {
                     avaIFaceJS.sdb_func.tableReport.row.add(
                         [moment(this.Date, old_date_format).format(new_date_format),
