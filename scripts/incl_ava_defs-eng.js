@@ -173,10 +173,10 @@ var padZero = function(num){
                       {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
                     ]},
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
-                    {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: ["depths relative to local low water level (LLWL) chart datum"] }] },
+                    {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: ["Depths relative to local low water level (LLWL) chart datum"] }] },
                     {tag: "br"},
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" }},
-                    {tag: "div", attr: { class: "popup" }, child: [" Channel&nbsp;&nbsp;", { tag: "span", attr: { class: "popuptext" }, child: ["designated channel maintained for shipping"] }] },
+                    {tag: "div", attr: { class: "popup" }, child: [" Channel&nbsp;&nbsp;", { tag: "span", attr: { class: "popuptext" }, child: ["Designated channel maintained for shipping"] }] },
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
                     " Show Cells",
                     {tag: "br" },
@@ -186,7 +186,7 @@ var padZero = function(num){
                         { tag: "span", attr: { class: "popuptext" }, child: ["bathymetry of recent PSPC soundings"] }
                     ] },
                     {tag: "div", attr: {class: "optionIndent"}, child: [
-                        {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["slide to adjust colour intensity"] }] }]},
+                        {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["Slide to adjust colour intensity"] }] }]},
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "Surface Type:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
@@ -203,15 +203,15 @@ var padZero = function(num){
                         ]},
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {id: "surf_combined", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
                             "Surface generated ",
                             {tag: "span", attr: {name: "srfDateCur"}}
                           ]},
-                          {tag: "div", attr: {id: "surf_conformance", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [
                             "Conformance generated ",
                             {tag: "span", attr: {name: "srfDateCur"}}
                           ]},
-                          {tag: "div", attr: {id: "surf_difference", name: "surfDetails"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_difference", name: "surfDetails"}, child: [
                             "Difference generated of ",
                             {tag: "span", attr: {name: "srfDateCur"}},
                             " from ",
@@ -220,7 +220,7 @@ var padZero = function(num){
                       ]},
                       "Surface Legend:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {id: "surfLegend"}}
+                          {tag: "div", attr: {style: "margin: 0.5em", id: "surfLegend"}}
                       ]}
                     ]}
                 ]}
