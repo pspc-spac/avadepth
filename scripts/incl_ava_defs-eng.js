@@ -993,21 +993,28 @@ var padZero = function(num){
           'reportBody':
             [
               {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-                {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
+                {tag:'table',attr:{id:'report_tbl',style:'width:auto; font-size:15px'},className:"styled width-80",child:[
                   {tag:'thead',child:[
                     {tag:'tr',child:[
-                      {tag:'th',child:['Date']},
-                      {tag:'th',child:['Drawing']},
-                      {tag:'th',child:['Location (km)']},
-                      {tag:'th',child:['Type']},
-                      {tag:'th',child:['Km Start']},
-                      {tag:'th',child:['Km End']}
+                      {tag:'th',child:["Date"]},
+                      {tag:'th',child:["Drawing"]},
+                      {tag:'th',child:["Location"]},
+                      {tag:'th',child:["Type"]},
+                      {tag:'th',child:["Start"]},
+                      {tag:'th',child:["End"]}
+                    ]},
+                    {tag:'tr',attr:{style:'background-color:#eee'},child:[
+                      {tag:'td',attr:{colspan:2}},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
+                      {tag:'td',attr:{colspan:1}},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]}
                     ]}
                   ]},
-                  {tag:'tbody'}
+                  {tag:'tbody',attr:{style:'white-space:nowrap'}}
                 ]}
-              ]}
-            ],
+            ]}
+          ],
           'reportDetail':
             [{tag:'p',child:['This tool does not support detailed search items']}]
         },
@@ -1056,7 +1063,7 @@ var padZero = function(num){
       // Default Styles and map constants
       wid1: '5.0',
       wid2: '2.0',
-      col1: '#ffff00',
+      col1: '#ffa500',
       col2: '#1d73b5',
       sel1: '#00ffff',
       black: '#000000',
