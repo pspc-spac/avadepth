@@ -12,6 +12,7 @@ function addWatch() {
     function repeatCheck(){
         if(avaIFaceJS.mapJS.cbw_func !== undefined){
             clearInterval(clearcheck);
+            document.getElementById("ddRiverName").addEventListener("change", avaIFaceJS.mapJS.cbw_func.setRiver);
             for(let lyr of elementIds){
                 let el = document.getElementById(lyr);
                 el.addEventListener('click', avaIFaceJS.mapJS.cbw_func.triggerLayer, false);
@@ -153,9 +154,9 @@ avaIFaceJS.cbw_func = {
 
     setOpacity: function(ev) {
         let newOpacity = Math.max(10, ev.target.value) / 100;
-        avaIFaceJS.mapJS.cbw_func.wmts_layers.conformance.setOpacity(newOpacity);
-        avaIFaceJS.mapJS.cbw_func.wmts_layers.combined.setOpacity(newOpacity);
-        avaIFaceJS.mapJS.cbw_func.wmts_layers.difference.setOpacity(newOpacity);
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.conformance&&avaIFaceJS.mapJS.cbw_func.wmts_layers.conformance.setOpacity(newOpacity);
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.combined&&avaIFaceJS.mapJS.cbw_func.wmts_layers.combined.setOpacity(newOpacity);
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.difference&&avaIFaceJS.mapJS.cbw_func.wmts_layers.difference.setOpacity(newOpacity);
     },
 
     init: function() {
