@@ -189,7 +189,7 @@ var padZero = function(num){
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                           {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
-                            "Surface generated ",
+                              "Date created ",
                             {tag: "span", attr: {name: "srfDateCur"}}
                           ]},
                           {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [

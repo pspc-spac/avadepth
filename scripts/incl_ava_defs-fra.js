@@ -176,19 +176,21 @@ var padZero = function(num){
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
                   {tag: "div", attr: { class: "popup" }, child: [
                           " sondages", {tag: "span", attr: { class: "popuptext" }, child: [
-                                  " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]
+                              " Profondeurs par rapport au zéro des cartes locales de niveau des basses eaux (NBE)"]
                           }]
                   },
                   {tag: "br"},
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" } },
-                  {tag: "div", attr: { class: "popup" }, child: [" chenal&nbsp;&nbsp;", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                  {
+                      tag: "div", attr: { class: "popup" }, child: [" chenal&nbsp;&nbsp;", {
+                          tag: "span", attr: { class: "popuptext" }, child: [" Chenal désigné maintenu pour le transport maritime"] }] },
                   {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
                   " montre cellules",
                   {tag: "br"},
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
                   {tag: "div", attr: { class: "popup" }, child: [
                           " surfaces:", {tag: "span", attr: { class: "popuptext" }, child: [
-                                  " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]
+                              " Bathymétrie de sondages récents de SPAC"]
                           }]
                   },
                   {tag: "br"},
@@ -196,7 +198,7 @@ var padZero = function(num){
                           {tag: "label", attr: { for: "surfTrans" }, child: [
                             {tag: "div", attr: { class: "popup" }, child: [
                                   "transparence", {tag: "span", attr: { class: "popuptext" }, child: [
-                                      " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]
+                                      " Glisser pour ajuster l’intensité de la couleur"]
                                   }]
                               }]
                           },
@@ -204,16 +206,20 @@ var padZero = function(num){
                       "type de surface:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                           {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "combined", checked: "checked" } },
-                          {tag: "div", attr: { class: "popup" }, child: [" bathymetrique", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                          {
+                              tag: "div", attr: { class: "popup" }, child: [" bathymetrique", {
+                                  tag: "span", attr: { class: "popuptext" }, child: [" Modèle numérique de terrain (MNT) généré à partir des sondages actuels"] }] },
                           {tag: "br"},
                           {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "conformance" } },
-                          {tag: "div", attr: { class: "popup" }, child: [" conformité", { tag: "span", attr: { class: "popuptext" }, child: [" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."] }] },
+                          {
+                              tag: "div", attr: { class: "popup" }, child: [" conformité", {
+                                  tag: "span", attr: { class: "popuptext" }, child: [" Différence relative au-dessus ou au-dessous du niveau de conception du chenal"] }] },
                           {tag: "br"}
                       ]},
                       "détails:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                           {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
-                              "surface généré ",
+                              "Date de création ",
                               {tag: "span", attr: {name: "srfDateCur"}}
                             ]},
                           {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [
