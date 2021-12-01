@@ -238,7 +238,7 @@ avaIFaceJS.sdb_func = {
                 $.each(data, function() {
                     avaIFaceJS.sdb_func.tableReport.row.add(
                         [moment(this.Date, old_date_format).format(new_date_format),
-                        "<a href='http://www2.pac.dfo-mpo.gc.ca/Data/dwf/"
+                        "<a href='https://www2.pac.dfo-mpo.gc.ca/Data/dwf/"
                             + this.Filename + "." +
                             this.FileType +
                             "' target='_blank'>"
