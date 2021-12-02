@@ -164,6 +164,7 @@ var padZero = function(num){
             {tag: "div", attr: {classname: "span-4"}, child: [
                 {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers"]},
                 {tag: "div", child: [
+                    /*
                     {tag: "label", attr: {for: "ddRiverName"}, child: ["River Selection"]},
                     {tag: "select", attr: {name: "riverName", id: "ddRiverName"}, child: [
                       {tag: "option", attr: {value: "FRSA", selected: "selected"}, child: ["Fraser River South Arm"]},
@@ -172,6 +173,7 @@ var padZero = function(num){
                       {tag: "option", attr: {value: "FRSC"}, child: ["Fraser River South Arm Channels"]},
                       {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
                     ]},
+                    */
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
                     {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: ["Depths relative to local low water level (LLWL) chart datum"] }] },
                     {tag: "br"},
