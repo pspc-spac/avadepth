@@ -55,23 +55,35 @@ avaIFaceJS.cbw_func = {
         {
             "name": "combined",
             legend: {
-                en: '<table><tbody><tr><th>Depth</th><th>Colour</th></tr>' +
-                    '<tr><td>0</td><td><div class="surface_legend" style="background-color:#980056"></div></td></tr>' +
-                    '<tr><td>1.8</td><td><div class="surface_legend" style="background-color:#fe0000"></div></td></tr>' +
-                    '<tr><td>8.2</td><td><div class="surface_legend" style="background-color:#ffff00"></div></td></tr>' +
-                    '<tr><td>13.3</td><td><div class="surface_legend" style="background-color:#00ff00"></div></td></tr>' +
-                    '<tr><td>16.9</td><td><div class="surface_legend" style="background-color:#00ffff"></div></td></tr>' +
-                    '<tr><td>21.8</td><td><div class="surface_legend" style="background-color:#0000ff"></div></td></tr>' +
-                    '<tr><td>25</td><td><div class="surface_legend" style="background-color:#74007a"></div></td></tr>' +
+                en: '<table><tbody><tr><th>Rating</th><th>Colour</th></tr>' +
+                    '<tr><td>-1.5 - -20 (or >-1.5)</td><td><div class="surface_legend" style="background-color:#C89600"></div></td></tr>' +
+                    '<tr><td>0.5 - -1.5</td><td><div class="surface_legend" style="background-color:#DAD25F"></div></td></tr>' +
+                    '<tr><td>2.5 - 0.5</td><td><div class="surface_legend" style="background-color:#00FFFF"></div></td></tr>' +
+                    '<tr><td>4.5 - 2.5</td><td><div class="surface_legend" style="background-color:#00D5E4"></div></td></tr>' +
+                    '<tr><td>6.5 - 4.5</td><td><div class="surface_legend" style="background-color:#00AAE1"></div></td></tr>' +
+                    '<tr><td>8.5 - 6.5</td><td><div class="surface_legend" style="background-color:#0080E1"></div></td></tr>' +
+                    '<tr><td>10.5 - 8.5</td><td><div class="surface_legend" style="background-color:#0055E1"></div></td></tr>' +
+                    '<tr><td>12.5 - 10.5</td><td><div class="surface_legend" style="background-color:#003DEA"></div></td></tr>' +
+                    '<tr><td>14.5 - 12.5</td><td><div class="surface_legend" style="background-color:#0031D4"></div></td></tr>' +
+                    '<tr><td>16.5 - 14.5</td><td><div class="surface_legend" style="background-color:#0024BF"></div></td></tr>' +
+                    '<tr><td>18.5 - 16.5</td><td><div class="surface_legend" style="background-color:#0018AA"></div></td></tr>' +
+                    '<tr><td>20.5 - 18.5</td><td><div class="surface_legend" style="background-color:#000091"></div></td></tr>' +
+                    '<tr><td>200 - 20.5 (or <20.5)</td><td><div class="surface_legend" style="background-color:#00007F"></div></td></tr>' +
                     '</tbody></table>',
                 fr: '<table><tbody><tr><th>profondeur</th><th>couleur</th></tr>' +
-                    '<tr><td>0</td><td><div class="surface_legend" style="background-color:#980056"></div></td></tr>' +
-                    '<tr><td>1.8</td><td><div class="surface_legend" style="background-color:#fe0000"></div></td></tr>' +
-                    '<tr><td>8.2</td><td><div class="surface_legend" style="background-color:#ffff00"></div></td></tr>' +
-                    '<tr><td>13.3</td><td><div class="surface_legend" style="background-color:#00ff00"></div></td></tr>' +
-                    '<tr><td>16.9</td><td><div class="surface_legend" style="background-color:#00ffff"></div></td></tr>' +
-                    '<tr><td>21.8</td><td><div class="surface_legend" style="background-color:#0000ff"></div></td></tr>' +
-                    '<tr><td>25</td><td><div class="surface_legend" style="background-color:#74007a"></div></td></tr>' +
+                    '<tr><td>-1.5 - -20 (ou >-1.5)</td><td><div class="surface_legend" style="background-color:#C89600"></div></td></tr>' +
+                    '<tr><td>0.5 - -1.5</td><td><div class="surface_legend" style="background-color:#DAD25F"></div></td></tr>' +
+                    '<tr><td>2.5 - 0.5</td><td><div class="surface_legend" style="background-color:#00FFFF"></div></td></tr>' +
+                    '<tr><td>4.5 - 2.5</td><td><div class="surface_legend" style="background-color:#00D5E4"></div></td></tr>' +
+                    '<tr><td>6.5 - 4.5</td><td><div class="surface_legend" style="background-color:#00AAE1"></div></td></tr>' +
+                    '<tr><td>8.5 - 6.5</td><td><div class="surface_legend" style="background-color:#0080E1"></div></td></tr>' +
+                    '<tr><td>10.5 - 8.5</td><td><div class="surface_legend" style="background-color:#0055E1"></div></td></tr>' +
+                    '<tr><td>12.5 - 10.5</td><td><div class="surface_legend" style="background-color:#003DEA"></div></td></tr>' +
+                    '<tr><td>14.5 - 12.5</td><td><div class="surface_legend" style="background-color:#0031D4"></div></td></tr>' +
+                    '<tr><td>16.5 - 14.5</td><td><div class="surface_legend" style="background-color:#0024BF"></div></td></tr>' +
+                    '<tr><td>18.5 - 16.5</td><td><div class="surface_legend" style="background-color:#0018AA"></div></td></tr>' +
+                    '<tr><td>20.5 - 18.5</td><td><div class="surface_legend" style="background-color:#000091"></div></td></tr>' +
+                    '<tr><td>200 - 20.5 (ou <20.5)</td><td><div class="surface_legend" style="background-color:#00007F"></div></td></tr>' +
                     '</tbody></table>',
             }
         },
@@ -164,7 +176,7 @@ avaIFaceJS.cbw_func = {
         addWatch();
         document.getElementById("surfTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity);
         document.getElementById("surfLegend").innerHTML = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === "combined").legend[page_lang];
-        fetch("river_updates.json", {method: "GET"})
+        fetch("https://ava-proto.com/river_updates.json", {method: "GET"})
             .then(r => r.json())
             .then(r => {
                 console.log("Adding new river dates", r);
