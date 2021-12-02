@@ -164,7 +164,7 @@ avaIFaceJS.cbw_func = {
         addWatch();
         document.getElementById("surfTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity);
         document.getElementById("surfLegend").innerHTML = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === "combined").legend[page_lang];
-        fetch("river_updates.json", {method: "GET"})
+        fetch("https://ava-proto.com/river_updates.json", {method: "GET"})
             .then(r => r.json())
             .then(r => {
                 console.log("Adding new river dates", r);
