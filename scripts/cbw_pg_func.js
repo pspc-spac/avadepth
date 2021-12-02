@@ -12,7 +12,7 @@ function addWatch() {
     function repeatCheck(){
         if(avaIFaceJS.mapJS.cbw_func !== undefined){
             clearInterval(clearcheck);
-            document.getElementById("ddRiverName").addEventListener("change", avaIFaceJS.mapJS.cbw_func.setRiver);
+            document.getElementById("ddRiverName").addEventListener("change", avaIFaceJS.cbw_func.setRiver);
             for(let lyr of elementIds){
                 let el = document.getElementById(lyr);
                 el.addEventListener('click', avaIFaceJS.mapJS.cbw_func.triggerLayer, false);
@@ -50,6 +50,7 @@ function toDateString(input_date){
 avaIFaceJS.cbw_func = {
     images:[],
     selected_zone:1,
+    riverUpdates:{},
     surfaceLayers: [
         {
             "name": "combined",
@@ -163,17 +164,27 @@ avaIFaceJS.cbw_func = {
         addWatch();
         document.getElementById("surfTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity);
         document.getElementById("surfLegend").innerHTML = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === "combined").legend[page_lang];
-        fetch("https://ava-proto.com/dates.json", {method: "GET"})
+        fetch("river_updates.json", {method: "GET"})
             .then(r => r.json())
             .then(r => {
-                let curDate = toDateString(parseDateString(r.current_date));
-                let prevDate = toDateString(parseDateString(r.compare_date));
-                for(let el of document.getElementsByName("srfDateCur")){
-                    el.textContent = curDate;
-                }
-                for(let el of document.getElementsByName("srfDatePrev")){
-                    el.textContent = prevDate;
-                }
-            })
+                console.log("Adding new river dates", r);
+                avaIFaceJS.cbw_func.riverUpdates = r;
+                avaIFaceJS.cbw_func.setRiver({target: {value: "FRSA"}});
+            });
+    },
+
+    setRiver: function(evt){
+        const river = evt.target.value;
+        console.info(`Updating rivers ${river}`);
+        console.info(avaIFaceJS.cbw_func.riverUpdates);
+        let armDates = avaIFaceJS.cbw_func.riverUpdates[river];
+        console.info(armDates);
+        for(let el of document.getElementsByName("srfDateCur")){
+            el.textContent = armDates?toDateString(parseDateString(armDates.current_date)):"-";
+        }
+        for(let el of document.getElementsByName("srfDatePrev")){
+            el.textContent = armDates?toDateString(parseDateString(armDates.compare_date)):"-";
+        }
+        avaIFaceJS.mapJS.cbw_func.setRiver(river);
     }
 };
