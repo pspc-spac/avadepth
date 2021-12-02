@@ -183,7 +183,7 @@ var padZero = function(num){
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
                     {tag: "div", attr: { class: "popup" }, child: [
                         " Surface:",
-                        { tag: "span", attr: { class: "popuptext" }, child: ["bathymetry of recent PSPC soundings"] }
+                        { tag: "span", attr: { class: "popuptext" }, child: ["Bathymetry of recent PSPC soundings"] }
                     ] },
                     {tag: "div", attr: {class: "optionIndent"}, child: [
                         {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["Slide to adjust colour intensity"] }] }]},
@@ -193,12 +193,12 @@ var padZero = function(num){
                           {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Bathymetry",
-                              { tag: "span", attr: { class: "popuptext" }, child: ["digital terrain model (DTM) generated from current soundings "] }] },
+                              { tag: "span", attr: { class: "popuptext" }, child: ["Digital terrain model (DTM) generated from current soundings "] }] },
                           {tag: "br" },
                           {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Conformance",
-                              { tag: "span", attr: { class: "popuptext" }, child: ["the relative difference above or below channel design grade"] }] },
+                              { tag: "span", attr: { class: "popuptext" }, child: ["The relative difference above or below channel design grade"] }] },
                           {tag: "br" }
                         ]},
                       "Surface Details:",
