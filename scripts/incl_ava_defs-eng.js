@@ -164,8 +164,8 @@ var padZero = function(num){
             {tag: "div", attr: {classname: "span-4"}, child: [
                 {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers"]},
                 {tag: "div", child: [
-                    {tag: "label", attr: {style: "display:none", for: "ddRiverName"}, child: ["River Selection"]},
-                    {tag: "select", attr: {style: "display:none", name: "riverName", id: "ddRiverName"}, child: [
+                    {tag: "label", attr: {for: "ddRiverName"}, child: ["River Selection"]},
+                    {tag: "select", attr: {name: "riverName", id: "ddRiverName"}, child: [
                       {tag: "option", attr: {value: "FRSA", selected: "selected"}, child: ["Fraser River South Arm"]},
                       {tag: "option", attr: {value: "FRNA"}, child: ["Fraser River North Arm"]},
                       {tag: "option", attr: {value: "FRMA"}, child: ["Fraser River Main Arm"]},

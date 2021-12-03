@@ -56,34 +56,24 @@ avaIFaceJS.cbw_func = {
             "name": "combined",
             legend: {
                 en: '<table><tbody><tr><th>Rating</th><th>Colour</th></tr>' +
-                    '<tr><td>-1.5 - -20 (or >-1.5)</td><td><div class="surface_legend" style="background-color:#C89600"></div></td></tr>' +
-                    '<tr><td>0.5 - -1.5</td><td><div class="surface_legend" style="background-color:#DAD25F"></div></td></tr>' +
-                    '<tr><td>2.5 - 0.5</td><td><div class="surface_legend" style="background-color:#00FFFF"></div></td></tr>' +
-                    '<tr><td>4.5 - 2.5</td><td><div class="surface_legend" style="background-color:#00D5E4"></div></td></tr>' +
-                    '<tr><td>6.5 - 4.5</td><td><div class="surface_legend" style="background-color:#00AAE1"></div></td></tr>' +
-                    '<tr><td>8.5 - 6.5</td><td><div class="surface_legend" style="background-color:#0080E1"></div></td></tr>' +
-                    '<tr><td>10.5 - 8.5</td><td><div class="surface_legend" style="background-color:#0055E1"></div></td></tr>' +
-                    '<tr><td>12.5 - 10.5</td><td><div class="surface_legend" style="background-color:#003DEA"></div></td></tr>' +
-                    '<tr><td>14.5 - 12.5</td><td><div class="surface_legend" style="background-color:#0031D4"></div></td></tr>' +
-                    '<tr><td>16.5 - 14.5</td><td><div class="surface_legend" style="background-color:#0024BF"></div></td></tr>' +
-                    '<tr><td>18.5 - 16.5</td><td><div class="surface_legend" style="background-color:#0018AA"></div></td></tr>' +
-                    '<tr><td>20.5 - 18.5</td><td><div class="surface_legend" style="background-color:#000091"></div></td></tr>' +
-                    '<tr><td>200 - 20.5 (or <20.5)</td><td><div class="surface_legend" style="background-color:#00007F"></div></td></tr>' +
+                    '<tr><td> -20 - -1.5 (or >-1.5)</td><td><div class="surface_legend" style="background-color:#C89600"></div></td></tr>' +
+                    '<tr><td>-1.5 - 0.5</td><td><div class="surface_legend" style="background-color:#DAD25F"></div></td></tr>' +
+                    '<tr><td>0.5 -2.5</td><td><div class="surface_legend" style="background-color:#00FFFF"></div></td></tr>' +
+                    '<tr><td>2.5 - 4.5</td><td><div class="surface_legend" style="background-color:#00D5E4"></div></td></tr>' +
+                    '<tr><td>4.5 - 6.5</td><td><div class="surface_legend" style="background-color:#00AAE1"></div></td></tr>' +
+                    '<tr><td>6.5 - 12.5</td><td><div class="surface_legend" style="background-color:#0080E1"></div></td></tr>' +
+                    '<tr><td>12.5 - 20.5</td><td><div class="surface_legend" style="background-color:#0024BF"></div></td></tr>' +
+                    '<tr><td>20.0 - 20.5 (or <20.5)</td><td><div class="surface_legend" style="background-color:#00007F"></div></td></tr>' +
                     '</tbody></table>',
                 fr: '<table><tbody><tr><th>profondeur</th><th>couleur</th></tr>' +
-                    '<tr><td>-1.5 - -20 (ou >-1.5)</td><td><div class="surface_legend" style="background-color:#C89600"></div></td></tr>' +
-                    '<tr><td>0.5 - -1.5</td><td><div class="surface_legend" style="background-color:#DAD25F"></div></td></tr>' +
-                    '<tr><td>2.5 - 0.5</td><td><div class="surface_legend" style="background-color:#00FFFF"></div></td></tr>' +
-                    '<tr><td>4.5 - 2.5</td><td><div class="surface_legend" style="background-color:#00D5E4"></div></td></tr>' +
-                    '<tr><td>6.5 - 4.5</td><td><div class="surface_legend" style="background-color:#00AAE1"></div></td></tr>' +
-                    '<tr><td>8.5 - 6.5</td><td><div class="surface_legend" style="background-color:#0080E1"></div></td></tr>' +
-                    '<tr><td>10.5 - 8.5</td><td><div class="surface_legend" style="background-color:#0055E1"></div></td></tr>' +
-                    '<tr><td>12.5 - 10.5</td><td><div class="surface_legend" style="background-color:#003DEA"></div></td></tr>' +
-                    '<tr><td>14.5 - 12.5</td><td><div class="surface_legend" style="background-color:#0031D4"></div></td></tr>' +
-                    '<tr><td>16.5 - 14.5</td><td><div class="surface_legend" style="background-color:#0024BF"></div></td></tr>' +
-                    '<tr><td>18.5 - 16.5</td><td><div class="surface_legend" style="background-color:#0018AA"></div></td></tr>' +
-                    '<tr><td>20.5 - 18.5</td><td><div class="surface_legend" style="background-color:#000091"></div></td></tr>' +
-                    '<tr><td>200 - 20.5 (ou <20.5)</td><td><div class="surface_legend" style="background-color:#00007F"></div></td></tr>' +
+                    '<tr><td> -20 - -1.5 (ou >-1.5)</td><td><div class="surface_legend" style="background-color:#C89600"></div></td></tr>' +
+                    '<tr><td>-1.5 - 0.5</td><td><div class="surface_legend" style="background-color:#DAD25F"></div></td></tr>' +
+                    '<tr><td>0.5 -2.5</td><td><div class="surface_legend" style="background-color:#00FFFF"></div></td></tr>' +
+                    '<tr><td>2.5 - 4.5</td><td><div class="surface_legend" style="background-color:#00D5E4"></div></td></tr>' +
+                    '<tr><td>4.5 - 6.5</td><td><div class="surface_legend" style="background-color:#00AAE1"></div></td></tr>' +
+                    '<tr><td>6.5 - 12.5</td><td><div class="surface_legend" style="background-color:#0080E1"></div></td></tr>' +
+                    '<tr><td>12.5 - 20.5</td><td><div class="surface_legend" style="background-color:#0024BF"></div></td></tr>' +
+                    '<tr><td>20.0 - 20.5 (ou <20.5)</td><td><div class="surface_legend" style="background-color:#00007F"></div></td></tr>' +
                     '</tbody></table>',
             }
         },
