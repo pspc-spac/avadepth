@@ -105,8 +105,8 @@ avaMapJS.cbw_func = {
         avaMapJS.cbw_func.currentSurface = "combined";
     },
 
-    setRiver: function(evt) {
-        avaMapJS.cbw_func.loadLayers(evt.target.value);
+    setRiver: function(river) {
+        avaMapJS.cbw_func.loadLayers(river);
     },
 
     triggerLayer: function(evt) {
