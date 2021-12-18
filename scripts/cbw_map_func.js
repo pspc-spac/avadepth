@@ -50,6 +50,7 @@ avaMapJS.cbw_func = {
         avaMapJS.cbw_func.wmts_layers = {};
         avaMapJS.cbw_func.current_river = "$";
         avaMapJS.cbw_func.loadLayers("FRSA");
+        avaMapJS.cbw_func.currentSurface = "combined";
         // addWatch("chkLyrChannel", avaMapJS.cbw_func.triggerLayer);
     },
 
@@ -94,6 +95,7 @@ avaMapJS.cbw_func = {
                 avaMapJS.cbw_func.wmts_layers.conformance&&avaMapJS.cbw_func.wmts_layers.conformance.setVisibility(false);
                 avaMapJS.cbw_func.wmts_layers.channel_cells&&avaMapJS.cbw_func.wmts_layers.channel_cells.setVisibility(false);
                 avaMapJS.map.addLayers(Object.keys(avaMapJS.cbw_func.wmts_layers).map(x => avaMapJS.cbw_func.wmts_layers[x]));
+                avaMapJS.cbw_func.setLayer("surface", true);
             },
             failure: function() {
                 alert("Trouble getting capabilities doc");
@@ -102,7 +104,6 @@ avaMapJS.cbw_func = {
         })
         avaMapJS.cbw_func.current_river = river;
         avaMapJS.cbw_func.setExtents();
-        avaMapJS.cbw_func.currentSurface = "combined";
     },
 
     setRiver: function(river) {
@@ -110,8 +111,10 @@ avaMapJS.cbw_func = {
     },
 
     triggerLayer: function(evt) {
-        let layerName = evt.target.value;
-        let toggleValue = evt.target.checked;
+        avaMapJS.cbw_func.setLayer(evt.target.value, evt.target.checked);
+    },
+
+    setLayer: function(layerName, toggleValue) {
         if(layerName === "surface"){
             avaMapJS.cbw_func.wmts_layers[avaMapJS.cbw_func.currentSurface].setVisibility(toggleValue);
         } else {
