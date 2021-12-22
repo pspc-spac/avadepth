@@ -36,14 +36,14 @@ function addWatch() {
 function parseDateString(input_date){
     return new Date(
         parseInt(input_date.slice(0, 4)),
-        parseInt(input_date.slice(4, 6)),
+        parseInt(input_date.slice(4, 6)) - 1,
         parseInt(input_date.slice(6, 8))
     )
 }
 
 function toDateString(input_date){
     return input_date.getDate().toString()
-        .padStart(2, "0") + "-" + input_date.getMonth().toString()
+        .padStart(2, "0") + "-" + (input_date.getMonth() + 1).toString()
         .padStart(2, "0") + "-" + input_date.getFullYear().toString();
 }
 
