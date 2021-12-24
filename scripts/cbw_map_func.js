@@ -33,11 +33,11 @@ const RiverSections = new Map([
     }],
     ["FRMA", {
         layers: ["combined", "conformance", "soundings"],
-        extents: new OpenLayers.Bounds(-13730138, 6282692,-13677350, 6314133)
+        extents: new OpenLayers.Bounds(-13692049.134674, 6277545.1912811, -13606133.914894, 6329522.3705077)
     }],
     ["PIRI", {
         layers: ["combined", "conformance", "soundings"],
-        extents: new OpenLayers.Bounds(-13730138, 6282692,-13677350, 6314133)
+        extents: new OpenLayers.Bounds(-13695106.615805, 6301928.6033007, -13609191.396025, 6353905.7825273)
     }],
 ]);
 
