@@ -3,8 +3,16 @@
  */
 let debug = false;
 let hostname = document.URL.split("/")[2].split(":")[0] === "localhost" ? "localhost:8080" : "ava-proto.com"
-let avadepthSFE = `https://${hostname}/avadepthserver/services/ows/wmts/avadepth`;
-let SFETileFormat = "default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png";
+const avadepthTMS = `https://${hostname}/tiles`;
+const TMSTileFormat = "GoogleMapsCompatible/${z}/${y}/${x}.png";
+const TMSOptions = {
+    sphericalMercator: true,
+    format: "image/png",
+    isBaseLayer: false,
+    projection: new OpenLayers.Projection("EPSG:3857"),
+    zoomOffset: 1,
+    units: "m"
+}
 
 let layerMap = new Map([
     ["channel", ["channel_cells", "channel_outline"]],
@@ -49,61 +57,30 @@ avaMapJS.cbw_func = {
     init: function() {
         avaMapJS.cbw_func.wmts_layers = {};
         avaMapJS.cbw_func.current_river = "$";
-        avaMapJS.cbw_func.loadLayers("FRSA");
         avaMapJS.cbw_func.currentSurface = "combined";
-        // addWatch("chkLyrChannel", avaMapJS.cbw_func.triggerLayer);
     },
 
     loadLayers: function(river) {
-        let current_layers = avaMapJS.map.layers.filter(x => x.layer&&x.layer.startsWith(avaMapJS.cbw_func.current_river));
+        let current_layers = avaMapJS.map.layers.filter(x => x.name&&x.name.startsWith(avaMapJS.cbw_func.current_river));
         for(let lyr of current_layers){
             avaMapJS.map.removeLayer(lyr);
         }
-        let format_cap = new OpenLayers.Format.WMTSCapabilities({
-            yx: {
-                "urn:ogc:def:crs:EPSG::3857": false
-            }
-        });
-        let layers = RiverSections.get(river).layers
-            .map(name => [name, LayerNames.get(name).title, applyRiverName(LayerNames.get(name).name, river)]);
-        OpenLayers.Request.GET({
-            url: avadepthSFE,
-            params: {
-                service: "WMTS",
-                version: "1.0.0",
-                request: "GetCapabilities"
-            },
-            success: function(request){
-                let doc = request.responseXML;
-                if (!doc || !doc.documentElement){
-                    doc = request.responseText;
-                }
-                let capabilities = format_cap.read(doc);
-                avaMapJS.cbw_func.wmts_layers = {};
-                for(let lyr of layers){
-                    avaMapJS.cbw_func.wmts_layers[lyr[0]] = format_cap.createLayer(capabilities, {
-                        layer: lyr[2],
-                        name: lyr[1],
-                        matrixSet: "GoogleMapsCompatible",
-                        format: "image/png",
-                        isBaseLayer: false,
-                        requestEncoding: 'REST',
-                        url: `${avadepthSFE}/1.0.0/${lyr[2]}/${SFETileFormat}`
-                    });
-                }
-                avaMapJS.cbw_func.wmts_layers.difference&&avaMapJS.cbw_func.wmts_layers.difference.setVisibility(false);
-                avaMapJS.cbw_func.wmts_layers.conformance&&avaMapJS.cbw_func.wmts_layers.conformance.setVisibility(false);
-                avaMapJS.cbw_func.wmts_layers.channel_cells&&avaMapJS.cbw_func.wmts_layers.channel_cells.setVisibility(false);
-                avaMapJS.map.addLayers(Object.keys(avaMapJS.cbw_func.wmts_layers).map(x => avaMapJS.cbw_func.wmts_layers[x]));
-                avaMapJS.cbw_func.setLayer("surface", true);
-            },
-            failure: function() {
-                alert("Trouble getting capabilities doc");
-                OpenLayers.Console.error.apply(OpenLayers.Console, arguments);
-            }
-        })
         avaMapJS.cbw_func.current_river = river;
         avaMapJS.cbw_func.setExtents();
+        let layers = RiverSections.get(river).layers
+            .map(name => [name, LayerNames.get(name).title, applyRiverName(LayerNames.get(name).name, river)]);
+        console.log(layers);
+        avaMapJS.cbw_func.wmts_layers = {};
+        for(let lyr of layers) {
+            avaMapJS.cbw_func.wmts_layers[lyr[0]] = new OpenLayers.Layer.XYZ(
+                lyr[2], `${avadepthTMS}/${lyr[2]}/${TMSTileFormat}`, TMSOptions
+            );
+        }
+        avaMapJS.cbw_func.wmts_layers.difference&&avaMapJS.cbw_func.wmts_layers.difference.setVisibility(false);
+        avaMapJS.cbw_func.wmts_layers.conformance&&avaMapJS.cbw_func.wmts_layers.conformance.setVisibility(false);
+        avaMapJS.cbw_func.wmts_layers.channel_cells&&avaMapJS.cbw_func.wmts_layers.channel_cells.setVisibility(false);
+        avaMapJS.map.addLayers(Object.keys(avaMapJS.cbw_func.wmts_layers).map(x => avaMapJS.cbw_func.wmts_layers[x]));
+        avaMapJS.cbw_func.setLayer("surface", true);
     },
 
     setRiver: function(river) {
