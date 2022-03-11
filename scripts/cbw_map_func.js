@@ -10,9 +10,30 @@ const TMSOptions = {
     format: "image/png",
     isBaseLayer: false,
     projection: new OpenLayers.Projection("EPSG:3857"),
-    zoomOffset: 1,
-    units: "m"
-}
+    units: "m",
+    alwaysInRange: true,
+    serverResolutions: [
+        156543.03392804097,
+        78271.51696402048,
+        39135.75848201024,
+        19567.87924100512,
+        9783.93962050256,
+        4891.96981025128,
+        2445.98490512564,
+        1222.99245256282,
+        611.4962262814101,
+        305.74811314070485,
+        152.8740565703525,
+        76.43702828517625,
+        38.218514142588134,
+        19.109257071294063,
+        9.554628535647032,
+        4.777314267823516,
+        2.388657133911758,
+        1.194328566955879,
+        0.5971642834779395
+    ]
+};
 
 let layerMap = new Map([
     ["channel", ["channel_cells", "channel_outline"]],
@@ -69,7 +90,6 @@ avaMapJS.cbw_func = {
         avaMapJS.cbw_func.setExtents();
         let layers = RiverSections.get(river).layers
             .map(name => [name, LayerNames.get(name).title, applyRiverName(LayerNames.get(name).name, river)]);
-        console.log(layers);
         avaMapJS.cbw_func.wmts_layers = {};
         for(let lyr of layers) {
             avaMapJS.cbw_func.wmts_layers[lyr[0]] = new OpenLayers.Layer.XYZ(
