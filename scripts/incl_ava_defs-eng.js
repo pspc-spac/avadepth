@@ -19,7 +19,7 @@ var padZero = function(num){
   function getAPI(extURL, intURL){
       // console.log(extURL);
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
-      return intURL;
+      return extURL;
     } else {
       return extURL;
     }
@@ -199,11 +199,22 @@ var padZero = function(num){
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Conformance",
                               { tag: "span", attr: { class: "popuptext" }, child: ["The relative difference above or below channel design grade"] }] },
-                          {tag: "br" }
+                          { tag: "br" },
+
+                          //Channel Infill & Scour Analysis
+                          { tag: "input", attr: { type: "radio", name: "surface", value: "ISA" } },
+                          {
+                              tag: "div", attr: { class: "popup" }, child: [
+                                  "ISA",
+                                  { tag: "span", attr: { class: "popuptext" }, child: ["Time series analysis of channel infill and scour illustrating how dynamic the river bottom can be during freshet"] }]
+                          },
+                          { tag: "br" }
+
                         ]},
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
-                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
+                          {
+                              tag: "div", attr: { style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
                               "Date created ",
                             {tag: "span", attr: {name: "srfDateCur"}}
                           ]},

@@ -1,6 +1,7 @@
 /**
  * Created by wsiddall on 09/03/2021
  */
+
 let debug = false;
 let hostname = document.URL.split("/")[2].split(":")[0] === "localhost" ? "localhost:8080" : "ava-proto.com"
 let avadepthSFE = `https://${hostname}/avadepthserver/services/ows/wmts/avadepth`;
@@ -138,3 +139,82 @@ avaMapJS.cbw_func = {
         }
     },
 }
+
+//Channel Infill & Scour Analysis Function
+
+/*** Interface functions ***/
+avaMapJS.isa_func = {
+    /** @propery {string} location - Location of the selected tile */
+    location: null,
+    init: function () {
+        locException.push({
+            riverCode: "FSD",
+            re: /Fraser\sSurrey\sDocks/
+        });
+
+        // Colour and resize map extents when waterway field changes
+        $('#isa_waterway').change(function () {
+            avaMapJS.mapJS.isa_func.setExtents($(this).val());
+            return $('#map').css("min-height", "400px");
+        });
+
+        // Colour Tiles when location field changes
+        $('#location').change(function () {
+            return avaMapJS.mapJS.isa_func.refreshLocation($(this).val());
+        });
+        //document.getElementById('pBarContainer').style.display = 'none'; 
+        document.getElementById('submit').style.display = 'none';
+
+    },
+    update: function (tileName) {
+        $.getJSON(
+            getAPI(
+                'api2/isas?location=' + tileName,
+                '/api/isa/' + tileName + '.json'))
+            .then(function (ISAs) {
+                console.log(ISAs);
+                avaMapJS.reportWindow.addTitle("Search Results", "", "");
+                avaMapJS.isa_func.tableReport || (avaMapJS.isa_func.tableReport = $('#isas').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "searching": false,
+                    "info": false,
+                }));
+
+                avaMapJS.reportWindow.addTitle("Search Results for", avaMapJS.isa_func.location, "");
+                avaMapJS.isa_func.tableReport.clear();
+                $('#isas tbody tr').remove();
+
+                $.each(ISAs, function () {
+                    avaMapJS.isa_func.tableReport.row.add([
+                        "<a href='https://avadepth.ccg-gcc.gc.ca/Data/" +
+                        "channel_infill_pdfs/" +
+                        this.Filename + "' target='_blank'>" +
+                        this.Filename + "</a>",
+                        this.Year
+                    ]);
+                });
+
+                avaMapJS.isa_func.tableReport.draw();
+                avaMapJS.sideNavPanel.reset();
+
+                var refMapString = (window.location.href.indexOf("fra") > -1) ? "Carte Physique" : "Reference Map";
+                var repHeaderString = (window.location.href.indexOf("fra") > -1) ? "Haut du rapport" : "Top of Report";
+                var sideNavTitleString = (window.location.href.indexOf("fra") > -1) ? "Aller à" : "Navigate To";
+
+                avaMapJS.sideNavPanel.addTitle(sideNavTitleString);
+                avaMapJS.sideNavPanel.addLink(refMapString, "#ava_map_ttl");
+                avaMapJS.sideNavPanel.addLink(repHeaderString, "#reportTitleDiv");
+                avaMapJS.sideNavPanel.display();
+
+                avaMapJS.reportWindow.show();
+
+                if (avaMapJS.isa_func.tableReport) {
+                    // (1) Place user page in the survey search results, as per client request - Last Updated 2018-09-28  
+                    var elemLocation = $("#reportTitleDiv").offset();
+                    window.scrollTo(elemLocation.left, elemLocation.top);
+                }
+            });
+    }
+};
+//# sourceURL=isa_pg_func.js
