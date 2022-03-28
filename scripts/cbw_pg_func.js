@@ -136,7 +136,6 @@ avaIFaceJS.cbw_func = {
     toggleChannelCells: function(evt) {
         let wmtsLayers = avaIFaceJS.mapJS.cbw_func.wmts_layers;
         if (wmtsLayers.channel_outline === undefined) return;
-
         let currentScale = avaIFaceJS.mapJS.map.getZoom();
         let lowScale = currentScale > 13;
         let channels = document.getElementById("chkLyrChannel");
