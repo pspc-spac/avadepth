@@ -185,3 +185,4 @@ avaIFaceJS.cbw_func = {
         avaIFaceJS.mapJS.cbw_func.setRiver(river);
     }
 };
+//# sourceURL=cbw_pg_func.js

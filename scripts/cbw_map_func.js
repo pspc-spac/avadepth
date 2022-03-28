@@ -139,12 +139,8 @@ avaMapJS.cbw_func = {
         }
     },
 }
-}
 
 //Channel Infill & Scour Analysis Function
-
-//var debug = false;
-//var locException = [];
 
 /*** Interface functions ***/
 avaMapJS.isa_func = {
