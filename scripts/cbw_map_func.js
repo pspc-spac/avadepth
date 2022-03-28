@@ -122,7 +122,7 @@ avaMapJS.cbw_func = {
         }
     },
 
-    changeSurface: function(layerName){
+    changeSurface: function (layerName) {
         if(layerName === avaMapJS.cbw_func.currentSurface)return;
         avaMapJS.cbw_func.wmts_layers[layerName].setVisibility(true);
         avaMapJS.cbw_func.wmts_layers[avaMapJS.cbw_func.currentSurface].setVisibility(false);
@@ -141,6 +141,9 @@ avaMapJS.cbw_func = {
 }
 
 //Channel Infill & Scour Analysis Function
+
+//var debug = false;
+//var locException = [];
 
 /*** Interface functions ***/
 avaMapJS.isa_func = {
@@ -217,4 +220,4 @@ avaMapJS.isa_func = {
             });
     }
 };
-//# sourceURL=isa_pg_func.js
+//# sourceURL=cbw_map_func.js

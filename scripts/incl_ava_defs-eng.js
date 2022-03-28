@@ -189,20 +189,25 @@ var padZero = function(num){
                         {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["Slide to adjust colour intensity"] }] }]},
                       {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "Surface Type:",
-                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                        {
+                            tag: "div", attr: { class: "optionIndent" }, child: [
+
+                          // Bathymetry
                           {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Bathymetry",
                               { tag: "span", attr: { class: "popuptext" }, child: ["Digital terrain model (DTM) generated from current soundings "] }] },
-                          {tag: "br" },
+                                { tag: "br" },
+
+                          // Conformance
                           {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Conformance",
                               { tag: "span", attr: { class: "popuptext" }, child: ["The relative difference above or below channel design grade"] }] },
                           { tag: "br" },
 
-                          //Channel Infill & Scour Analysis
-                          { tag: "input", attr: { type: "radio", name: "surface", value: "ISA" } },
+                          // Channel Infill & Scour Analysis
+                          { tag: "input", attr: { id: "isa", type: "radio", name: "surface", value: "isa" } },
                           {
                               tag: "div", attr: { class: "popup" }, child: [
                                   "ISA",
