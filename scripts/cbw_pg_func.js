@@ -136,7 +136,6 @@ avaIFaceJS.cbw_func = {
     toggleChannelCells: function(evt) {
         let wmtsLayers = avaIFaceJS.mapJS.cbw_func.wmts_layers;
         if (wmtsLayers.channel_outline === undefined) return;
-
         let currentScale = avaIFaceJS.mapJS.map.getZoom();
         let lowScale = currentScale > 13;
         let channels = document.getElementById("chkLyrChannel");
@@ -169,7 +168,6 @@ avaIFaceJS.cbw_func = {
         fetch("https://ava-proto.com/river_updates.json", {method: "GET"})
             .then(r => r.json())
             .then(r => {
-                console.log("Adding new river dates", r);
                 avaIFaceJS.cbw_func.riverUpdates = r;
                 avaIFaceJS.cbw_func.setRiver({target: {value: "FRSA"}});
             });
@@ -177,10 +175,7 @@ avaIFaceJS.cbw_func = {
 
     setRiver: function(evt){
         const river = evt.target.value;
-        console.info(`Updating rivers ${river}`);
-        console.info(avaIFaceJS.cbw_func.riverUpdates);
         let armDates = avaIFaceJS.cbw_func.riverUpdates[river];
-        console.info(armDates);
         for(let el of document.getElementsByName("srfDateCur")){
             el.textContent = armDates?toDateString(parseDateString(armDates.current_date)):"-";
         }
