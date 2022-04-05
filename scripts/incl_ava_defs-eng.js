@@ -19,7 +19,7 @@ var padZero = function(num){
   function getAPI(extURL, intURL){
       // console.log(extURL);
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
-      return extURL;
+      return intURL;
     } else {
       return extURL;
     }
