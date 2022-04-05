@@ -197,7 +197,7 @@ var padZero = function(num){
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Bathymetry",
                               { tag: "span", attr: { class: "popuptext" }, child: ["Digital terrain model (DTM) generated from current soundings "] }] },
-                                { tag: "br" },
+                          { tag: "br" },
 
                           // Conformance
                           {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
@@ -207,14 +207,12 @@ var padZero = function(num){
                           { tag: "br" },
 
                           // Channel Infill & Scour Analysis
-                          { tag: "input", attr: { id: "isa", type: "radio", name: "surface", value: "isa" } },
-                          {
-                              tag: "div", attr: { class: "popup" }, child: [
-                                  "ISA",
-                                  { tag: "span", attr: { class: "popuptext" }, child: ["Time series analysis of channel infill and scour illustrating how dynamic the river bottom can be during freshet"] }]
+                          {tag: "input", attr: { id: "isa", type: "radio", name: "surface", value: "isa" } },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                                "ISA",
+                                { tag: "span", attr: { class: "popuptext" }, child: ["Time series analysis of channel infill and scour illustrating how dynamic the river bottom can be during freshet"] }]
                           },
-                          { tag: "br" }
-
+                          {tag: "br" }
                         ]},
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
@@ -232,7 +230,14 @@ var padZero = function(num){
                             {tag: "span", attr: {name: "srfDateCur"}},
                             " from ",
                             {tag: "span", attr: {name: "srfDatePrev"}}
-                          ]},
+                          ]
+                          },
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_isa", name: "surfDetails"}, child: [
+                            "isa",
+                            {tag: "span", attr: {name: "srfDateCur"}},
+                            " from ",
+                            {tag: "span", attr: {name: "srfDatePrev"}}
+                          ]}
                       ]},
                       "Surface Legend:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
@@ -242,7 +247,19 @@ var padZero = function(num){
                 ]}
             ]}
           ],
-          "reportBody": [],
+          "reportBody": [
+                {tag:'section',attr:{'style':'padding: 0 20px 0 20px; margin: -100px 0 50px 0;'},child:[
+                {tag:'table',attr:{id:'report_tbl',style:"width:auto; font-size:15px;"},className:"styled width-80",child:[
+                  {tag:'thead',child:[
+                    {tag:'tr',attr:{style:'background-color:#eee'},child:[
+                      {tag:'th',child:['Filename']},
+                      {tag:'th',child:['Year']}
+                    ]}
+                  ]},
+                  {tag:'tbody',attr:{style:'white-space:nowrap'}}
+                ]}
+              ]}
+           ],
           "reportDetail": [],
         },
         'dd': {

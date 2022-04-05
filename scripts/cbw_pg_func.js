@@ -130,6 +130,13 @@ avaIFaceJS.cbw_func = {
                     '<tr><td>0.8 - 20</td><td><div class="surface_legend" style="background-color:#8000ff"></div></td></tr>' +
                     '</tbody></table>'
             }
+        },
+        {
+            "name": "isa",
+            legend: {
+                en: '',
+                fr: ''
+            }
         }
     ],
 
@@ -147,11 +154,19 @@ avaIFaceJS.cbw_func = {
 
     changeSurface: function(evt) {
         let layerName = evt.target.value;
-        document.getElementById("surf_" + layerName).hidden = false;
-        document.getElementById("surf_" + avaIFaceJS.mapJS.cbw_func.currentSurface).hidden = true;
-        let legend = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === layerName).legend[page_lang];
-        document.getElementById("surfLegend").innerHTML = legend;
-        avaIFaceJS.mapJS.cbw_func.changeSurface(layerName);
+        if (layerName === 'isa') {
+            document.getElementById("surf_" + avaIFaceJS.mapJS.cbw_func.currentSurface).hidden = true;
+            document.getElementById("surfLegend").hidden = true;
+            avaIFaceJS.mapJS.cbw_func.changeSurface(layerName);
+            avaIFaceJS.isa_func.init();
+        } else {
+            document.getElementById("surf_" + layerName).hidden = false;
+            document.getElementById("surfLegend").hidden = false;
+            document.getElementById("surf_" + avaIFaceJS.mapJS.cbw_func.currentSurface).hidden = true;
+            let legend = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === layerName).legend[page_lang];
+            document.getElementById("surfLegend").innerHTML = legend;
+            avaIFaceJS.mapJS.cbw_func.changeSurface(layerName);
+        }
     },
 
     setOpacity: function(ev) {
@@ -183,6 +198,84 @@ avaIFaceJS.cbw_func = {
             el.textContent = armDates?toDateString(parseDateString(armDates.compare_date)):"-";
         }
         avaIFaceJS.mapJS.cbw_func.setRiver(river);
+    }
+};
+// isa function
+var debug = false;
+var locException = [];
+avaIFaceJS.isa_func = {
+    /** @propery {string} location - Location of the selected tile */
+    location: null,
+    init: function () {
+        locException.push({
+            riverCode: "FSD",
+            re: /Fraser\sSurrey\sDocks/
+        });
+
+        // Colour and resize map extents when waterway field changes
+        $('#isa_waterway').change(function () {
+            avaIFaceJS.mapJS.isa_func.setExtents($(this).val());
+            return $('#map').css("min-height", "400px");
+        });
+
+        // Colour Tiles when location field changes
+        $('#location').change(function () {
+            return avaIFaceJS.mapJS.isa_func.refreshLocation($(this).val());
+        });
+    },
+    update: function (tileName) {
+        $.getJSON(
+            getAPI(
+                'api2/isas?location=' + tileName,
+                '/api/isa/' + tileName + '.json'))
+            .then(function (ISAs) {
+                console.log(ISAs);
+                avaIFaceJS.reportWindow.addTitle("Search Results", "", "");
+                avaIFaceJS.isa_func.tableReport || (avaIFaceJS.isa_func.tableReport = $('#report_tbl').DataTable({
+                    "paging": false,
+                    "ordering": false,
+                    "searching": false,
+                    "info": false,
+                }));
+
+                avaIFaceJS.reportWindow.addTitle("Search Results for", avaIFaceJS.isa_func.location, "");
+                avaIFaceJS.isa_func.tableReport.clear();
+                $('#report_tbl tbody tr').remove();
+
+                $.each(ISAs, function () {
+                    avaIFaceJS.isa_func.tableReport.row.add([
+                        "<a href='https://avadepth.ccg-gcc.gc.ca/Data/" +
+                        "channel_infill_pdfs/" +
+                        this.Filename + "' target='_blank'>" +
+                        this.Filename + "</a>",
+                        this.Year
+                    ]);
+                });
+                avaIFaceJS.isa_func.tableReport.draw();
+                $('#report_tbl tbody tr td').each(function () {
+                    $(this).css('text-align', 'center');
+                });
+
+                // (3) Add a button that allows the user to jump back to the map (a href=`${window.href.location} + #map`); - Last Update 2018-09-28
+                avaIFaceJS.sideNavPanel.reset();
+
+                var refMapString = (window.location.href.indexOf("fra") > -1) ? "Carte Physique" : "Reference Map";
+                var repHeaderString = (window.location.href.indexOf("fra") > -1) ? "Haut du rapport" : "Top of Report";
+                var sideNavTitleString = (window.location.href.indexOf("fra") > -1) ? "Aller à" : "Navigate To";
+
+                avaIFaceJS.sideNavPanel.addTitle(sideNavTitleString);
+                avaIFaceJS.sideNavPanel.addLink(refMapString, "#ava_map_ttl");
+                avaIFaceJS.sideNavPanel.addLink(repHeaderString, "#reportTitleDiv");
+                avaIFaceJS.sideNavPanel.display();
+
+                avaIFaceJS.reportWindow.show();
+
+                if (avaIFaceJS.isa_func.tableReport) {
+                    // (1) Place user page in the survey search results, as per client request - Last Updated 2018-09-28  
+                    var elemLocation = $("#reportTitleDiv").offset();
+                    window.scrollTo(elemLocation.left, elemLocation.top);
+                }
+            });
     }
 };
 //# sourceURL=cbw_pg_func.js

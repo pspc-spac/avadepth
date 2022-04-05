@@ -18,7 +18,7 @@ var padZero = function(num){
    */
   function getAPI(extURL, intURL){
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
-      return intURL;
+      return extURL;
     } else {
       return extURL;
     }
@@ -222,6 +222,11 @@ var padZero = function(num){
                           {
                               tag: "div", attr: { class: "popup" }, child: [" conformité", {
                                   tag: "span", attr: { class: "popuptext" }, child: [" Différence relative au-dessus ou au-dessous du niveau de conception du chenal"] }] },
+                          {tag: "br"},
+                          {tag: "input", attr: { id: "isa", style: "margin: 0.25em", type: "radio", name: "surface", value: "isa" } },
+                          {
+                              tag: "div", attr: { class: "popup" }, child: ["isa", {
+                                  tag: "span", attr: { class: "popuptext" }, child: [" Analyse des données chronologiques du remplissage et de l’affouillement du chenal pour illustrer que le fond de la rivière peut être très dynamique pendant la crue nivale"] }] },
                           {tag: "br"}
                       ]},
                       "détails:",
@@ -249,7 +254,19 @@ var padZero = function(num){
                 ]}
             ]}
         ],
-        "reportBody": [],
+        "reportBody": [
+                {tag:'section',attr:{'style':'padding: 0 20px 0 20px; margin: -100px 0 50px 0;'},child:[
+                {tag:'table',attr:{id:'report_tbl',style:"width:auto; font-size:15px;"},className:"styled width-80",child:[
+                  {tag:'thead',child:[
+                    {tag:'tr',attr:{style:'background-color:#eee'},child:[
+                      {tag:'th',child:['Filename']},
+                      {tag:'th',child:['Year']}
+                    ]}
+                  ]},
+                  {tag:'tbody',attr:{style:'white-space:nowrap'}}
+                ]}
+              ]}
+           ],
         "reportDetail": [],
       },
       'dd': {
