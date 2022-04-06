@@ -245,6 +245,12 @@ var padZero = function(num){
                               " du surface généré ",
                               {tag: "span", attr: {name: "srfDatePrev"}}
                             ]},
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_isa", name: "surfDetails"}, child: [
+                              "isa",
+                              {tag: "span", attr: {name: "srfDateCur"}},
+                              " from ",
+                              {tag: "span", attr: {name: "srfDatePrev"}}
+                            ]}
                         ]},
                       "légende:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
