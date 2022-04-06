@@ -1146,7 +1146,7 @@ var padZero = function(num){
           return { fillColor: mapStyle.sel1, strokeColor: mapStyle.sel1 }
       },
       area_channel: function () {
-          return { fillColor: "yellow", fillOpacity: "0.25", strokeColor: "yellow", strokeWidth: 2.0 }
+          return { fillColor: "#1d73b5", fillOpacity: "0.25", strokeColor: "#1d73b5", strokeWidth: 2.0 }
       },
       area_hover: function () {
           return { fillColor: '${getColor}', strokeColor: '${getColor}', fillOpacity: mapStyle.op_sel }

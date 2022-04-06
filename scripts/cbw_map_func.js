@@ -126,8 +126,10 @@ avaMapJS.cbw_func = {
         if (layerName === 'isa') {
             avaMapJS.isa_func.init();
             avaMapJS.cbw_func.wmts_layers[avaMapJS.cbw_func.currentSurface].setVisibility(false);
+            avaMapJS.cbw_func.wmts_layers.channel_outline.setVisibility(false);
         } else {
             avaMapJS.cbw_func.wmts_layers[layerName].setVisibility(true);
+            avaMapJS.cbw_func.wmts_layers.channel_outline.setVisibility(true);
             if (avaMapJS.cbw_func.currentSurface === 'isa') {
                 avaMapJS.map.removeLayer(avaMapJS.isa_func.kml);
             } else {
