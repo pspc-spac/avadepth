@@ -175,4 +175,3 @@ avaMapJS.setExtents = function(name){
 avaMapJS.proxySelect = function(evt){
   console.log(evt);
 };
-//# sourceURL=ava_map.js

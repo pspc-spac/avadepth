@@ -200,7 +200,8 @@ avaIFaceJS.cbw_func = {
         avaIFaceJS.mapJS.cbw_func.setRiver(river);
     }
 };
-// isa function
+
+// ISA Page Function
 var debug = false;
 var locException = [];
 avaIFaceJS.isa_func = {

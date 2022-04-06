@@ -1,7 +1,6 @@
 /**
  * Created by wsiddall on 09/03/2021
  */
-
 let debug = false;
 let hostname = document.URL.split("/")[2].split(":")[0] === "localhost" ? "localhost:8080" : "ava-proto.com"
 const avadepthTMS = `https://${hostname}/tiles`;
@@ -149,7 +148,7 @@ avaMapJS.cbw_func = {
     },
 }
 
-// isa function
+// ISA Map Function
 var locException = [];
 avaMapJS.isa_func = {
     // init function for loading custom tile file and other events
