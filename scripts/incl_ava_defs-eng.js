@@ -1020,19 +1020,12 @@ var padZero = function(num){
                 {tag:'table',attr:{id:'report_tbl',style:'width:auto; font-size:15px'},className:"styled width-80",child:[
                   {tag:'thead',child:[
                     {tag:'tr',child:[
-                      {tag:'th',child:["Date"]},
-                      {tag:'th',child:["Drawing"]},
-                      {tag:'th',child:["Location"]},
-                      {tag:'th',child:["Type"]},
-                      {tag:'th',child:["Start"]},
-                      {tag:'th',child:["End"]}
-                    ]},
-                    {tag:'tr',attr:{style:'background-color:#eee'},child:[
-                      {tag:'td',attr:{colspan:2}},
-                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
-                      {tag:'td',attr:{colspan:1}},
-                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
-                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]}
+                      {tag:'th',attr:{'style':'vertical-align:middle'},child:["Date"]},
+                      {tag:'th',attr:{'style':'vertical-align:middle'},child:["Drawing"]},
+                      {tag:'th',attr:{'style':'vertical-align:middle'},child:["Location"]},
+                      {tag:'th',attr:{'style':'vertical-align:middle'},child:["Type"]},
+                      {tag:'th',attr:{'style':'vertical-align:middle; width:60px'},child:["Km Start"]},
+                      {tag:'th',attr:{'style':'vertical-align:middle; width:60px'},child:["Km End"]}
                     ]}
                   ]},
                   {tag:'tbody',attr:{style:'white-space:nowrap'}}
