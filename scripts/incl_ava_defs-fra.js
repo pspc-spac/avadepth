@@ -1055,33 +1055,6 @@ var padZero = function(num){
         'reportDetail':
           [{tag:'p',child:['This tool does not support detailed search items']}]
       },
-      'isa':{
-        'title':"Analyse du remplissage et de l'affouillement du chenal",
-        'mapInitState':true,
-        'hasParameters':false,
-        'hasAnimate':false,
-        'hasMapFunc': true,
-        'longReport':true,
-        'landscapeReport':false,
-        'formParam':
-          [{tag:'text', child: ["Pour voir l'analyse du remplissage et de l'affouillement du chenal cliquez sur une zone en surbrillance."]}],
-        'reportBody':
-          [
-            {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-              {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
-                {tag:'thead',child:[
-                  {tag:'tr',child:[
-                    {tag:'th',child:['Filename']},
-                    {tag:'th',child:['Year']}
-                  ]}
-                ]},
-                {tag:'tbody'}
-              ]}
-            ]}
-          ],
-        'reportDetail':
-          []
-      }
     },
     ava_map :{
       toggleLayerBtn : {

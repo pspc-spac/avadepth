@@ -1042,34 +1042,6 @@ var padZero = function(num){
           'reportDetail':
             [{tag:'p',child:['This tool does not support detailed search items']}]
         },
-        'isa':{
-          'title':"Channel Infill & Scour Analysis",
-          'mapInitState':true,
-          'hasParameters':false,
-          "hasParametersApply": false,
-          'hasAnimate':false,
-          'hasMapFunc': true,
-          'longReport':true,
-          'landscapeReport':false,
-          'formParam':
-            [{tag:'text', child: ["To view channel infill & scour analysi click on a highlighted area."]}],
-          'reportBody':
-            [
-              {tag:'section',attr:{'style':'padding-left:25%; padding-right:25%'},child:[
-                {tag:'table',attr:{id:'isas',style:"text-align:center"},child:[
-                  {tag:'thead',child:[
-                    {tag:'tr',child:[
-                      {tag:'th',child:['Filename']},
-                      {tag:'th',child:['Year']}
-                    ]}
-                  ]},
-                  {tag:'tbody'}
-                ]}
-              ]}
-            ],
-          'reportDetail':
-            []
-        }
       },
       ava_map :{
         toggleLayerBtn : {
