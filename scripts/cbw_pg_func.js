@@ -157,6 +157,7 @@ avaIFaceJS.cbw_func = {
         if (layerName === 'isa') {
             document.getElementById("surf_" + avaIFaceJS.mapJS.cbw_func.currentSurface).hidden = true;
             document.getElementById("surfLegend").hidden = true;
+            document.getElementById("chkLyrChannel").checked = false;
             avaIFaceJS.mapJS.cbw_func.changeSurface(layerName);
             avaIFaceJS.isa_func.init();
         } else {
@@ -165,6 +166,7 @@ avaIFaceJS.cbw_func = {
             document.getElementById("surf_" + avaIFaceJS.mapJS.cbw_func.currentSurface).hidden = true;
             let legend = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === layerName).legend[page_lang];
             document.getElementById("surfLegend").innerHTML = legend;
+            document.getElementById("chkLyrChannel").checked = true;
             avaIFaceJS.mapJS.cbw_func.changeSurface(layerName);
         }
     },
