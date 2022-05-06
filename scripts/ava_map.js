@@ -75,7 +75,7 @@ var avaMapJS = {};
         }  
       }); 
 
-      panel.addControls([toggleButton]);
+      //panel.addControls([toggleButton]);
       // allow testing of specific renderers via "?renderer=Canvas", etc
       avaMapJS.renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
       avaMapJS.renderer = (avaMapJS.renderer)
@@ -95,7 +95,7 @@ var avaMapJS = {};
       if ( document.addEventListener ){
         bingAerial = new OpenLayers.Layer.OSM({
           attributions: [
-            'All maps © <a href="https://www.opencyclemap.org/">OpenCycleMap</a>'
+            'All maps ï¿½ <a href="https://www.opencyclemap.org/">OpenCycleMap</a>'
           ],
           url:
             'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png' +
@@ -103,7 +103,7 @@ var avaMapJS = {};
           });
         bingStreet = new OpenLayers.Layer.OSM({
           attributions: [
-            'All maps © <a href="https://www.opencyclemap.org/">OpenCycleMap</a>' ],
+            'All maps ï¿½ <a href="https://www.opencyclemap.org/">OpenCycleMap</a>' ],
           url:
             'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png' +
             '?apikey=Your API key from https://www.thunderforest.com/docs/apikeys/ here',
