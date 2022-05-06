@@ -93,21 +93,24 @@ var avaMapJS = {};
       // Loads Google Satellite map, or Google Street map for <IE9
       var bingAerial, bingStreet;
       if ( document.addEventListener ){
-        //bingAerial = new OpenLayers.Layer.Google("Google Satellite", {type: google.maps.MapTypeId.SATELLITE});
-        bingAerial = new OpenLayers.Layer.Bing({
-            name: "Satellite",
-            type: "Aerial",
-            key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
+        bingAerial = new OpenLayers.Layer.OSM({
+          attributions: [
+            'All maps © <a href="https://www.opencyclemap.org/">OpenCycleMap</a>'
+          ],
+          url:
+            'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png' +
+            '?apikey=Your API key from https://www.thunderforest.com/docs/apikeys/ here',
           });
-        bingStreet = new OpenLayers.Layer.Bing({
-            name: "Street layer",
-            type: "Road",
-            key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
+        bingStreet = new OpenLayers.Layer.OSM({
+          attributions: [
+            'All maps © <a href="https://www.opencyclemap.org/">OpenCycleMap</a>' ],
+          url:
+            'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png' +
+            '?apikey=Your API key from https://www.thunderforest.com/docs/apikeys/ here',
           });
-          bingAerial.setVisibility(false);
       } else {
         //bingAerial = new OpenLayers.Layer.Google("Google", {});
-        bingAerial = new OpenLayers.Layer.Bing("Bing", {});
+        bingAerial = new OpenLayers.Layer.OSM("Bing", {});
       }
 
         var baseLayer = bingStreet;

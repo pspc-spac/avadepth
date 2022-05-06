@@ -82,10 +82,8 @@ avaMapJS.cbw_func = {
     },
 
     loadLayers: function(river) {
-        let current_layers = avaMapJS.map.layers.filter(x => x.name&&x.name.startsWith(avaMapJS.cbw_func.current_river));
-        for(let lyr of current_layers){
-            avaMapJS.map.removeLayer(lyr);
-        }
+        let current_layers = avaMapJS.map.layers[0];
+
         avaMapJS.cbw_func.current_river = river;
         avaMapJS.cbw_func.setExtents();
         let layers = RiverSections.get(river).layers
