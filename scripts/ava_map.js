@@ -98,15 +98,13 @@ var avaMapJS = {};
             'All maps � <a href="https://www.opencyclemap.org/">OpenCycleMap</a>'
           ],
           url:
-            'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png' +
-            '?apikey=Your API key from https://www.thunderforest.com/docs/apikeys/ here',
+            'https://www.openstreetmap.org/export/embed.html',
           });
         bingStreet = new OpenLayers.Layer.OSM({
           attributions: [
             'All maps � <a href="https://www.opencyclemap.org/">OpenCycleMap</a>' ],
           url:
-            'https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png' +
-            '?apikey=Your API key from https://www.thunderforest.com/docs/apikeys/ here',
+            'https://www.openstreetmap.org/export/embed.html',
           });
       } else {
         //bingAerial = new OpenLayers.Layer.Google("Google", {});
