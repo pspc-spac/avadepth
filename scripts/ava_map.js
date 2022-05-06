@@ -94,24 +94,17 @@ var avaMapJS = {};
       var bingAerial, bingStreet;
       if ( document.addEventListener ){
         bingAerial = new OpenLayers.Layer.OSM({
-          attributions: [
-            'All maps � <a href="https://www.opencyclemap.org/">OpenCycleMap</a>'
-          ],
-          url:
-            'https://www.openstreetmap.org/export/embed.html',
-          });
+          url: 'https://www.openstreetmap.org/export/embed.html',
+        });
         bingStreet = new OpenLayers.Layer.OSM({
-          attributions: [
-            'All maps � <a href="https://www.opencyclemap.org/">OpenCycleMap</a>' ],
-          url:
-            'https://www.openstreetmap.org/export/embed.html',
-          });
+          url: 'https://www.openstreetmap.org/export/embed.html',
+        });
       } else {
         //bingAerial = new OpenLayers.Layer.Google("Google", {});
         bingAerial = new OpenLayers.Layer.OSM("Bing", {});
       }
 
-        var baseLayer = bingStreet;
+      var baseLayer = bingStreet;
 
       // Add layers
       //avaMapJS.map.addLayers([bingAerial,wmsLayer]);
