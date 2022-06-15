@@ -1,6 +1,7 @@
 <html lang="">
 <head>
-	<script src="scripts/oscar_13/oscar/Loader.js"></script>
+	<script src="scripts/openlayers/OpenLayers.js"></script>
+	<script src="wet-boew/js/jquery/2.2.4/jquery.min.js"></script>
   <script src='https://www.bing.com/api/maps/mapcontrol?key=AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5'></script>
   <script src="scripts/ava_map.js"></script>
   <style>
@@ -20,6 +21,6 @@
 </body>
   <script>
       // _OscarLoader.onReady(avaSurvey.initMap);
-      oscar.onReady(avaMapJS.initMap);
+      $(document).ready(avaMapJS.initMap);
   </script>
 </html>

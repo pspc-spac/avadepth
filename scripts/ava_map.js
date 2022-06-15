@@ -27,7 +27,7 @@ var avaMapJS = {};
       var options = {
         maxExtent: new OpenLayers.Bounds(-13625920,6283000,-13941007,6458623),//-125,49,-121,50),
         controls:[
-          new oscar.Control.PanZoomBar,  new OpenLayers.Control.MousePosition,
+          new OpenLayers.Control.PanZoomBar,  new OpenLayers.Control.MousePosition,
           new OpenLayers.Control.ScaleLine
         ],
         projection: new OpenLayers.Projection("EPSG:3857"),
@@ -82,12 +82,9 @@ var avaMapJS = {};
         ? [avaMapJS.renderer]
         : OpenLayers.Layer.Vector.prototype.renderers;
 
-      avaMapJS.map = new oscar.Map('ava_map_ref',options);
+      avaMapJS.map = new OpenLayers.Map('ava_map_ref',options);
       avaMapJS
-          .map.getControlsByClass("OpenLayers.Control.SelectFeature")[0]
-          .handlers
-          .feature
-          .stopDown=false;
+          .map.getControlsByClass("OpenLayers.Control.SelectFeature")[0];
       avaMapJS.map.addControl(panel);
       // Google Maps layer
       // Loads Google Satellite map, or Google Street map for <IE9
