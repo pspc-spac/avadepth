@@ -216,8 +216,8 @@
       <MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>-123.283674620898,49.1023426075608 -123.24891624064,49.11694959963 -123.262148898375,49.1303306562926 -123.296907078999,49.1158963292522 -123.283674620898,49.1023426075608</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>
   </Placemark>
   <Placemark>
-    <name>SA_101</name>
-		<location>Sand Heads Entrance</location>
+    <name>SA_-201</name>
+		<location>Sand Heads</location>
 		<waterway>FRSA</waterway>
       <MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>-123.283674620898,49.1023426075608 -123.296907078999,49.1158963292522 -123.319934865234,49.1063229967148 -123.306818768051,49.0926058538132 -123.283674620898,49.1023426075608</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>
   </Placemark>
@@ -259,7 +259,7 @@
   </Placemark>
   <Placemark>
     <name>SA_LSR</name>
-		<location>Ladner Sea Reach Overview</location>
+		<location>Ladner Sea Reach</location>
 		<waterway>FRSA_SC</waterway>
       <MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>-123.078124171377,49.1108025920732 -123.090580983165,49.1107927008778 -123.118403720169,49.1027306974631 -123.125015401257,49.1032003594844 -123.173344430218,49.1066216564505 -123.173243844641,49.0777226161336 -123.173203551509,49.0661330710641 -123.078054283913,49.0662366332434 -123.07807244186,49.0778262203676 -123.078106481096,49.0995322328862 -123.078124171377,49.1108025920732</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry>
   </Placemark>

@@ -75,7 +75,7 @@ var avaMapJS = {};
         }  
       }); 
 
-      panel.addControls([toggleButton]);
+      //panel.addControls([toggleButton]);
       // allow testing of specific renderers via "?renderer=Canvas", etc
       avaMapJS.renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
       avaMapJS.renderer = (avaMapJS.renderer)
@@ -93,24 +93,18 @@ var avaMapJS = {};
       // Loads Google Satellite map, or Google Street map for <IE9
       var bingAerial, bingStreet;
       if ( document.addEventListener ){
-        //bingAerial = new OpenLayers.Layer.Google("Google Satellite", {type: google.maps.MapTypeId.SATELLITE});
-        bingAerial = new OpenLayers.Layer.Bing({
-            name: "Satellite",
-            type: "Aerial",
-            key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
-          });
-        bingStreet = new OpenLayers.Layer.Bing({
-            name: "Street layer",
-            type: "Road",
-            key: "AqQ2w0kBuNgd9zJTPkmpxAM4AKdtOn95_uL_fwyuzM47rThWIUDknroTOmjnSrW5"
-          });
-          bingAerial.setVisibility(false);
+        bingAerial = new OpenLayers.Layer.OSM({
+          url: 'https://www.openstreetmap.org/export/embed.html',
+        });
+        bingStreet = new OpenLayers.Layer.OSM({
+          url: 'https://www.openstreetmap.org/export/embed.html',
+        });
       } else {
         //bingAerial = new OpenLayers.Layer.Google("Google", {});
-        bingAerial = new OpenLayers.Layer.Bing("Bing", {});
+        bingAerial = new OpenLayers.Layer.OSM("Bing", {});
       }
 
-        var baseLayer = bingStreet;
+      var baseLayer = bingStreet;
 
       // Add layers
       //avaMapJS.map.addLayers([bingAerial,wmsLayer]);

@@ -2,7 +2,7 @@
  * Created by wsiddall on 09/03/2021
  */
 let debug = false;
-let hostname = document.URL.split("/")[2].split(":")[0] === "localhost" ? "localhost:8080" : "ava-proto.com"
+let hostname = document.URL.split("/")[2].split(":")[0] === "localhost" ? "localhost:8080" : "ava-proto.com";
 const avadepthTMS = `https://${hostname}/tiles`;
 const TMSTileFormat = "GoogleMapsCompatible/${z}/${y}/${x}.png";
 const TMSOptions = {
@@ -82,10 +82,26 @@ avaMapJS.cbw_func = {
     },
 
     loadLayers: function(river) {
-        let current_layers = avaMapJS.map.layers.filter(x => x.name&&x.name.startsWith(avaMapJS.cbw_func.current_river));
+        let current_layers = [];
+        if (avaMapJS.map.layers != null && avaMapJS.map.layers.length > 0)
+        {
+            let current_river_name = avaMapJS.cbw_func.current_river;
+            if (current_river_name != null) {
+                avaMapJS.map.layers.forEach((layer) => {
+                    let is_current_layer =  layer.name != null && layer.name.length > 0 
+                        && layer.name.startsWith(current_river_name);
+
+                    if (is_current_layer) {
+                        current_layers.push(layer);
+                    }
+                });
+            }
+        }
+
         for(let lyr of current_layers){
             avaMapJS.map.removeLayer(lyr);
         }
+
         avaMapJS.cbw_func.current_river = river;
         avaMapJS.cbw_func.setExtents();
         let layers = RiverSections.get(river).layers
