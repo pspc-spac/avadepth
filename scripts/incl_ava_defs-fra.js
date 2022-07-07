@@ -222,6 +222,10 @@ var padZero = function(num){
                           {
                               tag: "div", attr: { class: "popup" }, child: [" conformité", {
                                   tag: "span", attr: { class: "popuptext" }, child: [" Différence relative au-dessus ou au-dessous du niveau de conception du chenal"] }] },
+                          {tag: "br"},
+                          {tag: "input", attr: {style: "margin: 0.25em", type: "radio", name: "surface", value: "difference"} },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                              " différence"]},
                           {tag: "br"}
                       ]},
                       "détails:",

@@ -199,7 +199,11 @@ var padZero = function(num){
                           {tag: "div", attr: { class: "popup" }, child: [
                               " Conformance",
                               { tag: "span", attr: { class: "popuptext" }, child: ["The relative difference above or below channel design grade"] }] },
-                          {tag: "br" }
+                          {tag: "br" },
+                          {tag: "input", attr: {type: "radio", name: "surface", value: "difference"} },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                              " Difference"]},
+                          {tag: "br"}
                         ]},
                       "Surface Details:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
