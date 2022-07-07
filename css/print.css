@@ -212,7 +212,6 @@ div#reportTitle2 {
 	display:none;
 }
 
-#soundings a[href]:after, #report_tbl a[href]:after {
+#soundings a[href]:after, #report_tbl a[href]:after, #surveys a[href]:after{
     content: "";
 }
-

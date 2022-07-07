@@ -19,7 +19,6 @@ var componentName = "wb-date",
 	containerName = "wb-picker",
 	toggleSuffix = "-picker-toggle",
 	today = new Date(),
-	initialized = false,
 	$document = wb.doc,
 	fromDateISO = wb.date.fromDateISO,
 	defaults = {
@@ -32,32 +31,32 @@ var componentName = "wb-date",
 				selectedDate = this.date,
 				linkFocus;
 
-				if ( range ) {
-					if ( range.max ) {
-						$inRange = $inRange.filter( ":lt(" + ( range.max + 1 ) + ")" );
-					}
-
-					if ( range.min ) {
-						$inRange = $inRange.filter( ":gt(" + ( range.min - 1 ) + ")" );
-					}
+			if ( range ) {
+				if ( range.max ) {
+					$inRange = $inRange.filter( ":lt(" + ( range.max + 1 ) + ")" );
 				}
 
-				$inRange.wrap( "<a href='javascript:;' tabindex='-1'></a>" );
-
-				if ( selectedDate && year === selectedDate.getFullYear() && month === selectedDate.getMonth() ) {
-					linkFocus = $days.eq( selectedDate.getDate() - 1 );
-
-					linkFocus.parent().attr( "aria-selected", true );
-				} else if ( year === today.getFullYear() && month === today.getMonth() ) {
-					linkFocus = $days.eq( today.getDate() - 1 );
-				} else {
-					linkFocus = $inRange.eq( 0 );
+				if ( range.min ) {
+					$inRange = $inRange.filter( ":gt(" + ( range.min - 1 ) + ")" );
 				}
+			}
 
-				linkFocus.parent().removeAttr( "tabindex" );
+			$inRange.wrap( "<a href='javascript:;' tabindex='-1'></a>" );
+
+			if ( selectedDate && year === selectedDate.getFullYear() && month === selectedDate.getMonth() ) {
+				linkFocus = $days.eq( selectedDate.getDate() - 1 );
+
+				linkFocus.parent().attr( "aria-selected", true );
+			} else if ( year === today.getFullYear() && month === today.getMonth() ) {
+				linkFocus = $days.eq( today.getDate() - 1 );
+			} else {
+				linkFocus = $inRange.eq( 0 );
+			}
+
+			linkFocus.parent().removeAttr( "tabindex" );
 		}
 	},
-	i18n, i18nText, $container, calendar, $calendarObj, focusOutTimer,
+	i18n, i18nText, $container, calendar, focusOutTimer,
 
 	/**
 	 * @method init
@@ -84,10 +83,10 @@ var componentName = "wb-date",
 				i18n = wb.i18n;
 				space = i18n( "space" ).replace( "&#32;", " " ).replace( "&#178;", "" );
 				i18nText = {
-					show: i18n( "date-show" ).replace( "\\\'", "'" ) + space,
-					hide: i18n( "date-hide" ).replace( "\\\'", "'" ) + space +
-						space + i18n( "esc-key" ).replace( "\\\'", "'" ),
-					selected: i18n( "date-sel" ).replace( "\\\'", "'" )
+					show: i18n( "date-show" ).replace( "\\'", "'" ) + space,
+					hide: i18n( "date-hide" ).replace( "\\'", "'" ) + space +
+						space + i18n( "esc-key" ).replace( "\\'", "'" ),
+					selected: i18n( "date-sel" ).replace( "\\'", "'" )
 				};
 			}
 
@@ -97,11 +96,11 @@ var componentName = "wb-date",
 			settings = {
 				field: this,
 				$field: $( this ),
-				labelText: $( "label[for=" + elm.id + "]" )
+				labelText: $( "label[for=" + wb.jqEscape( elm.id ) + "]" )
 					.clone()
 					.find( ".datepicker-format, .error" )
-						.remove()
-						.end()
+					.remove()
+					.end()
 					.text()
 			};
 
@@ -120,6 +119,8 @@ var componentName = "wb-date",
 
 			if ( today >= state.minDate && today <= state.maxDate ) {
 				initDate = today;
+			} else if ( state.minDate > today ) {
+				initDate = state.minDate;
 			} else {
 				initDate = state.maxDate;
 			}
@@ -141,7 +142,6 @@ var componentName = "wb-date",
 
 			// Identify that initialization has completed
 			wb.ready( $( elm ), componentName );
-			initialized = true;
 		}
 	},
 
@@ -156,7 +156,6 @@ var componentName = "wb-date",
 		$( "main" ).after( $container );
 
 		calendar = wb.calendar.create( $container, elm.state );
-		$calendarObj = calendar.$o;
 
 		// Close button
 		$( "<button type='button' class='picker-close mfp-close overlay-close' title=\"" +
@@ -172,15 +171,20 @@ var componentName = "wb-date",
 				showFieldLabelText + "\"><span class='glyphicon glyphicon-calendar'></span><span class='wb-inv'>" +
 				showFieldLabelText + "</span></a></span>";
 
-		$( "#" + fieldId ).wrap( "<span class='wb-date-wrap input-group'/>" ).after( objToggle );
+		$( "#" + wb.jqEscape( fieldId ) )
+			.wrap( "<span class='wb-date-wrap input-group'/>" )
+			.after( objToggle );
 		$container.slideUp( 0 );
 	},
 
 	updateState = function() {
 		var state = this.state,
-			minDate = state.minDate,
-			maxDate = state.maxDate,
+			minDate = fromDateISO( this.getAttribute( "min" ) ) || state.minDate,
+			maxDate = fromDateISO( this.getAttribute( "max" ) ) || state.maxDate,
 			date = fromDateISO( this.value );
+
+		this.state.minDate = minDate;
+		this.state.maxDate = maxDate;
 
 		if ( date && date >= minDate && date <= maxDate ) {
 			state.date = date;
@@ -204,10 +208,10 @@ var componentName = "wb-date",
 			$field = calendar.$field,
 			labelText = i18nText.show + calendar.labelText;
 
-		$( "#" + field.id + toggleSuffix )
+		$( "#" + wb.jqEscape( field.id + toggleSuffix ) )
 			.attr( "title", labelText.replace( "&#32;", " " ) )
 			.children( ".wb-inv" )
-				.html( labelText );
+			.html( labelText );
 
 		$container
 			.removeClass( "open" )
@@ -234,10 +238,10 @@ var componentName = "wb-date",
 			} )
 			.get( 0 ).focus();
 
-		$( "#" + fieldId + toggleSuffix )
+		$( "#" + wb.jqEscape( fieldId + toggleSuffix ) )
 			.attr( "title", closeText )
 			.children( ".wb-inv" )
-				.text( closeText );
+			.text( closeText );
 	},
 
 	position = function() {
@@ -255,11 +259,11 @@ $document.on( "focusout focusin", "#" + containerName + " .wb-clndr",  function(
 
 	// Hide the calendar when the focus leaves the calendar
 	switch ( event.type ) {
-		case "focusout":
-			focusOutTimer = setTimeout( hide, 10 );
-			break;
-		case "focusin":
-			clearTimeout( focusOutTimer );
+	case "focusout":
+		focusOutTimer = setTimeout( hide, 10 );
+		break;
+	case "focusin":
+		clearTimeout( focusOutTimer );
 	}
 } );
 
@@ -297,7 +301,7 @@ $document.on( "click", ".picker-toggle", function( event ) {
 	// Ignore middle/right mouse buttons
 	if ( ( !which || which === 1 ) ) {
 		pickerId = event.currentTarget.id;
-		field = $( "#" + pickerId.substring( 0, pickerId.indexOf( toggleSuffix ) ) ).get( 0 );
+		field = $( "#" + wb.jqEscape( pickerId.substring( 0, pickerId.indexOf( toggleSuffix ) ) ) ).get( 0 );
 		if ( !field.disabled && !field.readOnly ) {
 			toggle( field );
 			return false;

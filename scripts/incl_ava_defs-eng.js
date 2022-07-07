@@ -7,6 +7,15 @@ var padZero = function(num){
     return s.substr(s.length-2);
   };
   
+  /**
+   * Utility used to ease development.
+   * Will select between two APIs based on the environment.
+   * @param {string} extURL - API to be used when accessing the site externally.
+   * example - 'api2/isas?location=StevestonCut'
+   * 
+   * @param {string} intURL - API to be used when accessing the site from localhost.
+   * example - '/api/isa/StevestonCut.json'
+   */
   function getAPI(extURL, intURL){
       // console.log(extURL);
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
@@ -22,11 +31,12 @@ var padZero = function(num){
   incl_ava_defs={
     "avaPages" : {
         'acv':{
-          'title_e': "Animated Currents and Velocities for Fraser River South Arm",
-          'title_f': "Animation et vélocités du courant",
+          'title': "Animated Currents and Velocities for Fraser River South Arm",
           'mapInitState':true,
           'hasParameters':true,
+          "hasParametersApply": true,
           'hasAnimate':true,
+          'hasMapFunc': true,
           'longReport':false,
           'landscapeReport':false,
           'formParam':[
@@ -141,12 +151,91 @@ var padZero = function(num){
           ],
           'reportDetail':[]
         },
+        "cbw": {
+          "title": "Channel Bathymetry Webmap",
+          "mapInitState": true,
+          "hasParameters": true,
+          "hasParametersApply": false,
+          "hasAnimate": false,
+          "hasMapFunc": true,
+          "longReport": false,
+          "landscapeReport": false,
+          "formParam": [
+            {tag: "div", attr: {classname: "span-4"}, child: [
+                {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Layers"]},
+                {tag: "div", child: [
+                    {tag: "label", attr: {for: "ddRiverName"}, child: ["River Selection"]},
+                    {tag: "select", attr: {name: "riverName", id: "ddRiverName"}, child: [
+                      {tag: "option", attr: {value: "FRSA", selected: "selected"}, child: ["Fraser River South Arm"]},
+                      {tag: "option", attr: {value: "FRNA"}, child: ["Fraser River North Arm"]},
+                      {tag: "option", attr: {value: "FRMA"}, child: ["Fraser River Main Arm"]},
+                      {tag: "option", attr: {value: "FRSC"}, child: ["Fraser River South Arm Channels"]},
+                      {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
+                    ]},
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
+                    {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: ["Depths relative to local low water level (LLWL) chart datum"] }] },
+                    {tag: "br"},
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" }},
+                    {tag: "div", attr: { class: "popup" }, child: [" Channel&nbsp;&nbsp;", { tag: "span", attr: { class: "popuptext" }, child: ["Designated channel maintained for shipping"] }] },
+                    {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
+                    " Show Cells",
+                    {tag: "br" },
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
+                    {tag: "div", attr: { class: "popup" }, child: [
+                        " Surface:",
+                        { tag: "span", attr: { class: "popuptext" }, child: ["Bathymetry of recent PSPC soundings"] }
+                    ] },
+                    {tag: "div", attr: {class: "optionIndent"}, child: [
+                        {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["Slide to adjust colour intensity"] }] }]},
+                      {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
+                      "Surface Type:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                              " Bathymetry",
+                              { tag: "span", attr: { class: "popuptext" }, child: ["Digital terrain model (DTM) generated from current soundings "] }] },
+                          {tag: "br" },
+                          {tag: "input", attr: { type: "radio", name: "surface", value: "conformance" } },
+                          {tag: "div", attr: { class: "popup" }, child: [
+                              " Conformance",
+                              { tag: "span", attr: { class: "popuptext" }, child: ["The relative difference above or below channel design grade"] }] },
+                          {tag: "br" }
+                        ]},
+                      "Surface Details:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
+                              "Date created ",
+                            {tag: "span", attr: {name: "srfDateCur"}}
+                          ]},
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [
+                            "Conformance generated ",
+                            {tag: "span", attr: {name: "srfDateCur"}}
+                          ]},
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_difference", name: "surfDetails"}, child: [
+                            "Difference generated of ",
+                            {tag: "span", attr: {name: "srfDateCur"}},
+                            " from ",
+                            {tag: "span", attr: {name: "srfDatePrev"}}
+                          ]},
+                      ]},
+                      "Surface Legend:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.5em", id: "surfLegend"}}
+                      ]}
+                    ]}
+                ]}
+            ]}
+          ],
+          "reportBody": [],
+          "reportDetail": [],
+        },
         'dd': {
-          'title_e': "Available Depth Report for Fraser River South Arm",
-          'title_f': "Rapport sur les profondeurs disponibles",
+          'title': "Available Depth Report for Fraser River South Arm",
           'mapInitState':true,
           'hasParameters':true,
+          "hasParametersApply": true,
           'hasAnimate':false,
+          'hasMapFunc': false,
           'longReport':false,
           'landscapeReport':false,
           'formParam': [
@@ -341,11 +430,12 @@ var padZero = function(num){
           ]
         },
         'tw':{
-          'title_e':"Transit Window Report for Fraser River South Arm",
-          'title_f':"Fenêtre de circulation",
+          'title':"Transit Window Report for Fraser River South Arm",
           'mapInitState':true,
           'hasParameters':true,
+          "hasParametersApply": true,
           'hasAnimate':false,
+          'hasMapFunc': false,
           'longReport':false,
           'landscapeReport':false,
           'formParam':[
@@ -525,11 +615,12 @@ var padZero = function(num){
           ]
         },
         'pwl':{
-          'title_e':"Predicted Water Levels & Velocities",
-          'title_f':"Vélocités et niveaux prévus de l’eau",
+          'title':"Predicted Water Levels & Velocities",
           'mapInitState':true,
           'hasParameters':true,
+          "hasParametersApply": true,
           'hasAnimate':false,
+          'hasMapFunc': true,
           'longReport':true,
           'formParam':
             [
@@ -658,11 +749,12 @@ var padZero = function(num){
             ]
         },
         'frh':{
-          'title_e':"Fraser River Hydrograph",
-          'title_f':"Hydrographie du fleuve Fraser",
+          'title':"Fraser River Hydrograph",
           'mapInitState':true,
           'hasParameters':true,
+          "hasParametersApply": true,
           'hasAnimate':false,
+          'hasMapFunc': false,
           'longReport':false,
           'landscapeReport':true,
           'formParam':[
@@ -671,15 +763,26 @@ var padZero = function(num){
               {tag:'input',attr:{id:'date',type:'text',name:'date',className:'datepicker'}},
               {tag:'input',attr:{id:'alt-date',type:'hidden'}},
               {tag:'label',attr:{for:'period', style:'font-weight: bold;'},child:["Period:"]},
-              {tag:'select',attr:{id:'period'},ref:{tag:'option',values:[{key:3,value:"12 Months"},{key:2,value:'6 Months'},{key:1,value:'2 Months'},{key:0,value:'1 Month'}]}},
+              {tag:'select',attr:{id:'period'},
+                ref:{
+                  tag:'option',
+                  values:[
+                    {key:3,value:"12 Months"},
+                    {key:2,value:'6 Months'},
+                    {key:1,value:'2 Months'},
+                    {key:0,value:'1 Month'}]}},
               {tag:'label',attr:{for:'plot', style:'font-weight: bold;'},child:["Plot:"]},
+              //" Actual",
               {tag:'input',attr:{id:'actual',type:'checkbox',name:'actual',checked:'checked'}},
               {tag:'label',attr:{for:'actual',style:'font-weight:normal'},child:[" Actual"]},
-              //" Actual",
               {tag:'br'},
+              //" Predicted",
               {tag:'input',attr:{id:'predicted',type:'checkbox',name:'predicted',checked:'checked'}},
               {tag:'label',attr:{for:'predicted',style:'font-weight:normal'},child:[" Predicted"]},
-              //" Predicted",
+              {tag:'br'},
+              //" Min/Max",
+              {tag:'input',attr:{id:'minMax',type:'checkbox',name:'minMax',checked:'checked'}},
+              {tag:'label',attr:{for:'minMax',style:'font-weight:normal'},child:[" Min/Max"]},
               {tag:'br'},{tag:'br'}
             ]}
           ],
@@ -697,11 +800,12 @@ var padZero = function(num){
           ]
         },
         'ccc':{
-          'title_e':"Current Channel Conditions for Fraser River – South Arm",
-          'title_f':"Conditions actuelles du chenal – bras sud du fleuve Fraser",
+          'title':"Current Channel Conditions for Fraser River – South Arm",
           'mapInitState':false,
           'hasParameters':false,
+          "hasParametersApply": false,
           'hasAnimate':false,
+          'hasMapFunc': false,
           'longReport':true,
           'landscapeReport':false,
           'formParam':[
@@ -710,7 +814,7 @@ var padZero = function(num){
           reportBody:[
             {tag:'div',attr:{id:'conditions'},child:[
               {tag:'div',attr:{id:'soundings-header'},child:[
-                {tag:'table',attr:{className:'print-margin-0',style:'margin: 0 auto; width: 950px;'},child:[
+                {tag:'table',attr:{className:'print-margin-0',style:'margin: 0 auto; width: 950px; font-size: 15px;'},child:[
                  {tag:'thead',child:[
                   {tag:'tr',child:[
                     {tag:'th',attr:{className:'align-left'},child:["Note:  All soundings / depths are relative to local low water level"]}
@@ -745,7 +849,7 @@ var padZero = function(num){
               ]},
               {tag:'div',attr:{className:'clear'}},
               {tag:'br'},
-              {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0', style:'width: 800px'},child:[
+              {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0', style:'width: 800px; font-size: 15px'},child:[
                 {tag:'thead',child:[
                   {tag:'tr',attr:{className:'first-row'},child:[
                     {tag:'th',attr:{colspan:3,style:'background-color: white;'}},
@@ -845,11 +949,12 @@ var padZero = function(num){
     
         },
         'sdb':{
-          'title_e':"Survey Drawings",
-          'title_f':"Dessins d'arpentage",
+          'title':"Survey Drawings",
           'mapInitState':true,
           'hasParameters':true,
+          "hasParametersApply": true,
           'hasAnimate':false,
+          'hasMapFunc': true,
           'longReport':true,
           'landscapeReport':false,
           'formParam':
@@ -874,7 +979,7 @@ var padZero = function(num){
                 {tag:'select',attr:{id:'type',name:'type', style:'width:100%;'},ref:{tag:'option',values:
                   function() {
                     var res = [];
-                    var oArr = ["",
+                    var oArr = ["Select All",
                                 "Recon", "Monitor", "Annual", "Investigation", "Composite",
                                 "Dredging", "Design", "Photograph"];
                     for (var k in oArr) {
@@ -888,15 +993,50 @@ var padZero = function(num){
           'reportBody':
             [
               {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
-                {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
+                {tag:'table',attr:{id:'report_tbl',style:'width:auto; font-size:15px'},className:"styled width-80",child:[
                   {tag:'thead',child:[
                     {tag:'tr',child:[
-                      {tag:'th',child:['Date']},
-                      {tag:'th',child:['Drawing']},
-                      {tag:'th',child:['Location (km)']},
-                      {tag:'th',child:['Type']},
-                      {tag:'th',child:['Km Start']},
-                      {tag:'th',child:['Km End']}
+                      {tag:'th',child:["Date"]},
+                      {tag:'th',child:["Drawing"]},
+                      {tag:'th',child:["Location"]},
+                      {tag:'th',child:["Type"]},
+                      {tag:'th',child:["Start"]},
+                      {tag:'th',child:["End"]}
+                    ]},
+                    {tag:'tr',attr:{style:'background-color:#eee'},child:[
+                      {tag:'td',attr:{colspan:2}},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
+                      {tag:'td',attr:{colspan:1}},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]}
+                    ]}
+                  ]},
+                  {tag:'tbody',attr:{style:'white-space:nowrap'}}
+                ]}
+            ]}
+          ],
+          'reportDetail':
+            [{tag:'p',child:['This tool does not support detailed search items']}]
+        },
+        'isa':{
+          'title':"Channel Infill & Scour Analysis",
+          'mapInitState':true,
+          'hasParameters':false,
+          "hasParametersApply": false,
+          'hasAnimate':false,
+          'hasMapFunc': true,
+          'longReport':true,
+          'landscapeReport':false,
+          'formParam':
+            [{tag:'text', child: ["To view channel infill & scour analysi click on a highlighted area."]}],
+          'reportBody':
+            [
+              {tag:'section',attr:{'style':'padding-left:25%; padding-right:25%'},child:[
+                {tag:'table',attr:{id:'isas',style:"text-align:center"},child:[
+                  {tag:'thead',child:[
+                    {tag:'tr',child:[
+                      {tag:'th',child:['Filename']},
+                      {tag:'th',child:['Year']}
                     ]}
                   ]},
                   {tag:'tbody'}
@@ -904,22 +1044,14 @@ var padZero = function(num){
               ]}
             ],
           'reportDetail':
-            [{tag:'p',child:['This tool does not support detailed search items']}]
-        },
-        'isa':{
-          'title_e':"Channel Infill & Scour Analysis",
-          'title_f':"Analyse du remplissage et de l'affouillement du chenal",
-          'mapInitState':true,
-          'hasParameters':false,
-          'hasAnimate':false,
-          'longReport':true,
-          'landscapeReport':false,
-          'formParam':
-            [{tag:'text', child: ["To view channel infill & scour analysi click on a highlighted area."]}],
-          'reportBody':
-            [],
-          'reportDetail':
             []
+        }
+      },
+      ava_map :{
+        toggleLayerBtn : {
+          aerial : 'Change to Aerial view',
+          street : 'Change to Street view',
+          title : 'Use this button to toggle between Aerial and Street view'
         }
       }
   };
@@ -931,13 +1063,13 @@ var padZero = function(num){
       // Default Styles and map constants
       wid1: '5.0',
       wid2: '2.0',
-      col1: '#ffff00',
-      col2: '#28eafc',
+      col1: '#ffa500',
+      col2: '#1d73b5',
       sel1: '#00ffff',
       black: '#000000',
       white: '#ffffff',
       op1: 0.2,
-      op2: 0.1,
+      op2: 0.3,
       op_sel: 0.5,
       callback_function: undefined,
       cl: function (feat, c1, c2) { return (mapStyle.callback_function(feat) ? c1 : c2) },

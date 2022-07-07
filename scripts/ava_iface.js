@@ -9,144 +9,169 @@ Current Conditions: cc-ca.js, soundings-sondages.js
 
 // Load def JS File
 var loadJS = function(name, callback) {
-    $.getScript('scripts/' + name + '.js', callback);
+    $.getScript('scripts/' + name + '.js')
+        .done(callback)
+        .fail(function(jqxhr, settings, exception){
+            console.error(exception);
+            console.error('failed to load script: ' + name);
+        });
 };
+
+let body = document.getElementsByTagName("body")[0];
+let mapEl = document.getElementById("map");
+
+mapEl.addEventListener("mouseenter", ev => {
+    body.classList.add("noscroll");
+}, false);
+mapEl.addEventListener("mouseleave", ev => {
+    body.classList.remove("noscroll");
+}, false);
 
 // Create global variables
 var page_lang = $('html').attr('lang');
 
 // Create avaIFace
-var avaIFaceJS;
-avaIFaceJS = {
+/** @namespace */
+var avaIFaceJS = {};
 
     // Internal Object for handling the detail window
-    detailWindow: {
-        useMap: false,
-        mapColorKey: null,
-        detailContent: null,
-        map: null,
+avaIFaceJS.detailWindow = {
+    useMap: false,
+    mapColorKey: null,
+    detailContent: null,
+    map: null,
 
-        // Add inner content to Detail Window (uses JSON struct format for layout)
-        addContent: function(content) {
-            if (content.length > 0) {
-                var detCont = [{
+    // Add inner content to Detail Window (uses JSON struct format for layout)
+    addContent: function(content) {
+        if (content.length > 0) {
+            var detCont = [{
+                tag: 'div',
+                attr: {
+                    id: 'detail_content'
+                },
+                child: [{
                     tag: 'div',
                     attr: {
-                        id: 'detail_content'
+                        className: 'print_holder'
                     },
                     child: [{
-                        tag: 'div',
+                        tag: 'button',
                         attr: {
-                            className: 'print_holder'
+                            name: 'print',
+                            className: 'btn btn-primary print_button print_hide'
                         },
                         child: [{
-                            tag: 'button',
+                            tag: 'span',
                             attr: {
-                                name: 'print',
-                                className: 'button button-accent print_button print_hide'
-                            },
-                            child: ['Print']
-                        }]
-                    }, {
-                        tag: 'div',
-                        child: [$.extend({}, content[0])]
-                    }, {
-                        tag: 'div',
-                        attr: {
-                            className: 'page-break'
-                        }
-                    }, {
-                        tag: 'div',
-                        attr: {
-                            className: 'print_holder'
-                        },
-                        child: [{
-                            tag: 'button',
-                            attr: {
-                                name: 'print',
-                                className: 'button button-accent print_button print_hide'
-                            },
-                            child: ['Print']
-                        }]
+                                className: 'glyphicon glyphicon-print'
+                            }
+                        }, ' Print']
                     }]
-                }];
-            }
-            avaIFaceJS.detailWindow.detailContent = avaIFaceJS.getElements(detCont);
-        },
-
-        // Load Detail layout with empty template
-        loadLayout: function() {
-            $('#rep_detail_info').html('').append(avaIFaceJS.detailWindow.detailContent).show();
-
-            $('#cboxClose').unbind('click').click(avaIFaceJS.detailWindow.hide);
-            $('button[name="print"]').unbind('click').click(function() {
-                window.print()
-            });
-        },
-
-        // Displays Detail Window
-        show: function() {
-            var repDet = $('#report_detail');
-
-            // PWL detail map removal
-            /*if (avaIFaceJS.detailWindow.useMap) {
-        $('#rep_detail_map').hide().show().css('width','100%');
-        avaIFaceJS.detailWindow.mapJS.renderMap();
-      } else {
-        $('#rep_detail_map').hide();
-      }*/
-            $('#rep_detail_map').hide();
-            $('#report_map').css('width', '100%');
-
-            // detail report position parameters
-            repDet.show().css('left', ($( document ).width() - repDet.width()) / 2);
-            repDet.show().css('top', ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 50));
-            repDet.show().css('position', 'fixed');
-
-            /* 
-             * set dynamic detail report size
-             */
-            // detail report size parameters
-            var dataHeight = $('#rep_detail_map').height() + $('#rep_detail_info').height();
-            var windowHeight = window.innerHeight - ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 80);
-
-            if ((avaIFaceJS.currentPage == 'ccc') || (dataHeight >= windowHeight)) { // amount of data in detail report is greater than length of screen, or special case for current channel conditions
-                $('#cboxLoadedContent').css('height', windowHeight);
-            } else {
-                $('#cboxLoadedContent').css('height', dataHeight);
-            }
-            $('#cboxLoadedContent').css('width', '103%'); // prevents needless horizontal scroll bar
-
-            $('#report_det_cover').show().css('height', (repDet.height() + repDet.offset().top + 50 < $(document).height() ? $(document).height() : repDet.height() + repDet.offset().top + 50));
-
-            /*
-             * generates detial_print div html and css from current detail display window
-             */
-            $('<style>@media print { #report_body { display: none; } }</style>').appendTo('head');
-
-            var printReport = $("#detail_content").clone();
-            printReport.find("#print_remove").remove(); // specific to handle ccc radio buttons
-            $("#detail_print").html(printReport);
-            // see pwl_func.js goToGraph function for canvas printing fix
-        },
-
-        // Hides Detail Window
-        hide: function() {
-            if (avaIFaceJS.detailWindow.useMap) {
-                $('#rep_detail_map').hide();
-                avaIFaceJS.detailWindow.useMap = false;
-            }
-            $('#report_det_cover').hide();
-            $('#report_detail').hide();
-
-            // hide report window printing div from print css
-            $('<style>@media print { #report_body { display: block; } }</style>').appendTo('head');
-            $("#detail_print").html("");
+                }, {
+                    tag: 'div',
+                    child: [$.extend({}, content[0])]
+                }, {
+                    tag: 'div',
+                    attr: {
+                        className: 'page-break'
+                    }
+                }, {
+                    tag: 'div',
+                    attr: {
+                        className: 'print_holder'
+                    },
+                    child: [{
+                        tag: 'button',
+                        attr: {
+                            name: 'print',
+                            className: 'btn btn-primary print_button print_hide'
+                        },
+                        child: [{
+                            tag: 'span',
+                            attr: {
+                                className: 'glyphicon glyphicon-print'
+                            }
+                        }, ' Print']
+                    }]
+                }]
+            }];
         }
+        avaIFaceJS.detailWindow.detailContent = avaIFaceJS.getElements(detCont);
     },
 
+    // Load Detail layout with empty template
+    loadLayout: function() {
+        $('#rep_detail_info').html('').append(avaIFaceJS.detailWindow.detailContent).show();
+
+        $('#cboxClose').unbind('click').click(avaIFaceJS.detailWindow.hide);
+        $('button[name="print"]').unbind('click').click(function() {
+            window.print();
+        });
+    },
+
+    // Displays Detail Window
+    show: function() {
+        var repDet = $('#report_detail');
+
+        // PWL detail map removal
+        /*if (avaIFaceJS.detailWindow.useMap) {
+    $('#rep_detail_map').hide().show().css('width','100%');
+    avaIFaceJS.detailWindow.mapJS.renderMap();
+    } else {
+    $('#rep_detail_map').hide();
+    }*/
+        $('#rep_detail_map').hide();
+        $('#report_map').css('width', '100%');
+
+        // detail report position parameters
+        repDet.show().css('left', ($( document ).width() - repDet.width()) / 2);
+        repDet.show().css('top', ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 50));
+        repDet.show().css('position', 'fixed');
+
+        /* 
+            * set dynamic detail report size
+            */
+        // detail report size parameters
+        var dataHeight = $('#rep_detail_map').height() + $('#rep_detail_info').height();
+        var windowHeight = window.innerHeight - ($('#gcwu-gcnb-in').height() + $('#cboxClose').height() + 80);
+
+        if ((avaIFaceJS.currentPage == 'ccc') || (dataHeight >= windowHeight)) { // amount of data in detail report is greater than length of screen, or special case for current channel conditions
+            $('#cboxLoadedContent').css('height', windowHeight);
+        } else {
+            $('#cboxLoadedContent').css('height', dataHeight);
+        }
+        $('#cboxLoadedContent').css('width', '103%'); // prevents needless horizontal scroll bar
+
+        $('#report_det_cover').show().css('height', (repDet.height() + repDet.offset().top + 50 < $(document).height() ? $(document).height() : repDet.height() + repDet.offset().top + 50));
+
+        /*
+            * generates detial_print div html and css from current detail display window
+            */
+        $('<style>@media print { #report_body { display: none; } }</style>').appendTo('head');
+
+        var printReport = $("#detail_content").clone();
+        printReport.find("#print_remove").remove(); // specific to handle ccc radio buttons
+        $("#detail_print").html(printReport);
+        // see pwl_func.js goToGraph function for canvas printing fix
+    },
+
+    // Hides Detail Window
+    hide: function() {
+        if (avaIFaceJS.detailWindow.useMap) {
+            $('#rep_detail_map').hide();
+            avaIFaceJS.detailWindow.useMap = false;
+        }
+        $('#report_det_cover').hide();
+        $('#report_detail').hide();
+
+        // hide report window printing div from print css
+        $('<style>@media print { #report_body { display: block; } }</style>').appendTo('head');
+        $("#detail_print").html("");
+    }
+}
+
     // Internal Object for handling the report window
-    reportWindow: {
+    avaIFaceJS.reportWindow = {
         isInit: false,
         title1: "",
         title2: "",
@@ -231,9 +256,14 @@ avaIFaceJS = {
                         tag: 'button',
                         attr: {
                             name: 'print',
-                            className: 'button button-accent print_button print_hide'
+                            className: 'btn btn-primary print_button print_hide'
                         },
-                        child: ['Print']
+                        child: [{
+                            tag: 'span',
+                            attr: {
+                                className: 'glyphicon glyphicon-print'
+                            }
+                        }, ' Print']
                     }]
                 }, {
                     tag: 'div',
@@ -320,9 +350,14 @@ avaIFaceJS = {
                         tag: 'button',
                         attr: {
                             name: 'print',
-                            className: 'button button-accent print_button print_hide'
+                            className: 'btn btn-primary print_button print_hide'
                         },
-                        child: ['Print']
+                        child: [{
+                            tag: 'span',
+                            attr: {
+                                className: 'glyphicon glyphicon-print'
+                            }
+                        }, ' Print']
                     }]
                 });
             }
@@ -337,14 +372,21 @@ avaIFaceJS = {
             avaIFaceJS.reportWindow.setTitle();
 
             $('button[name="print"]').unbind('click').click(function() {
-                window.print()
+                window.print();
             });
         },
 
-        // Adds strings to fit into Report Title Template
+        /**
+         * Adds strings to fit into Report Title Template
+         * @param {string} repTitle1 - Main title for report. Appears inside <h2> tag
+         * @param {string} repTitle2 - Second part of title for report.  Appears in <h3> tag
+         * @param {string} subT1 - First subtitle for report. Appears in <p> tag
+         * @param {string} subT2 - Second subtitle for report. Appears in same <p> tag
+         * as subT2 but broken to a new line with a <br /> tag
+         **/
         addTitle: function(repTitle1, repTitle2, subT1, subT2) {
             if (!avaIFaceJS.reportWindow.isInit) {
-                avaIFaceJS.reportWindow.init()
+                avaIFaceJS.reportWindow.init();
             }
             if (repTitle1 != undefined) {
                 avaIFaceJS.reportWindow.title1 = repTitle1;
@@ -373,7 +415,7 @@ avaIFaceJS = {
         // Applies report layout to report window
         addContent: function(content) {
             if (!avaIFaceJS.reportWindow.isInit) {
-                avaIFaceJS.reportWindow.init()
+                avaIFaceJS.reportWindow.init();
             }
             avaIFaceJS.reportWindow.repContent = $.extend([], content);
         },
@@ -386,7 +428,7 @@ avaIFaceJS = {
             $('#report_content').show();
 
             if (!avaIFaceJS.reportWindow.isInit) {
-                avaIFaceJS.reportWindow.init()
+                avaIFaceJS.reportWindow.init();
             }
 
             avaIFaceJS.reportWindow.repWrapper.trigger('resize').show();
@@ -403,10 +445,10 @@ avaIFaceJS = {
         clear: function() {
             avaIFaceJS.reportWindow.repBodyElem.innerHTML = "";
         }
-    },
+    };
 
     // Internal Object for Parameters Window
-    paramWindow: {
+    avaIFaceJS.paramWindow = {
         linkBtn: null,
         paramForm: null,
         isInit: false,
@@ -420,7 +462,7 @@ avaIFaceJS = {
 
         useParam: function(state) {
             if (!avaIFaceJS.paramWindow.isInit) {
-                avaIFaceJS.paramWindow.init()
+                avaIFaceJS.paramWindow.init();
             }
             if (state) {
                 avaIFaceJS.paramWindow.show();
@@ -455,45 +497,34 @@ avaIFaceJS = {
             }
         },
 
-        addForm: function(content) {
+        addForm: function(content, showApply) {
             if (!avaIFaceJS.paramWindow.isInit) {
-                avaIFaceJS.paramWindow.init()
+                avaIFaceJS.paramWindow.init();
             }
             var pgParam = $.extend([], content);
-            if (window.location.href.indexOf("fra") > -1) {
-                //If url contains 'fra'	use 
-                pgParam.push({
-                    tag: 'button',
-                    attr: {
-                        id: 'submit',
-                        type: 'button',
-                        className: 'button button-accent',
-                        name: 'submit',
-                        //alt: 'Appliquer'
-                    },
-                    'child': ['Appliquer']
-                });
-            } else {
-                //If url does not contain 'fra' use
-                pgParam.push({
-                    tag: 'button',
-                    attr: {
-                        id: 'submit',
-                        type: 'button',
-                        className: 'button button-accent',
-                        name: 'submit'
-                        //alt: 'Apply'
-                    },
-                    'child': ['Apply']
-                });
-            }
+            var applyButtonText = (window.location.href.indexOf("fra") > -1)
+                ? 'Appliquer'
+                : 'Apply';
+
+            if(showApply === undefined || showApply) pgParam.push({
+                tag: 'button',
+                attr: {
+                    id: 'submit',
+                    type: 'button',
+                    className: 'btn btn-primary',
+                    name: 'submit',
+                    //alt: 'Appliquer'
+                },
+                'child': [applyButtonText]
+            });
+
             if (avaIFaceJS.paramWindow.hasAnimate) {
                 pgParam.push({
                     tag: 'button',
                     attr: {
                         id: 'replay',
                         type: 'button',
-                        className: 'button button-accent',
+                        className: 'btn btn-primary',
                         name: 'replay',
                         style: 'font-style: normal; margin-left: 5px'
                     },
@@ -562,14 +593,14 @@ avaIFaceJS = {
 
         isOpen: function() {
             if (!avaIFaceJS.paramWindow.isInit) {
-                avaIFaceJS.paramWindow.init()
+                avaIFaceJS.paramWindow.init();
             }
             // return (!(document.getElementById('paramButton').innerText == "Parameters"))
         }
-    },
+    };
 
     // side navigation panel for results
-    sideNavPanel: {
+    avaIFaceJS.sideNavPanel = {
         navTitle: $("#side_nav .panel-heading .panel-title"),
         navBody: $("#side_nav .panel-body"),
         Title: "",
@@ -620,10 +651,10 @@ avaIFaceJS = {
             navBody.empty();
             this.hide();
         }
-    },
+    };
 
     // Initiate avaIFaceJS Object/add Event Triggers and load page elements
-    init: function() {
+    avaIFaceJS.init = function() {
         // console.clear();
         // Clear and nullify objects
         avaIFaceJS.mapJS = null;
@@ -637,17 +668,17 @@ avaIFaceJS = {
             $(window).unbind('resize').resize(function() {
                 var hgt = $('#wb-core').width() * 8.5 / 15;
                 if (hgt < 680) {
-                    hgt = 680
+                    hgt = 680;
                 }
                 $('#embed_map').height(hgt);
             });
             $('#ref_map_link').click(function() {
                 var hgt = $('#wb-core').width() * 8.5 / 15;
                 if (hgt < 680) {
-                    hgt = 680
+                    hgt = 680;
                 }
                 $('#embed_map').height(hgt);
-            })
+            });
         }
         // avaIFaceJS.setMapOpen(avaIFaceJS.MapState.Open);
 
@@ -655,39 +686,32 @@ avaIFaceJS = {
         if (querystring('page').length > 0) {
             avaIFaceJS.loadPage(querystring('page'));
         }
-    },
+    };
 
     /*** General Functions ***/
     // Change page for new report
-    loadPage: function(page_name) {
+    avaIFaceJS.loadPage = function(page_name) {
 
         // Load Embedded Map
         avaIFaceJS.mapJS.map.updateSize();
 
         // Retrieve Page Definition
         avaIFaceJS.currentPage = page_name;
-        if (!avaIFaceJS[page_name + '_func']) {
-            loadJS(page_name + '_func', avaIFaceJS.getPage);
+        if (!avaIFaceJS[page_name + '_pg_func']) {
+            loadJS(page_name + '_pg_func', avaIFaceJS.getPage);
         } else {
             avaIFaceJS.getPage();
         }
-    },
+    };
 
-    getPage: function() {
+    avaIFaceJS.getPage = function() {
         var pg_entry = incl_ava_defs.avaPages[avaIFaceJS.currentPage];
 
-        // Set Title
-        if (window.location.href.indexOf("fra") > -1) {
-            //If url contains 'fra'	show the French title
-            $('#ava_map_ttl').text(pg_entry.title_f);
-        } else {
-            //If url does not contain 'fra' show the English title
-            $('#ava_map_ttl').text(pg_entry.title_e);
-        }
+        $('#ava_map_ttl').text(pg_entry.title);
 
         // Page Form Parameters
         avaIFaceJS.paramWindow.hasAnimate = pg_entry.hasAnimate;
-        avaIFaceJS.paramWindow.addForm(pg_entry.formParam);
+        avaIFaceJS.paramWindow.addForm(pg_entry.formParam, pg_entry.hasParametersApply);
 
         // Add Content layout for Detail Window
         avaIFaceJS.detailWindow.addContent(pg_entry.reportDetail);
@@ -699,7 +723,10 @@ avaIFaceJS = {
         avaIFaceJS.reportWindow.loadReport();
 
         // Retrieve Page Elements and initiate Page code
-        avaIFaceJS.mapJS.setPageActivity(avaIFaceJS.currentPage);
+        if(pg_entry.hasMapFunc){
+            avaIFaceJS.mapJS.setPageActivity(avaIFaceJS.currentPage);
+        }
+
         avaIFaceJS[avaIFaceJS.currentPage + "_func"].init();
 
         // Open Parameters Tab, Map Window
@@ -711,14 +738,15 @@ avaIFaceJS = {
         // Close Report Window
         avaIFaceJS.reportWindow.hide();
 
-    },
+    };
 
     // Open/Close Map when needed
-    MapState: {
+    avaIFaceJS.MapState = {
         Close: false,
         Open: true
-    },
-    setMapOpen: function(state, callback, arg) {
+    };
+
+    avaIFaceJS.setMapOpen = function(state, callback, arg) {
         // console.log("state: " + state + ", arg: " + arg 
         //             + ", isMapOpen: " + this.isMapOpen());
         var mapLink = $('#ref_map_link');
@@ -733,39 +761,39 @@ avaIFaceJS = {
         var embedMap = $('#embed_map');
         var hgt = $('#wb-core').width() * 8.5 / 15;
         if (hgt < 680) {
-            hgt = 680
+            hgt = 680;
         }
         embedMap.height(hgt);
         $('#map').height(hgt);
         var ifr = $('iframe');
         var mp = $('#ava_map_ref', ifr.contents());
         mp.height(hgt);
-        (this.isMapOpen() ? $('#map_wrapper').className = "print_show" : $('#map_wrapper').className = "print_hide");
-    },
+        ifr.height(hgt+50);
+    };
 
-    isMapOpen: function() {
+    avaIFaceJS.isMapOpen = function() {
         return document.getElementById('ref_map_det').clientHeight > 50;
-    },
+    };
 
     // Parse incoming JSON struct to DOM for Form, Report, and Detail layouts
-    getElements: function(arr) {
+    avaIFaceJS.getElements = function(arr) {
         var res = [];
         if ($.isArray(arr)) {
             for (var a = 0; a < arr.length; a++) {
                 if ($.type(arr[a]) === 'object') {
-                    var t = $('<' + arr[a]['tag'] + '></' + arr[a]['tag'] + '>');
+                    var t = $('<' + arr[a].tag + '></' + arr[a].tag + '>');
                     if ('attr' in arr[a]) {
                         if ('className' in arr[a].attr) {
                             t.addClass(arr[a].attr.className);
                             delete arr[a].attr.className;
                         }
-                        t.attr(arr[a].attr)
+                        t.attr(arr[a].attr);
                     }
                     if ('ref' in arr[a]) {
-                        var tagUsed = arr[a]['ref']['tag'];
-                        var oArr = arr[a]['ref']['values'];
+                        var tagUsed = arr[a].ref.tag;
+                        var oArr = arr[a].ref.values;
                         if (typeof oArr == 'function') {
-                            oArr = oArr()
+                            oArr = oArr();
                         }
                         var r = [];
                         for (var k in oArr) {
@@ -775,17 +803,17 @@ avaIFaceJS = {
                                 child: [oArr[k].value]
                             };
                             if ('key' in oArr[k]) {
-                                v.attr.value = oArr[k].key
+                                v.attr.value = oArr[k].key;
                             }
                             if ('select' in oArr[k]) {
-                                v.attr.selected = "selected"
+                                v.attr.selected = "selected";
                             }
                             r.push(v);
                         }
                         arr[a].child = r;
                     }
                     if ('child' in arr[a]) {
-                        t.append(avaIFaceJS.getElements(arr[a]['child']));
+                        t.append(avaIFaceJS.getElements(arr[a].child));
                     }
                     res.push(t);
                 } else {
@@ -794,8 +822,8 @@ avaIFaceJS = {
             }
         }
         return res;
-    }
-};
+    };
+
 if (window.location.href.indexOf("fra") > -1) {
     //If url contains 'fra'	use 
     loadJS('incl_ava_defs-fra', function() {});
@@ -832,17 +860,17 @@ function pBarToggle() {
         document.getElementById('map_parameters').style.display = 'none';
         //document.getElementById('pBarContainer').style.opacity = '0.8';
         //document.getElementById('pBarContainer').style.filter = 'Alpha(opacity=80)';
-        document.getElementById('pBarButton').innerText = "+"
+        document.getElementById('pBarButton').innerText = "+";
     } else {
         document.getElementById('map_parameters').style.display = 'block';
         //document.getElementById('pBarContainer').style.opacity = '1';
         //document.getElementById('pBarContainer').style.filter = 'Alpha(opacity=100)';
-        document.getElementById('pBarButton').innerText = "-"
+        document.getElementById('pBarButton').innerText = "-";
     }
-};
+}
 
 // takes the user to specified selector
 function NavigateTo(selector){
     var elemLocation = $(selector).offset();
     window.scrollTo(elemLocation.left,elemLocation.top);
-};
+}

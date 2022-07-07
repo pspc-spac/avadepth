@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Created by wsiddall on 14/07/2014.
  */
 
@@ -6,7 +6,16 @@ var padZero = function(num){
     var s = "000" + num;
     return s.substr(s.length-2);
   };
-  
+   
+  /**
+   * Utility used to ease development.
+   * Will select between two APIs based on the environment.
+   * @param {string} extURL - API to be used when accessing the site externally.
+   * example - 'api2/isas?location=StevestonCut'
+   * 
+   * @param {string} intURL - API to be used when accessing the site from localhost.
+   * example - '/api/isa/StevestonCut.json'
+   */
   function getAPI(extURL, intURL){
     if(document.URL.split("/")[2].split(":")[0] === "localhost") {
       return intURL;
@@ -20,11 +29,11 @@ var padZero = function(num){
   incl_ava_defs={
     avaPages:{
       'acv':{
-        'title_e': "Animated Currents and Velocities",
-        'title_f': "Animation et vélocités du courant",
+        'title': "Animation et vélocités du courant",
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':true,
+        'hasMapFunc': true,
         'longReport':false,
         'landscapeReport':false,
         'formParam':[
@@ -151,12 +160,104 @@ var padZero = function(num){
         ],
         'reportDetail':[]
       },
+      "cbw": {
+        "title": "Carte Web de la bathymétrie du chenal",
+        "mapInitState": true,
+        "hasParameters": true,
+        "hasParametersApply": false,
+        "hasAnimate": false,
+        "hasMapFunc": true,
+        "longReport": false,
+        "landscapeReport": false,
+        "formParam": [
+          {tag: "div", attr: {classname: "span-4"}, child: [
+              {tag: "label", attr: {for: "layers_ttl", style: "font-weight:bold"}, child: ["Couches:"]},
+              {tag: "div", child: [
+                  {tag: "label", attr: {for: "ddRiverName"}, child: ["réseaux"]},
+                  {tag: "select", attr: {name: "riverName", id: "ddRiverName"}, child: [
+                      {tag: "option", attr: {value: "FRSA", selected: "selected"}, child: ["Fraser River - chenal sud"]},
+                      {tag: "option", attr: {value: "FRNA"}, child: ["Fraser River - chenal nord"]},
+                      {tag: "option", attr: {value: "FRMA"}, child: ["Fraser River - chenal principal"]},
+                      {tag: "option", attr: {value: "FRSC"}, child: ["chenals du Fraser River - chenal sud"]},
+                      {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
+                    ]},
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
+                  {tag: "div", attr: { class: "popup" }, child: [
+                          " sondages", {tag: "span", attr: { class: "popuptext" }, child: [
+                              " Profondeurs par rapport au zéro des cartes locales de niveau des basses eaux (NBE)"]
+                          }]
+                  },
+                  {tag: "br"},
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrChannel", value: "channel", checked: "checked" } },
+                  {
+                      tag: "div", attr: { class: "popup" }, child: [" chenal&nbsp;&nbsp;", {
+                          tag: "span", attr: { class: "popuptext" }, child: [" Chenal désigné maintenu pour le transport maritime"] }] },
+                  {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
+                  " montre cellules",
+                  {tag: "br"},
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
+                  {tag: "div", attr: { class: "popup" }, child: [
+                          " surfaces:", {tag: "span", attr: { class: "popuptext" }, child: [
+                              " Bathymétrie de sondages récents de SPAC"]
+                          }]
+                  },
+                  {tag: "br"},
+                  {tag: "div", attr: { class: "optionIndent" }, child: [
+                          {tag: "label", attr: { for: "surfTrans" }, child: [
+                            {tag: "div", attr: { class: "popup" }, child: [
+                                  "transparence", {tag: "span", attr: { class: "popuptext" }, child: [
+                                      " Glisser pour ajuster l’intensité de la couleur"]
+                                  }]
+                              }]
+                          },
+                      {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
+                      "type de surface:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "combined", checked: "checked" } },
+                          {
+                              tag: "div", attr: { class: "popup" }, child: [" bathymetrique", {
+                                  tag: "span", attr: { class: "popuptext" }, child: [" Modèle numérique de terrain (MNT) généré à partir des sondages actuels"] }] },
+                          {tag: "br"},
+                          {tag: "input", attr: { style: "margin: 0.25em", type: "radio", name: "surface", value: "conformance" } },
+                          {
+                              tag: "div", attr: { class: "popup" }, child: [" conformité", {
+                                  tag: "span", attr: { class: "popuptext" }, child: [" Différence relative au-dessus ou au-dessous du niveau de conception du chenal"] }] },
+                          {tag: "br"}
+                      ]},
+                      "détails:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_combined", name: "surfDetails"}, child: [
+                              "Date de création ",
+                              {tag: "span", attr: {name: "srfDateCur"}}
+                            ]},
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_conformance", name: "surfDetails"}, child: [
+                              "conformité généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}}
+                            ]},
+                          {tag: "div", attr: {style: "margin: 0.25em", id: "surf_difference", name: "surfDetails"}, child: [
+                              "différence généré ",
+                              {tag: "span", attr: {name: "srfDateCur"}},
+                              " du surface généré ",
+                              {tag: "span", attr: {name: "srfDatePrev"}}
+                            ]},
+                        ]},
+                      "légende:",
+                      {tag: "div", attr: {class: "optionIndent"}, child: [
+                          {tag: "div", attr: {style: "margin: 0.5em", id: "surfLegend"}}
+                      ]}
+                  ]}
+                ]}
+            ]}
+        ],
+        "reportBody": [],
+        "reportDetail": [],
+      },
       'dd': {
-        'title_e': "Available Depth Report for Fraser River South Arm",
-        'title_f': "Rapport sur les profondeurs disponibles",
+        'title': "Rapport sur les profondeurs disponibles",
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':false,
         'landscapeReport':false,
         'formParam': [
@@ -354,11 +455,11 @@ var padZero = function(num){
         ]
       },
       'tw':{
-        'title_e':"Transit Window Report",
-        'title_f':"Fenêtre de circulation",
+        'title':"Fenêtre de circulation",
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':false,
         'landscapeReport':false,
         'formParam':[
@@ -539,11 +640,11 @@ var padZero = function(num){
         ]
       },
       'pwl':{
-        'title_e':"Predicted Water Levels & Velocities",
-        'title_f':"Vélocités et niveaux prévus de l’eau",
+        'title':"Vélocités et niveaux prévus de l’eau",
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': true,
         'longReport':true,
         'formParam':
           [
@@ -671,11 +772,11 @@ var padZero = function(num){
           ]
       },
       'frh':{
-        'title_e':"Fraser River Hydrograph",
-        'title_f':"Hydrographie du fleuve Fraser",
+        'title':"Hydrographie du fleuve Fraser",
         'mapInitState':false,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':false,
         'landscapeReport':true,
         'formParam':[
@@ -684,16 +785,27 @@ var padZero = function(num){
             {tag:'input',attr:{id:'date',type:'text',name:'date',className:'datepicker'}},
             {tag:'input',attr:{id:'alt-date',type:'hidden'}},
             {tag:'label',attr:{for:'period'},child:["Period:"]},
-            {tag:'select',attr:{id:'period'},ref:{tag:'option',values:[{key:3,value:"12 Months"},{key:2,value:'6 Months'},{key:1,value:'2 Months'},{key:0,value:'1 Month'}]}},
+            {tag:'select',attr:{id:'period'},
+              ref:{
+                tag:'option',
+                values:[
+                  {key:3,value:"12 Months"},
+                  {key:2,value:'6 Months'},
+                  {key:1,value:'2 Months'},
+                  {key:0,value:'1 Month'}]}},
             {tag:'label',attr:{for:'plot'},child:["Plot:"]},
+            //" Actual",
             {tag:'input',attr:{id:'actual',type:'checkbox',name:'actual',checked:'checked'}},
             {tag:'label',attr:{for:'actual',style:'font-weight:normal'},child:[" Actual"]},
-            //" Actual",
             {tag:'br'},
+            //" Predicted",
             {tag:'input',attr:{id:'predicted',type:'checkbox',name:'predicted',checked:'checked'}},
             {tag:'label',attr:{for:'predicted',style:'font-weight:normal'},child:[" Predicted"]},
-            //" Predicted",
-            {tag:'br'}
+            {tag:'br'},
+            //" Min/Max",
+            {tag:'input',attr:{id:'minMax',type:'checkbox',name:'minMax',checked:'checked'}},
+            {tag:'label',attr:{for:'minMax',style:'font-weight:normal'},child:[" Min/Max"]},
+            {tag:'br'},{tag:'br'}
           ]}
         ],
         'reportBody':[
@@ -710,11 +822,11 @@ var padZero = function(num){
         ]
       },
       'ccc':{
-        'title_e':"Current Channel Conditions for Fraser River South Arm",
-        'title_f':"Conditions actuelles du chenal – bras sud du fleuve Fraser",
+        'title':"Conditions actuelles du chenal – bras sud du fleuve Fraser",
         'mapInitState':false,
         'hasParameters':false,
         'hasAnimate':false,
+        'hasMapFunc': false,
         'longReport':true,
         'landscapeReport':false,
         'formParam':[
@@ -723,7 +835,7 @@ var padZero = function(num){
         reportBody:[
           {tag:'div',attr:{id:'conditions'},child:[
             {tag:'div',attr:{id:'soundings-header'},child:[
-              {tag:'table',attr:{className:'print-margin-0',style:'table-layout: fixed; margin: 0 auto; width: 950px;'},child:[
+              {tag:'table',attr:{className:'print-margin-0',style:'margin: 0 auto; width: 950px; font-size: 15px'},child:[
                 {tag:'thead',child:[
                 {tag:'tr',child:[
                   {tag:'td',attr:{className:'align-left'},child:["Remarque : Toutes les profondeurs et tous les sondages sont relatifs au niveau d’eau basse local."]}
@@ -752,16 +864,17 @@ var padZero = function(num){
             ]},
             {tag:'div',attr:{className:'clear'}},
             {tag:'br'},
-            {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0'},child:[
+            {tag:'table',attr:{id:'soundings',className:'align-center print-align-center print-margin-0', style:'width: 800px; font-size: 15px'},child:[
               {tag:'thead',child:[
                 {tag:'tr',attr:{className:'first-row'},child:[
-                  {tag:'th',attr:{colspan:2,style:'background-color: white;'}},
+                  {tag:'th',attr:{colspan:3,style:'background-color: white;'}},
                   {tag:'th',attr:{colspan:4,style:'background-color: white;'},child:["Limite intérieure du chenal"]},
                   {tag:'th',attr:{colspan:4,style:'background-color: white;'},child:["Limite extérieure du chenal"]}
                 ]},
                 {tag:'tr',child:[
                   {tag:'th',child:["Km"]},
                   {tag:'th',child:["Date du relevé"]},
+                  {tag:'th',child:["Plan de référence"]},
                   {tag:'th',child:["Pente d’origine"]},
                   {tag:'th',attr:{style:'padding:0'},child:["Profondeur minimum sondée"]},
                   {tag:'th',attr:{colspan:2},child:["Largeur disponible"]},
@@ -770,7 +883,7 @@ var padZero = function(num){
                   {tag:'th',attr:{colspan:2},child:["Largeur disponible"]}
                 ]},
                 {tag:'tr',child:[
-                  {tag:'th',attr:{colspan:2}},
+                  {tag:'th',attr:{colspan:3}},
                   {tag:'th',child:["(m)"]},
                   {tag:'th',child:["(m)"]},
                   {tag:'th',child:["(m)"]},
@@ -851,56 +964,92 @@ var padZero = function(num){
   
       },
       'sdb':{
-        'title_e':"Survey Drawings",
-        'title_f':"Dessins d'arpentage",
+        'title':"Dessins d'arpentage",
         'mapInitState':true,
         'hasParameters':true,
         'hasAnimate':false,
+        'hasMapFunc': true,
         'longReport':true,
         'landscapeReport':false,
         'formParam':
           [
-            {tag:'label',attr:{for:'sdb_waterway'},child:['Voie navigable&nbsp;:']},
-            {tag:'select',attr:{id:'sdb_waterway'},ref:{tag:'option',values:
-              function(){
-                var oArr=[];
-                for(var k in incl_ava_defs.locDefs){
-                  var v=incl_ava_defs.locDefs[k].Form;
-                  oArr[v.Order]={key:k, value:v.Title};
-                }
-                return oArr;
-              }
-            }},
-            {tag:'label',attr:{for:'channel'},child:['Chenal&nbsp;:']},
-            {tag:'select',attr:{id:'channel'}},
-            {tag:'label',attr:{for:'location'},child:['Emplacement&nbsp;:']},
-            {tag:'select',attr:{id:'location'}},
-            {tag:'label',attr:{for:'type'},child:['Type&nbsp;:']},
-            {tag:'div',child:[
-              {tag:'select',attr:{id:'type',name:'type'},ref:{tag:'option',values:
-                function() {
-                  var res = [];
-                  var oArr = ["", "Composite", "Annual", "Monitor", "Recon", "Investigation", "Dredging", "Structure", "Photograph"];
-                  for (var k in oArr) {
-                    res.push({key: oArr[k], value: oArr[k]});
+              {tag:'label',attr:{for:'sdb_waterway', style:'font-weight: bold;'},child:['Voie navigable&nbsp;:']},
+              {tag:'select',attr:{id:'sdb_waterway', style:'width:100%;'},ref:{tag:'option',values:
+                function(){
+                  var oArr=[];
+                  for(var k in incl_ava_defs.locDefs){
+                    var v=incl_ava_defs.locDefs[k].Form;
+                    oArr[v.Order]={key:k, value:v.Title};
                   }
-                  return res;
+                  return oArr;
                 }
-              }}
-            ]}
+              }},
+              {tag:'label',attr:{for:'channel', style:'font-weight: bold;'},child:['Chenal&nbsp;:']},
+              {tag:'select',attr:{id:'channel',  style:'width:100%;'}},
+              {tag:'label',attr:{for:'location', style:'font-weight: bold;'},child:['Emplacement&nbsp;:']},
+              {tag:'select',attr:{id:'location',  style:'width:100%;'}},
+              {tag:'label',attr:{for:'type', style:'font-weight: bold;'},child:['Type&nbsp;:']},
+              {tag:'div',child:[
+                {tag:'select',attr:{id:'type',name:'type', style:'width:100%;'},ref:{tag:'option',values:
+                  function() {
+                    var res = [];
+                    var oArr = ["Select All",
+                                "Recon", "Monitor", "Annual", "Investigation", "Composite",
+                                "Dredging", "Design", "Photograph"];
+                    for (var k in oArr) {
+                      res.push({key: oArr[k], value: oArr[k]});
+                    }
+                    return res;
+                  }
+                }}
+              ]}
           ],
+        'reportBody':
+            [
+              {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
+                {tag:'table',attr:{id:'report_tbl',style:'width:auto; font-size:15px'},className:"styled width-80",child:[
+                  {tag:'thead',child:[
+                    {tag:'tr',child:[
+                      {tag:'th',child:["Date"]},
+                      {tag:'th',child:["Dessins"]},
+                      {tag:'th',child:["Emplacement"]},
+                      {tag:'th',child:["Type"]},
+                      {tag:'th',child:["début"]},
+                      {tag:'th',child:["fin"]}
+                    ]},
+                    {tag:'tr',attr:{style:'background-color:#eee'},child:[
+                      {tag:'td',attr:{colspan:2}},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
+                      {tag:'td',attr:{colspan:1}},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]},
+                      {tag:'td',attr:{style:'font-weight:bold; text-align:center'},child:["(km)"]}
+                    ]}
+                  ]},
+                  {tag:'tbody',attr:{style:'white-space:nowrap'}}
+                ]}
+              ]}
+            ],
+        'reportDetail':
+          [{tag:'p',child:['This tool does not support detailed search items']}]
+      },
+      'isa':{
+        'title':"Analyse du remplissage et de l'affouillement du chenal",
+        'mapInitState':true,
+        'hasParameters':false,
+        'hasAnimate':false,
+        'hasMapFunc': true,
+        'longReport':true,
+        'landscapeReport':false,
+        'formParam':
+          [{tag:'text', child: ["Pour voir l'analyse du remplissage et de l'affouillement du chenal cliquez sur une zone en surbrillance."]}],
         'reportBody':
           [
             {tag:'section',attr:{'style':'padding:0 20px 0 20px;'},child:[
               {tag:'table',attr:{id:'report_tbl',className:"styled width-80"},child:[
                 {tag:'thead',child:[
                   {tag:'tr',child:[
-                    {tag:'th',child:['Date']},
-                    {tag:'th',child:['Dessins']},
-                    {tag:'th',child:['Emplacement (km)']},
-                    {tag:'th',child:['Type']},
-                    {tag:'th',child:['Km début']},
-                    {tag:'th',child:['Km fin']}
+                    {tag:'th',child:['Filename']},
+                    {tag:'th',child:['Year']}
                   ]}
                 ]},
                 {tag:'tbody'}
@@ -908,22 +1057,14 @@ var padZero = function(num){
             ]}
           ],
         'reportDetail':
-          [{tag:'p',child:['This tool does not support detailed search items']}]
-      },
-      'isa':{
-        'title_e':"Channel Infill & Scour Analysis",
-        'title_f':"Analyse du remplissage et de l'affouillement du chenal",
-        'mapInitState':true,
-        'hasParameters':false,
-        'hasAnimate':false,
-        'longReport':true,
-        'landscapeReport':false,
-        'formParam':
-          [{tag:'text', child: ["Pour voir l'analyse du remplissage et de l'affouillement du chenal cliquez sur une zone en surbrillance."]}],
-        'reportBody':
-          [],
-        'reportDetail':
           []
+      }
+    },
+    ava_map :{
+      toggleLayerBtn : {
+        aerial : 'Passer à la vue aérienne',
+        street : 'Passer à la vue de la rue',
+        title : 'Utilisez ce bouton pour passer de la vue aérienne à la vue de la rue'
       }
     }
   };
@@ -932,15 +1073,15 @@ var padZero = function(num){
   var mapStyle = {
   
       // Default Styles and map constants
-      wid1: '7.0',
+      wid1: '5.0',
       wid2: '2.0',
-      col1: '#ffff00',
-      col2: '#aaaaaa',
+      col1: '#ffa500',
+      col2: '#1d73b5',
       sel1: '#00ffff',
       black: '#000000',
       white: '#ffffff',
       op1: 0.2,
-      op2: 0.1,
+      op2: 0.3,
       op_sel: 0.5,
       callback_function: undefined,
       cl: function (feat, c1, c2) { return (mapStyle.callback_function(feat) ? c1 : c2) },
@@ -1036,36 +1177,30 @@ var padZero = function(num){
           })
       }
   };
-  
+   
+  /**
+   * [buildParametersObject gets Survey Parameters and sets it on incl_ava_defs.locDefs via API call]
+   * @return {[void]} - incl_ava_defs.locDefs becomes modified to have Survey Parameters
+   */
   function buildParametersObject(){
     jQuery.ajax({
       url: "/api2/SurveyParameters",
       method: "GET",
-      async: false,
+      async:false,    
       success: function(data){
-        var params = new Object();
+        params = new Object();
         data.forEach(function(waterway){
             params[waterway.Key] = waterway;
-            var Sections = waterway.Sections;
+            var Sections = waterway.Sections; // Create back-up of sections for loop
             params[waterway.Key]["Sections"] = {};
-            Sections.forEach(function(sec){
-                params[waterway.Key]["Sections"][sec.Form.Key] = sec;
-                params[waterway.Key]["Sections"][sec.Form.Key]["Names"] = [];
-                sec.Locations.forEach(function(loc){
-                    params[waterway.Key]["Sections"][sec.Form.Key]["Names"].push({ "Location Name": loc.Name, "Tile": loc.Tile});
-                });
-
-                delete params[waterway.Key]["Sections"][sec.Form.Key]["Locations"];
-                
-                if (sec.pwl){
-                    params[waterway.Key]["Sections"][sec.Form.Key]["pwl"] = sec.pwl;
-                }
+            Sections.forEach(function(section){
+                params[waterway.Key]["Sections"][section.Form.Key] = section;
             });
             delete params[waterway.Key].Key;
         });
-        //Change when modifying code
         incl_ava_defs["locDefs"] = params;
+
       }
   });
-
 }
+//# sourceURL=incl_ava_defs-fra.js

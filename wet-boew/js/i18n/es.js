@@ -1,12 +1,13 @@
 /*
- * Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
- * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
- */
+* Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
+* wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+*/
 /*
 ----- Spanish dictionary (il8n) ---
- */
+*/
 ( function( wb ) {
 "use strict";
+
 /* main index */
 wb.i18nDict = {
 	"lang-code": "es",
@@ -53,7 +54,7 @@ wb.i18nDict = {
 	"prv-l": "Anterior (tecla flecha izquierda)",
 	first: "Primero",
 	last: "Último",
-	page: "Page",
+	page: "Jump to: Page",
 	"srch-menus": "Búsqueda y menús",
 	email: "Correo electrónico",
 	"menu-close": "Cierre el menú",
@@ -71,6 +72,7 @@ wb.i18nDict = {
 	"tab-pnl-end2": "Volver a la lista de pestañas",
 	"tab-pnl-end3": "o continuar al resto de la página.",
 	"tab-play": "Reproducir",
+
 	/* Multimedia player */
 	"mmp-play": "Reproducir",
 	pause: "Pausa",
@@ -92,6 +94,7 @@ wb.i18nDict = {
 	},
 	pos: "Posición actual:",
 	dur: "Tiempo total:",
+
 	/* Share widget */
 	"shr-txt": "Compartir",
 	"shr-pg": " esta página",
@@ -99,14 +102,18 @@ wb.i18nDict = {
 	"shr-aud": " este archivo de audio",
 	"shr-hnt": " con {s} ",
 	"shr-disc": "No implica la promoción ni recomendación de ningún producto o servicio.",
+
 	/* Form validation */
 	"frm-nosubmit": "El formulario no pudo ser enviado debido a ",
 	"errs-fnd": " errores encontrados.",
 	"err-fnd": " error encontrado.",
+	"err-correct": "(corregir y reenviar)",
+
 	/* Date picker */
 	"date-hide": "Ocultar calendario",
 	"date-show": "Escoger una fecha de un calendario para el campo:",
 	"date-sel": "Seleccionado",
+
 	/* Calendar */
 	days: [
 		"Domingo",
@@ -141,26 +148,32 @@ wb.i18nDict = {
 	"cal-goToBtn": "Ir",
 	prvMnth: "Mes anterior: ",
 	nxtMnth: "Mes siguiente: ",
+
 	/* Lightbox */
 	"lb-curr": "Artículo %curr% de %total%",
 	"lb-xhr-err": "Este contenido no pudo ser cargado.",
 	"lb-img-err": "Esta imagen no pudo ser cargada.",
+
 	/* Charts widget */
 	"tbl-txt": "Tabla",
 	"tbl-dtls": "Cuadro. Los detalles aparecen en la siguiente tabla.",
+	"chrt-cmbslc": "Combined slice",
+
 	/* Session timeout */
-	"st-to-msg-bgn": "Su sesión expirará automáticamente en #min# min #sec# sec.",
-	"st-to-msg-end": "Seleccione \"Continuar sesión\" para prolongar tu sesión.",
+	"st-to-msg-bgn": "Su sesión expirará automáticamente en #min# min #sec# seg.",
+	"st-to-msg-end": "Seleccione \"Continuar sesión\" para prolongar su sesión.",
 	"st-msgbx-ttl": "Aviso de finalización de sesión",
 	"st-alrdy-to-msg": "Lo sentimos, su sesión ha expirado. Por favor ingrese nuevamente.",
 	"st-btn-cont": "Continuar sesión",
 	"st-btn-end": "Finalizar sesión ahora",
+
 	/* Toggle details */
 	"td-toggle": "Alternar todo",
 	"td-open": "Expandir todo",
 	"td-close": "Colapsar todo",
 	"td-ttl-open": "Expandir todas las secciones de contenido",
 	"td-ttl-close": "Colapsar todas las secciones de contenido",
+
 	/* Table enhancement */
 	sortAsc: "active para ordenar en sentido ascendente",
 	sortDesc: "active para ordenar en sentido decendente",
@@ -171,6 +184,7 @@ wb.i18nDict = {
 	info1000: ".",
 	lenMenu: "Mostrar _MENU_ entradas",
 	filter: "filtrar artículos",
+
 	/* Geomap */
 	"geo-mapctrl": "@geo-mapctrl@",
 	"geo-zmin": "Aumentar",
@@ -184,14 +198,15 @@ wb.i18nDict = {
 	"geo-allyttl": "Instrucciones: Mapa de navegación",
 	"geo-tgllyr": "Cambiar la visualización de la capa",
 	"geo-hdnlyr": "Esta capa está oculta.",
-	"geo-bmapurl": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-bmap-url": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer/WMTS/",
+	"geo-bmap-matrix-set": "default028mm",
 	"geo-bmapttl": "BaseMaps_CBMT3978",
-	"geo-bmapurltxt": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
-	"geo-attrlnk": "http://geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
+	"geo-bmapurltxt": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-attrlnk": "//geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
 	"geo-attrttl": "GeoGratis - Canadá mapa base (Inglés o francés)",
 	"geo-sel": "Seleccionar",
 	"geo-lblsel": "Haga clic para seleccionar el elemento en el mapa",
-	"geo-locurl-geogratis": "http://geogratis.gc.ca/services/geolocation/en/locate",
+	"geo-locurl-geogratis": "//geogratis.gc.ca/services/geolocation/en/locate",
 	"geo-loc-placeholder": "Indique el nombre de la localidad&#44; código postal&#44; dirección (postal)&#44; el número de NTS ...",
 	"geo-loc-label": "Ubicación",
 	"geo-aoi-north": "Norte",
@@ -199,24 +214,45 @@ wb.i18nDict = {
 	"geo-aoi-south": "Sur",
 	"geo-aoi-west": "Oeste",
 	"geo-aoi-instructions": "Delimitar una zona en el mapa o rellene el formulario a continuación&#44; haga clic en el botón \"Añadir\".",
+	"geo-aoi-title": "Draw box on map or enter coordinates",
 	"geo-aoi-btndraw": "Dibujar",
 	"geo-aoi-btnclear": "Eliminar",
 	"geo-geoloc-btn": "Aumentar la ubicación actual",
 	"geo-geoloc-fail": "Ubicación falló. Por favor asegúrese de que los servicios de localización están habilitados.",
 	"geo-geoloc-uncapable": "Localización puede no ser compatible con su navegador.",
 	"geo-lgnd-grphc": "Gráfico leyenda para la capa de mapa.",
+
 	/* Disable/enable WET plugins and polyfills */
-	"wb-disable": "Versión HTML básica",
-	"wb-enable": "Versión estándar",
+	"wb-disable": "Switch to basic HTML version",
+	"wb-enable": "Switch to standard version",
+	"disable-notice-h": "Notice: Basic HTML",
+	"disable-notice": "You are viewing Basic HTML view. Some features may be disabled.",
+	"skip-prefix": "Skip to:",
+
 	/* Dismissable content */
 	"dismiss": "Dismiss",
+
 	/* Template */
-	"tmpl-signin": "Iniciar sesión"
+	"tmpl-signin": "Iniciar sesión",
+
+	/* Filter */
+	"fltr-lbl": "Filter<span class=\"wb-inv\"> content: results appear below as you type.</span>",
+	"fltr-info": "Showing _NBITEM_ filtered from _TOTAL_ total entries"
 };
 
 } )( wb );
 
 wb.doc.one( "formLanguages.wb", function() {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: ES (Spanish; Español)
@@ -243,6 +279,7 @@ $.extend( $.validator.messages, {
 	nieES: "Por favor, escribe un NIE válido.",
 	cifES: "Por favor, escribe un CIF válido."
 } );
-
+return $;
+}));
 
 });

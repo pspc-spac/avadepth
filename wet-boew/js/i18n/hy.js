@@ -1,12 +1,13 @@
 /*
- * Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
- * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
- */
+* Web Experience Toolkit (WET) / Boîte à outils de l"expérience Web (BOEW)
+* wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+*/
 /*
 ----- Armenian dictionary (il8n) ---
- */
+*/
 ( function( wb ) {
 "use strict";
+
 /* main index */
 wb.i18nDict = {
 	"lang-code": "hy",
@@ -53,7 +54,7 @@ wb.i18nDict = {
 	"prv-l": "Նախորդ (ձախ սլաքների բանալին)",
 	first: "Առաջին",
 	last: "Անցյալ",
-	page: "Page",
+	page: "Jump to: Page",
 	"srch-menus": "Որոնել եւ Ընտրացանկերը",
 	email: "Էլեկտրոնային փոստ",
 	"menu-close": "Փակել մենյուն",
@@ -71,6 +72,7 @@ wb.i18nDict = {
 	"tab-pnl-end2": "Վերադառնալ ցուցակին էջանիշը",
 	"tab-pnl-end3": "կամ շարունակում է մնացած էջում.",
 	"tab-play": "Խաղալ",
+
 	/* Multimedia player */
 	"mmp-play": "Խաղալ",
 	pause: "Դադար",
@@ -92,6 +94,7 @@ wb.i18nDict = {
 	},
 	pos: "Ներկայիս պաշտոնը:",
 	dur: "Ընդհանուր ժամանակը:",
+
 	/* Share widget */
 	"shr-txt": "Կիսում",
 	"shr-pg": " այս էջը",
@@ -99,14 +102,18 @@ wb.i18nDict = {
 	"shr-aud": " այս աուդիո ֆայլը",
 	"shr-hnt": " հետ {s} ",
 	"shr-disc": "Ոչ հաստատում որեւէ արտադրանքի կամ ծառայությունների արտահայտված կամ ենթադրվող.",
+
 	/* Form validation */
 	"frm-nosubmit": "Ձեւը չի կարող ներկայացվել, քանի որ ",
 	"errs-fnd": " սխալներ չեն հայտնաբերվել.",
 	"err-fnd": " սխալ է գտնվել.",
+	"err-correct": "(Correct and resubmit)",
+
 	/* Date picker */
 	"date-hide": "Թաքցնել Օրացույց",
 	"date-show": "Ընտրեք ամսաթիվը ից Օրացույց ոլորտում:",
 	"date-sel": "Նյութերի բազա",
+
 	/* Calendar */
 	days: [
 		"Կիրակի",
@@ -141,13 +148,17 @@ wb.i18nDict = {
 	"cal-goToBtn": "Գնալ",
 	prvMnth: "Էջանշան դնել Դարձնել սկզբնական: ",
 	nxtMnth: "Հաջորդ ամիս: ",
+
 	/* Lightbox */
 	"lb-curr": "Կոդ %curr% %total% - ից",
 	"lb-xhr-err": "Բեռնվում այս պարունակությունը չի հաջողվել.",
 	"lb-img-err": "Բեռնվում է պատկերը ձախողվել է.",
+
 	/* Charts widget */
 	"tbl-txt": "Սեղան",
 	"tbl-dtls": "Աղյուսակում. Մանրամասներ է հետեւյալ աղյուսակում.",
+	"chrt-cmbslc": "Combined slice",
+
 	/* Session timeout */
 	"st-to-msg-bgn": "Ձեր սեսիան կսպառվի ինքնաբերաբար ին #min# րոպե #sec# վրկ",
 	"st-to-msg-end": "սկզբնական Ընտրել \"Շարունակել նիստը» երկարաձգել հայտվել ձեր.",
@@ -155,12 +166,14 @@ wb.i18nDict = {
 	"st-alrdy-to-msg": "Ներեցեք Ձեր նիստն արդեն ավարտվել է: Խնդրում ենք մուտք գործել կրկին փորձել.",
 	"st-btn-cont": "Շարունակել նիստ",
 	"st-btn-end": "Վերջացնել նիստ է",
+
 	/* Toggle details */
 	"td-toggle": "Ընդլայնիր կամ Ամբողջությամբ ցուցադրել բոլորը",
 	"td-open": "Ծավալել բոլորը",
 	"td-close": "Ամբողջությամբ ցուցադրել բոլորը",
 	"td-ttl-open": "Ծավալել բոլորը բաժինները բովանդակության",
 	"td-ttl-close": "Ամբողջությամբ ցուցադրել բոլորը բաժինները բովանդակության",
+
 	/* Table enhancement */
 	sortAsc: ": որպեսզի դասավորում աճման",
 	sortDesc: ": որպեսզի դասավորում Նվազման",
@@ -171,6 +184,7 @@ wb.i18nDict = {
 	info1000: ",",
 	lenMenu: "Ցուցադրել _MENU_ գրառում",
 	filter: "Զտման նյութեր",
+
 	/* Geomap */
 	"geo-mapctrl": "@geo-mapctrl@",
 	"geo-zmin": "Խոշորացնել",
@@ -184,14 +198,15 @@ wb.i18nDict = {
 	"geo-allyttl": "Հրահանգներ: Նավիգացիոն քարտեզ",
 	"geo-tgllyr": "Ցուցադրման կամ թաքցնել շերտը",
 	"geo-hdnlyr": "Այս շերտի այժմ թաքնված.",
-	"geo-bmapurl": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-bmap-url": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer/WMTS/",
+	"geo-bmap-matrix-set": "default028mm",
 	"geo-bmapttl": "BaseMaps_CBMT3978",
-	"geo-bmapurltxt": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
-	"geo-attrlnk": "http://geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
+	"geo-bmapurltxt": "//geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer/WMTS/tile/1.0.0/BaseMaps_CBMT3978/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg",
+	"geo-attrlnk": "//geogratis.gc.ca/geogratis/CBM_CBC?lang=en",
 	"geo-attrttl": "GeoGratis - Կանադա բազա քարտեզ (անգլերեն կամ ֆրանսերեն միայն)",
 	"geo-sel": "Ընտրել",
 	"geo-lblsel": "Ստուգեք ընտրել տարրը քարտեզի վրա",
-	"geo-locurl-geogratis": "http://geogratis.gc.ca/services/geolocation/en/locate",
+	"geo-locurl-geogratis": "//geogratis.gc.ca/services/geolocation/en/locate",
 	"geo-loc-placeholder": "Նշեք անունը&#44; գտնվելու վայրը&#44; փոստային կոդը&#44; հասցեն&#44; (փոստային) համարը NTS ...",
 	"geo-loc-label": "Որտեղից",
 	"geo-aoi-north": "Հյուսիս",
@@ -199,19 +214,30 @@ wb.i18nDict = {
 	"geo-aoi-south": "Հարավ",
 	"geo-aoi-west": "Արեւմուտք",
 	"geo-aoi-instructions": "Ոչ ոքի վանդակը քարտեզի վրա, կամ մուտք գործել համակարգում ստորեւ, եւ սեղմեք \"Ավելացնել\" կոճակը:",
+	"geo-aoi-title": "Draw box on map or enter coordinates",
 	"geo-aoi-btndraw": "Նկարել",
 	"geo-aoi-btnclear": "Հեռացնել",
 	"geo-geoloc-btn": "Մեծացնել ձեր զբաղեցրած պաշտոնը",
 	"geo-geoloc-fail": "Որտեղից ձախողվեց. Խնդրում ենք համոզվել, որ այդ վայրում ծառայություններ հնարավորություն.",
 	"geo-geoloc-uncapable": "Տեղայնացման չի ապահովվում է ձեր բրոուզերում.",
 	"geo-lgnd-grphc": "Լեգենդ արվեստ քարտեզ շերտ.",
+
 	/* Disable/enable WET plugins and polyfills */
-	"wb-disable": "հիմնական HTML տարբերակ",
-	"wb-enable": "Դնել",
+	"wb-disable": "Switch to basic HTML version",
+	"wb-enable": "Switch to standard version",
+	"disable-notice-h": "Notice: Basic HTML",
+	"disable-notice": "You are viewing Basic HTML view. Some features may be disabled.",
+	"skip-prefix": "Skip to:",
+
 	/* Dismissable content */
 	"dismiss": "Dismiss",
+
 	/* Template */
-	"tmpl-signin": "Գրանցվել"
+	"tmpl-signin": "Գրանցվել",
+
+	/* Filter */
+	"fltr-lbl": "Filter<span class=\"wb-inv\"> content: results appear below as you type.</span>",
+	"fltr-info": "Showing _NBITEM_ filtered from _TOTAL_ total entries"
 };
 
 } )( wb );

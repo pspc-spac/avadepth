@@ -3,24 +3,35 @@
 <head>
 	<meta http-equiv="x-ua-compatible" content="IE=edge">
 	<title>Depth Verification</title>
-	<script src="/scripts/jquery/jquery-1.9.1.min.js"></script>
+	<script src="/wet-boew/js/jquery/1.11.1/jquery.min.js"></script>
 	<script src="/scripts/jquery/jquery.ui.core.js"></script>
 	<script src="/scripts/jquery/jquery.ui.datepicker.js"></script>
-	<script src="/scripts/jquery/jquery.dataTables.min.js"></script>
+	<script src="/wet-boew/js/deps/jquery.dataTables.min.js"></script>
 	<script src="/scripts/avadepth.js"></script>
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/js/css/pe-ap-min.css">
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/grids/css/util-min.css">
+
+	<!--[if gte IE 9 | !IE ]><!-->
+	<link href="/GCWeb/assets/favicon.ico" rel="icon" type="image/x-icon" />
+	<link rel="stylesheet" href="/GCWeb/css/theme.min.css" />
+	<!--<![endif]-->
+	<!--[if lt IE 9]>
+	<link href="/GCWeb/assets/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" href="/GCWeb/css/ie8-theme.min.css" />
+	<![endif]-->
+	<noscript><link rel="stylesheet" href="/wet-boew/css/noscript.min.css" /></noscript>	<link rel="stylesheet" type="text/css" href="/css/custom.css">
 	<link rel="stylesheet" type="text/css" href="/css/custom.css">
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/theme-gcwu-fegc/css/theme-min.css">
+	<link rel="stylesheet" media="print" href="/css/print.css" />
 
 	<style type="text/css" media="screen">
-		.span-8 {
-			width: 98%;
-		}
 		#verify_wrapper {
 			display: table;
 			margin: 0 auto;
 		}
+
+		#verify {
+			width: 700px!important;
+			margin-top: 20px;
+		}
+
 		.print_holder {
 			display: -webkit-box;
 			display: -moz-box;
@@ -29,15 +40,19 @@
 			display: flex;
 			height: 50px;
 		}
-		.button {
+		.btn {
 			height: 26px;
 			margin: auto;
 		}
 	</style>
 
 	<style type="text/css" media="print">
-		.button {
+		.btn {
 			display: none;
+		}
+
+		body {
+			font-size: 13px;
 		}
 	</style>
 
@@ -57,7 +72,7 @@
 			$('button[name="print"]').click(function() {
 				window.print()
 			});
-			var closeButton = $('<input type="button" class="button button-accent" value="Close" onClick="window.close()">');
+			var closeButton = $('<input type="button" class="btn btn-primary" value="Close" onClick="window.close()">');
 			$('.print_holder').append(closeButton);
 		});
 	</script>

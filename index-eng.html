@@ -1,13 +1,5 @@
 <!--#include virtual="/includes/header-eng.html" -->
 <!-- MainContentStart -->
-<script>
-  $(function() {
-    $.getJSON("db_last_modified.pl", function(data) {
-      $('#last_modified').html(data.last_updated)
-    });
-  });
-</script>
-
 <aside class="prm-flpr">
 <div class="container">
 <div class="row">
@@ -54,6 +46,8 @@
 </div>
 </div>
 </aside>
+
+<div class="container">
 <h1 property="name" id="wb-cont" class="wb-inv">Welcome to Avadepth</h1>
 <section>
 <div class="row">
@@ -63,6 +57,7 @@
 </div>
 </div>
 </section>
+</div>
 
 <aside class="gc-nttvs container">
 <h2>Avadepth Reports</h2>
@@ -108,19 +103,25 @@
 <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
 <h3 class="h5"><a href="/avdpth_srch-eng.html?page=ccc">Fraser River – South Arm Channel Condition Report</a></h3>
 <p>A weekly printout of channel bottom conditions for the Fraser River Deep Sea Navigation Channel.</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+<h3 class="h5"><a href="/Data/overview/FSD_Overview.pdf?" target="_blank">Fraser Surrey Docks – Berth Soundings</a></h3>
+<p>A composite drawing that incorporates the most recent surveys of the berths and approach channels to Fraser Surrey Docks. </p>
 <h3 class="h5"><a href="/Data/overview/FR_Overview_S.dwf?" target="_blank">Fraser River – South Arm Channel Overview</a></h3>
 <p>A composite of the most current soundings / surveys of the main navigation channel from Sand Heads (km -1.0) to New Westminster (km 35.0).</p>
 </section>
 <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/Data/overview/FSD_Overview.pdf?" target="_blank">Fraser Surrey Docks – Berth Soundings</a></h3>
-<p>A composite drawing that incorporates the most recent surveys of the berths and approach channels to Fraser Surrey Docks. </p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-eng.html?page=sdb">Survey Drawings</a></h3>
-<p>Users have access to drawings and survey field sheets of main commercial channels monitored by the Canadian Coast Guard, Waterways Management.  Users will need to install an Autodesk DWF viewer to display and view the survey drawings.</p>
+<h3 class="h5"><a href="/avdpth_srch-eng.html?page=sdb" target="_blank">Survey Drawings</a></h3>
+<p>Users have access to drawings and survey field sheets of main commercial
+channels monitored by the Canadian Coast Guard, Waterways Management. Users
+will need to install an Autodesk DWF viewer to display and view the
+survey drawings.</p>
 <p style="width: 100%; text-align: center;"><a href="https://www.autodesk.com/products/design-review/download">Download Autodesk Viewer</a></p>
+<h3 class="h5"><a href="/Data/bMIO/FR_bMIO.zip">Download – bMIO for the Fraser River South Arm Shipping Channel</a></h3>
+<p>This bathymetric Marine Information Overlay (bMIO) is an Electronic Nautical
+Chart (ENC) of recent soundings that are to be displayed in conjunction with
+Canadian Hydrographic Service (CHS) Chart 3490.  The overlay displays additional
+depth information regarding available depths that have resulted from maintenance
+dredging or from sedimentation during the "spring run-off"; a period when
+channel depths change rapidly due to river flow conditions.</p>
 </section>
 </div>
 </aside>
@@ -129,12 +130,17 @@
 <h2>Channel Bathymetry Analysis</h2>
 <div class="wb-eqht row">
 <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a>Channel Bathymetry Webmap (Beta)</a></h3>
-<p><i>Coming soon</i></p>
+<h3 class="h5"><a href="/avdpth_srch-eng.html?page=cbw">Channel Bathymetry Webmap</a></h3>
+<p>A bathymetry model of current channel bottom conditions on the Fraser River,
+South Arm available in two design parameters: (1) available depths relative to
+Low Low Water Level (LLWL) and (2) depth contours relative to channel grade for
+a vessel with a 11.5 m draft.</p>
 </section>
 <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
 <h3 class="h5"><a href="/avdpth_srch-eng.html?page=isa">Channel Infill & Scour Analysis</a></h3>
-<p>Time series analysis of channel infill and scour illustrating how dynamic the river bottom can be during freshet.  Users will need to have Adobe Reader to display and view these images.</p>
+<p>Time series analysis of channel infill and scour illustrating how dynamic the
+river bottom can be during freshet.  Users will need to have Adobe Reader to
+display and view these images.</p>
 </section>
 </div>
 </aside>
@@ -149,9 +155,11 @@
 <li><a target="_blank" href="http://www.portvancouver.com">Port of Vancouver</a></li>
 <li><a target="_blank" href="http://www.rupertport.com/">Port of Prince Rupert</a></li>
 <li><a target="_blank" href="http://www.npa.ca/en">Nanaimo Port Authority</a></li>
-</ul> 
+<li><a target="_blank" href="https://nis.ccg-gcc.gc.ca/public/rest/messages/en/search">Navigational Warnings (NAVWARNs)</a></li>
+<li><a target="_blank" href="https://www.marinfo.gc.ca/e-nav/index-en.php">Maritime Information Portal</a></li>
+</ul>
 </div>
 </aside>
 <br>
-<p style="float:right;margin-bottom:-10px">Database last updated: <span id="last_modified"></span> PST</p>
+<p style="float:right;margin-bottom:-10px">Database last updated: <!--#include virtual="/Data/updated.inc" --> PST</p>
 <!--#include virtual="/includes/footer-eng.html" -->

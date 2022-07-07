@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta http-equiv="x-ua-compatible" content="IE=edge">
 	<title>Least Soundings and Available Widths</title>
-	<script src="/scripts/jquery/jquery-1.9.1.min.js"></script>
+	<script src="/wet-boew/js/jquery/1.11.1/jquery.min.js"></script>
 	<script src="/scripts/jquery/jquery.ui.core.js"></script>
 	<script src="/scripts/moment.min.js"></script>
-	<script src="/scripts/jquery/jquery.dataTables.min.js"></script>
+	<script src="/wet-boew/js/deps/jquery.dataTables.min.js"></script>
 	<script src="/scripts/avadepth_util.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/js/css/pe-ap-min.css">
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/grids/css/util-min.css">
-	<link rel="stylesheet" type="text/css" href="/css/custom.css">
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/theme-gcwu-fegc/css/theme-min.css">
+	<noscript><link rel="stylesheet" href="/wet-boew/css/noscript.min.css" /></noscript>
+	<link href="/GCWeb/assets/favicon.ico" rel="icon" type="image/x-icon" />
+	<link rel="stylesheet" href="/GCWeb/css/theme.min.css" />
 
+	<!-- CustomCSSStart -->
+	<link rel="stylesheet" href="/css/custom.css" />
+	<link rel="stylesheet" media="print" href="/css/print.css" />
+	<link rel="stylesheet" href="/css/smoothness/jquery-ui-1.7.1.custom.css" />
+	<!-- CustomCSSEnd -->
 	<style type="text/css" media="screen">
 		.span-8 {
 			width: 98%;
 		}
+
 		#verify_wrapper {
 			display: table;
 			margin: 0 auto;
 		}
+
 		.print_holder {
 			display: -webkit-box;
 			display: -moz-box;
@@ -30,70 +37,110 @@
 			display: flex;
 			height: 50px;
 		}
-		.button {
+
+		.btn {
 			height: 26px;
 			margin: auto;
 		}
 	</style>
 
 	<style type="text/css" media="print">
-		.button {
+		.btn {
 			display: none;
 		}
 	</style>
 
 	<script>
-		$(document).ready(function() {
-			$('button[name="print"]').click(function() {
+		var formatDate = function(date){
+			var dateFormat = "YYYY-M-D";
+			return (date === undefined)
+				? moment().format(dateFormat)
+				: moment(date).format(dateFormat);
+		}
+
+		var channelItem = function(apiLineItem){
+			this.grade = apiLineItem.grade.toFixed(1);
+			this.sounding  = apiLineItem.sounding.toFixed(1);
+			this.width = apiLineItem.width;
+			this.widthPerc = apiLineItem.widthperc;
+			this.isHigh = "";
+			this.isHighAst = "";
+								
+			if (apiLineItem.grade > apiLineItem.sounding) {
+				this.isHigh = " class=\"red\"";
+				this.isHighAst = "*";
+			}
+		};
+
+		$(document).ready(function () {
+			$('button[name="print"]').click(function () {
 				window.print()
 			});
 
 			var chainage = avadepth.util.getUrlParameter("chainage");
+			var today = formatDate();
+			var apiURL = "/api/History?date=" + today + "&chainage=" + chainage;
 
 			$('#print_remove').addClass('align-center')
-			$('input[id="inner_select"]').attr('checked','checked');
 			$('#heading').text("km " + (chainage - 1) + " - " + (chainage));
 
-			$('input[name=channel_select]').change(function() {			
-				if(!($(this).is(':checked'))){return;}
-				var detailIsInnerChannel=($(this).val()==="1");
+			$('#detail_print').find('#segment').text($(this).next().text()); // updates print div with current channel information
+			$('#surveys tbody').html('');
 
-				$('#detail_print').find('#segment').text($(this).next().text()); // updates print div with current channel information
-				$('#surveys tbody').html('');
-				
-				return $.getJSON(("/api/History?date=" + moment().format("YYYY-M-D") + "&") +
-					("lane=" + (detailIsInnerChannel ? "1" : "2")) + "&" +
-					("chainage=" + chainage), function(data) {
-					$.each(data, function (index) {
-					var row, surveydate, ishigh="", ishighast="";
-					surveydate = moment(this.date).format("D-MMM-YYYY");
-					if(this.grade>this.sounding){
-						ishigh=" class=\"red\"";
-						ishighast="*";
-					}
-					if(this.Plan.slice(0,2) != "FR"){
-						row = "<tr>" +
-								"<td>" + surveydate + "</td>" +
-								"<td><a href=\"http://www2.pac.dfo-mpo.gc.ca/Data/dwf/" + this.Plan + ".dwf?\"" +
-										"target=\"_blank\">" + this.Plan + "</a></td>" +
-								"<td"+ishigh+">" + (this.grade.toFixed(1)) + "</td>" +
-								"<td"+ishigh+">" + (this.sounding.toFixed(1)) + ishighast + "</td>" +
-								"<td"+ishigh+">" + this.width + "</td>" +
-								"<td"+ishigh+">" + this.widthperc + "</td>" +
-							"</tr>";
-					}
-					return $("#surveys tbody").append(row);
+			$.when(
+				$.getJSON(apiURL + "&lane=1"),
+				$.getJSON(apiURL + "&lane=2")
+			).done(function(innerChannelData, outterChannelData){
+				var combinedData = [];
+
+				$.each(outterChannelData[0], function(outterIx, outterVal){
+					var outterValDate = formatDate(outterVal.date);
+
+					$.each(innerChannelData[0], function(innerIx, innerVal){
+						var innerValDate = formatDate(innerVal.date);
+						if(innerValDate == outterValDate){
+							if (this.Plan.slice(0, 2) != "FR") {
+								combinedData.push({date: innerVal.date, plan: this.Plan});
+								combinedData[combinedData.length-1]["outterChannel"] = new channelItem(outterVal);
+								combinedData[combinedData.length-1]["innerChannel"] = new channelItem(innerVal);
+							}
+
+							return false;
+						}
 					});
 				});
-			}).change();
+
+				$.each(combinedData, function () {
+					var row;
+					var surveydate = moment(this.date).format("D-MMM-YYYY");
+					
+					row = "<tr>" +
+						"<td>" + surveydate + "</td>" +
+						"<td><a href='http://avadepth.ccg-gcc.gc.ca/Data/dwf/" + this.plan + ".dwf?' target='blank'>" + this.plan + "</a></td>" +
+						"<td" + this.innerChannel.isHigh + ">" + this.innerChannel.grade + "</td>" +
+						"<td" + this.innerChannel.isHigh + ">" + this.innerChannel.sounding + this.innerChannel.isHighAst + "</td>" +
+						"<td" + this.innerChannel.isHigh + ">" + this.innerChannel.width + "</td>" +
+						"<td" + this.innerChannel.isHigh + ">" + this.innerChannel.widthPerc + "</td>" +
+						"<td" + this.outterChannel.isHigh + ">" + this.outterChannel.grade + "</td>" +
+						"<td" + this.outterChannel.isHigh + ">" + this.outterChannel.sounding + this.outterChannel.isHighAst +  "</td>" +
+						"<td" + this.outterChannel.isHigh + ">" + this.outterChannel.width + "</td>" +
+						"<td" + this.outterChannel.isHigh + ">" + this.outterChannel.widthPerc + "</td>" +
+					"</tr>";
+
+					return $("#surveys tbody").append(row);
+				});
+			});
 		});
 	</script>
 </head>
+
 <body>
-<div id="detail_content">
+	<div id="detail_content">
 		<div class="print_holder">
-			<button name="print" class="button button-accent print_button print_hide">Print</button>
-			<input class="button button-accent" onclick="window.close()" type="button" value="Close">
+			<button name="print" class="btn btn-primary print_button print_hide">
+				<span class="glyphicon glyphicon-print"></span> Print
+			</button>
+			<input class="btn btn-primary" onclick="window.close()" type="button" value="Close">
 		</div>
 		<div>
 			<div>
@@ -103,35 +150,45 @@
 						<h3 style="margin: 0px;"><span>for Fraser River - South Arm, </span><span id="heading"></span></h3>
 						<h3 style="margin: 0px;"><span class="print_show_inline" id="segment"></span></h3>
 					</div>
-					<table class="styled align-center" id="survey-header" style="width: 600px; margin-right: auto; margin-left: auto;">
+					<table class="styled align-center" id="survey-header"
+						style="width: 600px; margin-right: auto; margin-left: auto;">
 						<thead>
-							<tr><td>Note: All soundings / depths are relative to local low water level</td></tr>
+							<tr>
+								<td>Note: All soundings / depths are relative to local low water level</td>
+							</tr>
 						</thead>
 						<tbody>
-							<tr class="print_hide"><td>Users will need to download an Autodesk DWF viewer to view and display the Reference Plan. <a href="https://www.autodesk.com/products/design-review/download" target="_blank">Download Autodesk viewer</a></td></tr>
+							<tr class="print_hide">
+								<td>Users will need to download an Autodesk DWF viewer to view and display the Reference Plan. <a
+										href="https://www.autodesk.com/products/design-review/download" target="_blank">Download Autodesk
+										viewer</a></td>
+							</tr>
 						</tbody>
 					</table>
-					<div class="print_hide align-center" id="print_remove">
-						<strong>Channel Select</strong>
-						<br>
-						<input name="channel_select" id="inner_select" style="display: inline;" type="radio" checked="checked" value="1">
-						<label style="display: inline;" for="inner_select">Inner Channel</label>
-						<input name="channel_select" id="outer_select" style="display: inline;" type="radio" value="2">
-						<label style="display: inline;" for="outer_select">Outer Channel</label>
-						<br>
-					</div>
 				</div>
 				<div class="grid-12">
-					<table class="styled align-center" id="surveys" style="width: 600px; margin-right: auto; margin-left: auto;">
+					<table class="styled align-center" id="surveys" style="margin-right: auto; margin-left: auto;">
 						<thead>
+							<tr>
+								<th colspan="2">&nbsp;</th>
+								<th colspan="4">Inner Channel</th>
+								<th colspan="4">Outter Channel</th>
+							</tr>
 							<tr>
 								<th rowspan="2">Date of Survey</th>
 								<th rowspan="2">Reference Plan</th>
 								<th style="width: 55px;">Design Grade</th>
 								<th style="width: 55px;">Least Soundings</th>
 								<th colspan="2">Available Width</th>
+								<th style="width: 55px;">Design Grade</th>
+								<th style="width: 55px;">Least Soundings</th>
+								<th colspan="2">Available Width</th>
 							</tr>
 							<tr>
+								<th>(m)</th>
+								<th>(m)</th>
+								<th>(m)</th>
+								<th>(%)</th>
 								<th>(m)</th>
 								<th>(m)</th>
 								<th>(m)</th>
@@ -146,9 +203,12 @@
 		</div>
 		<div class="page-break"></div>
 		<div class="print_holder">
-			<button name="print" class="button button-accent print_button print_hide">Print</button>
-			<input class="button button-accent" onclick="window.close()" type="button" value="Close">
+			<button name="print" class="btn btn-primary print_button print_hide">
+				<span class="glyphicon glyphicon-print"></span> Print
+			</button>
+			<input class="btn btn-primary" onclick="window.close()" type="button" value="Close">
 		</div>
 	</div>
 </body>
+
 </html>

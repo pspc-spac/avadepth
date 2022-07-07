@@ -3,19 +3,23 @@
 <head>
 	<meta http-equiv="x-ua-compatible" content="IE=edge">
 	<title>Predicted Water Levels</title>
-	<script src="/scripts/jquery/jquery-1.9.1.min.js"></script>
+	<script src="/wet-boew/js/jquery/1.11.1/jquery.min.js"></script>
 	<script src="/scripts/jquery/jquery.ui.core.js"></script>
 	<script src="/scripts/moment.min.js"></script>
-	<script src="/scripts/flot/jquery.flot.js"></script>
+	<script src="/wet-boew/js/deps/jquery.flot.min.js"></script>
 	<script src="/scripts/flot/jquery.flot.time.js"></script>
 	<script src="/scripts/flot/jquery.flot.axislabels.js"></script>
 	<script src="/scripts/avadepth_util.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/js/css/pe-ap-min.css">
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/grids/css/util-min.css">
-	<link rel="stylesheet" type="text/css" href="/css/custom.css">
-	<link rel="stylesheet" type="text/css" href="/wet-boew/dist/theme-gcwu-fegc/css/theme-min.css">
+	<noscript><link rel="stylesheet" href="/wet-boew/css/noscript.min.css" /></noscript>
+	<link href="/GCWeb/assets/favicon.ico" rel="icon" type="image/x-icon" />
+	<link rel="stylesheet" href="/GCWeb/css/theme.min.css" />
 
+<!-- CustomCSSStart -->
+<link rel="stylesheet" href="/css/custom.css" />
+<link rel="stylesheet" media="print" href="/css/print.css" />
+<link rel="stylesheet" href="/css/smoothness/jquery-ui-1.7.1.custom.css" />
+<!-- CustomCSSEnd -->
 	<style type="text/css" media="screen">
 		.span-8 {
 			width: 98%;
@@ -32,7 +36,7 @@
 			display: flex;
 			height: 50px;
 		}
-		.button {
+		.btn {
 			height: 26px;
 			margin: auto;
 		}
@@ -45,7 +49,7 @@
 	</style>
 
 	<style type="text/css" media="print">
-		.button {
+		.btn {
 			display: none;
 		}
 	</style>
@@ -210,8 +214,10 @@
 <body>
 	<div id="detail_content">
 		<div class="print_holder">
-			<button name="print" class="button button-accent print_button print_hide">Print</button>
-			<input class="button button-accent" onclick="window.close()" type="button" value="Close">
+			<button name="print" class="btn btn-primary print_button print_hide">
+				<span class="glyphicon glyphicon-print"></span> Print
+			</button>
+			<input class="btn btn-primary print_hide" onclick="window.close()" type="button" value="Close">
 		</div>
 		<div>
 			<div class="grid-12">
@@ -222,8 +228,10 @@
 				</div>
 				<div class="page-break"></div>
 				<div class="print_holder">
-					<button name="print" class="button button-accent print_button print_hide">Print</button>
-					<input class="button button-accent" onclick="window.close()" type="button" value="Close">
+					<button name="print" class="btn btn-primary print_button print_hide">
+						<span class="glyphicon glyphicon-print"></span> Print
+					</button>
+					<input class="btn btn-primary print_hide" onclick="window.close()" type="button" value="Close">
 				</div>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 /*!
  * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
  * wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
- * v4.0.21 - 2016-04-12
+ * v4.0.43.1 - 2021-06-18
  *
  *//**
  * @title WET-BOEW JQuery Helper Methods
@@ -11,1159 +11,1304 @@
  * Credits: http://kaibun.net/blog/2013/04/19/a-fully-fledged-coffeescript-boilerplate-for-jquery-plugins/
  */
 ( function( $, wb ) {
-	wb.getData = function( element, dataName ) {
-		var elm = !element.jquery ? element : element[ 0 ],
-			dataAttr = elm.getAttribute( "data-" + dataName ),
-			dataObj;
 
-		if ( dataAttr ) {
-			try {
-				dataObj = JSON.parse( dataAttr );
-				$.data( elm, dataName, dataObj );
-			} catch ( error ) {
-				$.error( "Bad JSON array in data-" + dataName + " attribute" );
-			}
+wb.getData = function( element, dataName ) {
+	var elm = !element.jquery ? element : element[ 0 ],
+		dataAttr = elm.getAttribute( "data-" + dataName ),
+		dataObj;
+
+	if ( dataAttr ) {
+		try {
+			dataObj = JSON.parse( dataAttr );
+			$.data( elm, dataName, dataObj );
+		} catch ( error ) {
+			$.error( "Bad JSON array in data-" + dataName + " attribute" );
 		}
+	}
 
-		return dataObj;
-	};
+	return dataObj;
+};
+
+/*
+ * Initiate an in-browser download from a blob
+ * @param blob: a reference to a blob object
+ * @param filename: a suggested file name to save as under
+ * @param title: (Optional) a title added to the link. Its use case is for web analytics tracking.
+*/
+wb.download = function( blob, filename, title ) {
+
+	var objectURL = URL.createObjectURL( blob ),
+		anchor = document.createElement( "a" );
+
+	filename = filename || "unnamed"; // Ensure a filename is defined
+
+	anchor.textContent = title || "";
+	anchor.download = filename;
+
+	anchor.hidden = true;
+	document.body.appendChild( anchor ); // Added to the body for the web analytic tracking use case.
+
+	if ( window.navigator.msSaveOrOpenBlob ) {
+
+		// This is for IE11 support
+		anchor.addEventListener( "click", function( ) {
+			window.navigator.msSaveOrOpenBlob( blob, filename );
+		} );
+		anchor.setAttribute( "target", "_blank" );
+	} else {
+		anchor.href = objectURL;
+	}
+
+	anchor.click();
+
+	// Clean the DOM, remove the accessory anchor at the next tick
+	setTimeout( function() {
+		document.body.removeChild( anchor );
+	}, 1 );
+
+	// Revoke the ojbect, A setTimeout is used because Blob API don't have a download complete event.
+	setTimeout( function() {
+		if ( typeof objectURL === "string" ) {
+			URL.revokeObjectURL( objectURL );
+		} else {
+			objectURL.remove();
+		}
+	}, 40000 ); // The revoking time is arbitrary
+
+};
+
+/* ---------------------------------
+@extension: shuffleDOM
+@returns: [list] shuffles a list of items randomly
+-------------------------------- */
+wb.shuffleDOM = function( $elm ) {
+	var allElems = $elm.get(),
+		shuffled = $.map( allElems, function() {
+			var random = Math.floor( Math.random() * allElems.length ),
+				randEl = $( allElems[ random ] ).clone( true )[ 0 ];
+			allElems.splice( random, 1 );
+			return randEl;
+		} ),
+		elm_len = $elm.length,
+		i;
+
+	for ( i = 0; i < elm_len; i++ ) {
+		$( $elm[ i ] ).replaceWith( $( shuffled[ i ] ) );
+	}
+
+	return $( shuffled );
+};
+
+/* ---------------------------------
+@extension: pickElements
+@returns: [collection] of randoms elements
+-------------------------------- */
+wb.pickElements = function( $elm, numOfElm ) {
+	var nbElm = $elm.size(),
+		elmCopies,
+		i, swap;
+
+	numOfElm = numOfElm || 1;
+
+	// Special cases
+	if ( numOfElm > nbElm ) {
+		return $elm.pushStack( $elm );
+	} else if ( numOfElm === 1 ) {
+		return $elm.filter( ":eq(" + Math.floor( Math.random() * nbElm ) + ")" );
+	}
+
+	// Create a randomized copy of the set of elements,
+	// using Fisher-Yates sorting
+	elmCopies = $elm.get();
+
+	for ( i = 0; i < nbElm - 1; i++ ) {
+		swap = Math.floor( Math.random() * ( nbElm - i ) ) + i;
+		elmCopies[ swap ] = elmCopies.splice( i, 1, elmCopies[ swap ] )[ 0 ];
+	}
+	elmCopies = elmCopies.slice( 0, numOfElm );
+
+	// Finally, filter jQuery stack
+	return $elm.filter( function( idx ) {
+		return $.inArray( $elm.get( idx ), elmCopies ) > -1;
+	} );
+};
+
+/* ---------------------------------
+Adds a link to the Skip links navigation
+@param text: Text to display in the anchor or button
+@param attr: JSO with { attribute: value, ... } to add attributes to the anchor or button. Minimum is { href: "#your-anchor" } for the anchor tag
+@param isBtn: (Optional) Bool if true element is a button, otherwise it is an anchor by default
+@param isLast: (Optional) Bool if true element will be inserted last in the list
+-------------------------------- */
+wb.addSkipLink = function( text, attr, isBtn, isLast ) {
+	var list = document.getElementById( "wb-tphp" ),
+		li = document.createElement( "li" ),
+		elm = document.createElement( ( isBtn ? "button" : "a" ) ),
+		key;
+
+	// Add skip link's proprietary classes to new element
+	li.className = "wb-slc";
+	elm.className = "wb-sl";
+
+	// Add given attributes to element
+	for ( key in attr ) {
+		elm.setAttribute( key, attr[ key ] );
+	}
+
+	// Append text and new element to the skip link list (after main content)
+	elm.appendChild( document.createTextNode( text ) );
+	li.appendChild( elm );
+
+	if ( isLast ) {
+		list.appendChild( li );
+	} else {
+		list.insertBefore( li, list.childNodes[ 2 ] );
+	}
+
+	return true;
+};
+
 } )( jQuery, wb );
 
 ( function( wb ) {
-	"use strict";
 
-	// Escapes the characters in a string for use in a jQuery selector
-	// Based on http://totaldev.com/content/escaping-characters-get-valid-jquery-id
-	wb.jqEscape = function( selector ) {
-		return selector.replace( /([;&,\.\+\*\~':"\\\!\^\/#$%@\[\]\(\)=>\|])/g, "\\$1" );
-	};
+"use strict";
 
-	// RegEx used by formattedNumCompare
-	wb.formattedNumCompareRegEx = /(<[^>]*>|[^\d\.])/g;
+// Escapes the characters in a string for use in a jQuery selector
+// Based on https://totaldev.com/content/escaping-characters-get-valid-jquery-id
+wb.jqEscape = function( selector ) {
+	// eslint-disable-next-line no-useless-escape
+	return selector.replace( /([;&,\.\+\*\~':"\\\!\^\/#$%@\[\]\(\)=>\|])/g, "\\$1" );
+};
 
-	// Compares two formatted numbers (e.g., 1.2.12 or 1,000,345)
-	wb.formattedNumCompare = function( a, b ) {
-		var regEx = wb.formattedNumCompareRegEx,
-			aMultiple = a.indexOf( "-" ) === -1 ? 1 : -1,
-			aNumbers = ( ( a === "-" || a === "" ) ? "0" : a.replace( regEx, "" ) ).split( "." ),
-			bMultiple = b.indexOf( "-" ) === -1 ? 1 : -1,
-			bNumbers = ( ( b === "-" || b === "" ) ? "0" : b.replace( regEx, "" ) ).split( "." ),
-			len = aNumbers.length,
-			i, result;
+// RegEx used by formattedNumCompare
+wb.formattedNumCompareRegEx = /(<[^>]*>|[^\d.])/g;
 
-		for ( i = 0; i !== len; i += 1 ) {
-			result = parseInt( aNumbers[ i ], 10 ) * aMultiple - parseInt( bNumbers[ i ], 10 ) * bMultiple;
-			if ( result !== 0 ) {
-				break;
-			}
+// Compares two formatted numbers (e.g., 1.2.12 or 1,000,345)
+wb.formattedNumCompare = function( a, b ) {
+	var regEx = wb.formattedNumCompareRegEx,
+		aMultiple = a.indexOf( "-" ) === -1 ? 1 : -1,
+		aNumbers = ( ( a === "-" || a === "" ) ? "0" : a.replace( regEx, "" ) ).split( "." ),
+		bMultiple = b.indexOf( "-" ) === -1 ? 1 : -1,
+		bNumbers = ( ( b === "-" || b === "" ) ? "0" : b.replace( regEx, "" ) ).split( "." ),
+		len = aNumbers.length,
+		i, result;
+
+	for ( i = 0; i !== len; i += 1 ) {
+		result = parseInt( aNumbers[ i ], 10 ) * aMultiple - parseInt( bNumbers[ i ], 10 ) * bMultiple;
+		if ( result !== 0 ) {
+			break;
 		}
-		return result;
-	};
+	}
+	return result;
+};
 
-	// Compare two strings with special characters (e.g., Cyrillic or Chinese characters)
-	wb.i18nTextCompare = function( a, b ) {
-		return wb.normalizeDiacritics( a ).localeCompare( wb.normalizeDiacritics( b ) );
-	};
+// Compare two strings with special characters (e.g., Cyrillic or Chinese characters)
+wb.i18nTextCompare = function( a, b ) {
+	return wb.normalizeDiacritics( a ).localeCompare( wb.normalizeDiacritics( b ) );
+};
 
-	// Based upon https://gist.github.com/instanceofme/1731620
-	// Licensed under WTFPL v2 http://sam.zoy.org/wtfpl/COPYING
-	wb.normalizeDiacritics = function( str ) {
-		var diacritics = {
-				"\u24B6": "A",
-				"\uFF21": "A",
-				"\u00C0": "A",
-				"\u00C1": "A",
-				"\u00C2": "A",
-				"\u1EA6": "A",
-				"\u1EA4": "A",
-				"\u1EAA": "A",
-				"\u1EA8": "A",
-				"\u00C3": "A",
-				"\u0100": "A",
-				"\u0102": "A",
-				"\u1EB0": "A",
-				"\u1EAE": "A",
-				"\u1EB4": "A",
-				"\u1EB2": "A",
-				"\u0226": "A",
-				"\u01E0": "A",
-				"\u00C4": "A",
-				"\u01DE": "A",
-				"\u1EA2": "A",
-				"\u00C5": "A",
-				"\u01FA": "A",
-				"\u01CD": "A",
-				"\u0200": "A",
-				"\u0202": "A",
-				"\u1EA0": "A",
-				"\u1EAC": "A",
-				"\u1EB6": "A",
-				"\u1E00": "A",
-				"\u0104": "A",
-				"\u023A": "A",
-				"\u2C6F": "A",
-				"\uA732": "AA",
-				"\u00C6": "AE",
-				"\u01FC": "AE",
-				"\u01E2": "AE",
-				"\uA734": "AO",
-				"\uA736": "AU",
-				"\uA738": "AV",
-				"\uA73A": "AV",
-				"\uA73C": "AY",
-				"\u24B7": "B",
-				"\uFF22": "B",
-				"\u1E02": "B",
-				"\u1E04": "B",
-				"\u1E06": "B",
-				"\u0243": "B",
-				"\u0182": "B",
-				"\u0181": "B",
-				"\u24B8": "C",
-				"\uFF23": "C",
-				"\u0106": "C",
-				"\u0108": "C",
-				"\u010A": "C",
-				"\u010C": "C",
-				"\u00C7": "C",
-				"\u1E08": "C",
-				"\u0187": "C",
-				"\u023B": "C",
-				"\uA73E": "C",
-				"\u24B9": "D",
-				"\uFF24": "D",
-				"\u1E0A": "D",
-				"\u010E": "D",
-				"\u1E0C": "D",
-				"\u1E10": "D",
-				"\u1E12": "D",
-				"\u1E0E": "D",
-				"\u0110": "D",
-				"\u018B": "D",
-				"\u018A": "D",
-				"\u0189": "D",
-				"\uA779": "D",
-				"\u01F1": "DZ",
-				"\u01C4": "DZ",
-				"\u01F2": "Dz",
-				"\u01C5": "Dz",
-				"\u24BA": "E",
-				"\uFF25": "E",
-				"\u00C8": "E",
-				"\u00C9": "E",
-				"\u00CA": "E",
-				"\u1EC0": "E",
-				"\u1EBE": "E",
-				"\u1EC4": "E",
-				"\u1EC2": "E",
-				"\u1EBC": "E",
-				"\u0112": "E",
-				"\u1E14": "E",
-				"\u1E16": "E",
-				"\u0114": "E",
-				"\u0116": "E",
-				"\u00CB": "E",
-				"\u1EBA": "E",
-				"\u011A": "E",
-				"\u0204": "E",
-				"\u0206": "E",
-				"\u1EB8": "E",
-				"\u1EC6": "E",
-				"\u0228": "E",
-				"\u1E1C": "E",
-				"\u0118": "E",
-				"\u1E18": "E",
-				"\u1E1A": "E",
-				"\u0190": "E",
-				"\u018E": "E",
-				"\u24BB": "F",
-				"\uFF26": "F",
-				"\u1E1E": "F",
-				"\u0191": "F",
-				"\uA77B": "F",
-				"\u24BC": "G",
-				"\uFF27": "G",
-				"\u01F4": "G",
-				"\u011C": "G",
-				"\u1E20": "G",
-				"\u011E": "G",
-				"\u0120": "G",
-				"\u01E6": "G",
-				"\u0122": "G",
-				"\u01E4": "G",
-				"\u0193": "G",
-				"\uA7A0": "G",
-				"\uA77D": "G",
-				"\uA77E": "G",
-				"\u24BD": "H",
-				"\uFF28": "H",
-				"\u0124": "H",
-				"\u1E22": "H",
-				"\u1E26": "H",
-				"\u021E": "H",
-				"\u1E24": "H",
-				"\u1E28": "H",
-				"\u1E2A": "H",
-				"\u0126": "H",
-				"\u2C67": "H",
-				"\u2C75": "H",
-				"\uA78D": "H",
-				"\u24BE": "I",
-				"\uFF29": "I",
-				"\u00CC": "I",
-				"\u00CD": "I",
-				"\u00CE": "I",
-				"\u0128": "I",
-				"\u012A": "I",
-				"\u012C": "I",
-				"\u0130": "I",
-				"\u00CF": "I",
-				"\u1E2E": "I",
-				"\u1EC8": "I",
-				"\u01CF": "I",
-				"\u0208": "I",
-				"\u020A": "I",
-				"\u1ECA": "I",
-				"\u012E": "I",
-				"\u1E2C": "I",
-				"\u0197": "I",
-				"\u24BF": "J",
-				"\uFF2A": "J",
-				"\u0134": "J",
-				"\u0248": "J",
-				"\u24C0": "K",
-				"\uFF2B": "K",
-				"\u1E30": "K",
-				"\u01E8": "K",
-				"\u1E32": "K",
-				"\u0136": "K",
-				"\u1E34": "K",
-				"\u0198": "K",
-				"\u2C69": "K",
-				"\uA740": "K",
-				"\uA742": "K",
-				"\uA744": "K",
-				"\uA7A2": "K",
-				"\u24C1": "L",
-				"\uFF2C": "L",
-				"\u013F": "L",
-				"\u0139": "L",
-				"\u013D": "L",
-				"\u1E36": "L",
-				"\u1E38": "L",
-				"\u013B": "L",
-				"\u1E3C": "L",
-				"\u1E3A": "L",
-				"\u0141": "L",
-				"\u023D": "L",
-				"\u2C62": "L",
-				"\u2C60": "L",
-				"\uA748": "L",
-				"\uA746": "L",
-				"\uA780": "L",
-				"\u01C7": "LJ",
-				"\u01C8": "Lj",
-				"\u24C2": "M",
-				"\uFF2D": "M",
-				"\u1E3E": "M",
-				"\u1E40": "M",
-				"\u1E42": "M",
-				"\u2C6E": "M",
-				"\u019C": "M",
-				"\u24C3": "N",
-				"\uFF2E": "N",
-				"\u01F8": "N",
-				"\u0143": "N",
-				"\u00D1": "N",
-				"\u1E44": "N",
-				"\u0147": "N",
-				"\u1E46": "N",
-				"\u0145": "N",
-				"\u1E4A": "N",
-				"\u1E48": "N",
-				"\u0220": "N",
-				"\u019D": "N",
-				"\uA790": "N",
-				"\uA7A4": "N",
-				"\u01CA": "NJ",
-				"\u01CB": "Nj",
-				"\u24C4": "O",
-				"\uFF2F": "O",
-				"\u00D2": "O",
-				"\u00D3": "O",
-				"\u00D4": "O",
-				"\u1ED2": "O",
-				"\u1ED0": "O",
-				"\u1ED6": "O",
-				"\u1ED4": "O",
-				"\u00D5": "O",
-				"\u1E4C": "O",
-				"\u022C": "O",
-				"\u1E4E": "O",
-				"\u014C": "O",
-				"\u1E50": "O",
-				"\u1E52": "O",
-				"\u014E": "O",
-				"\u022E": "O",
-				"\u0230": "O",
-				"\u00D6": "O",
-				"\u022A": "O",
-				"\u1ECE": "O",
-				"\u0150": "O",
-				"\u01D1": "O",
-				"\u020C": "O",
-				"\u020E": "O",
-				"\u01A0": "O",
-				"\u1EDC": "O",
-				"\u1EDA": "O",
-				"\u1EE0": "O",
-				"\u1EDE": "O",
-				"\u1EE2": "O",
-				"\u1ECC": "O",
-				"\u1ED8": "O",
-				"\u01EA": "O",
-				"\u01EC": "O",
-				"\u00D8": "O",
-				"\u01FE": "O",
-				"\u0186": "O",
-				"\u019F": "O",
-				"\uA74A": "O",
-				"\uA74C": "O",
-				"\u0152": "OE",
-				"\u01A2": "OI",
-				"\uA74E": "OO",
-				"\u0222": "OU",
-				"\u24C5": "P",
-				"\uFF30": "P",
-				"\u1E54": "P",
-				"\u1E56": "P",
-				"\u01A4": "P",
-				"\u2C63": "P",
-				"\uA750": "P",
-				"\uA752": "P",
-				"\uA754": "P",
-				"\u24C6": "Q",
-				"\uFF31": "Q",
-				"\uA756": "Q",
-				"\uA758": "Q",
-				"\u024A": "Q",
-				"\u24C7": "R",
-				"\uFF32": "R",
-				"\u0154": "R",
-				"\u1E58": "R",
-				"\u0158": "R",
-				"\u0210": "R",
-				"\u0212": "R",
-				"\u1E5A": "R",
-				"\u1E5C": "R",
-				"\u0156": "R",
-				"\u1E5E": "R",
-				"\u024C": "R",
-				"\u2C64": "R",
-				"\uA75A": "R",
-				"\uA7A6": "R",
-				"\uA782": "R",
-				"\u24C8": "S",
-				"\uFF33": "S",
-				"\u015A": "S",
-				"\u1E64": "S",
-				"\u015C": "S",
-				"\u1E60": "S",
-				"\u0160": "S",
-				"\u1E66": "S",
-				"\u1E62": "S",
-				"\u1E68": "S",
-				"\u0218": "S",
-				"\u015E": "S",
-				"\u2C7E": "S",
-				"\uA7A8": "S",
-				"\uA784": "S",
-				"\u1E9E": "SS",
-				"\u24C9": "T",
-				"\uFF34": "T",
-				"\u1E6A": "T",
-				"\u0164": "T",
-				"\u1E6C": "T",
-				"\u021A": "T",
-				"\u0162": "T",
-				"\u1E70": "T",
-				"\u1E6E": "T",
-				"\u0166": "T",
-				"\u01AC": "T",
-				"\u01AE": "T",
-				"\u023E": "T",
-				"\uA786": "T",
-				"\uA728": "TZ",
-				"\u24CA": "U",
-				"\uFF35": "U",
-				"\u00D9": "U",
-				"\u00DA": "U",
-				"\u00DB": "U",
-				"\u0168": "U",
-				"\u1E78": "U",
-				"\u016A": "U",
-				"\u1E7A": "U",
-				"\u016C": "U",
-				"\u00DC": "U",
-				"\u01DB": "U",
-				"\u01D7": "U",
-				"\u01D5": "U",
-				"\u01D9": "U",
-				"\u1EE6": "U",
-				"\u016E": "U",
-				"\u0170": "U",
-				"\u01D3": "U",
-				"\u0214": "U",
-				"\u0216": "U",
-				"\u01AF": "U",
-				"\u1EEA": "U",
-				"\u1EE8": "U",
-				"\u1EEE": "U",
-				"\u1EEC": "U",
-				"\u1EF0": "U",
-				"\u1EE4": "U",
-				"\u1E72": "U",
-				"\u0172": "U",
-				"\u1E76": "U",
-				"\u1E74": "U",
-				"\u0244": "U",
-				"\u24CB": "V",
-				"\uFF36": "V",
-				"\u1E7C": "V",
-				"\u1E7E": "V",
-				"\u01B2": "V",
-				"\uA75E": "V",
-				"\u0245": "V",
-				"\uA760": "VY",
-				"\u24CC": "W",
-				"\uFF37": "W",
-				"\u1E80": "W",
-				"\u1E82": "W",
-				"\u0174": "W",
-				"\u1E86": "W",
-				"\u1E84": "W",
-				"\u1E88": "W",
-				"\u2C72": "W",
-				"\u24CD": "X",
-				"\uFF38": "X",
-				"\u1E8A": "X",
-				"\u1E8C": "X",
-				"\u24CE": "Y",
-				"\uFF39": "Y",
-				"\u1EF2": "Y",
-				"\u00DD": "Y",
-				"\u0176": "Y",
-				"\u1EF8": "Y",
-				"\u0232": "Y",
-				"\u1E8E": "Y",
-				"\u0178": "Y",
-				"\u1EF6": "Y",
-				"\u1EF4": "Y",
-				"\u01B3": "Y",
-				"\u024E": "Y",
-				"\u1EFE": "Y",
-				"\u24CF": "Z",
-				"\uFF3A": "Z",
-				"\u0179": "Z",
-				"\u1E90": "Z",
-				"\u017B": "Z",
-				"\u017D": "Z",
-				"\u1E92": "Z",
-				"\u1E94": "Z",
-				"\u01B5": "Z",
-				"\u0224": "Z",
-				"\u2C7F": "Z",
-				"\u2C6B": "Z",
-				"\uA762": "Z",
-				"\u24D0": "a",
-				"\uFF41": "a",
-				"\u1E9A": "a",
-				"\u00E0": "a",
-				"\u00E1": "a",
-				"\u00E2": "a",
-				"\u1EA7": "a",
-				"\u1EA5": "a",
-				"\u1EAB": "a",
-				"\u1EA9": "a",
-				"\u00E3": "a",
-				"\u0101": "a",
-				"\u0103": "a",
-				"\u1EB1": "a",
-				"\u1EAF": "a",
-				"\u1EB5": "a",
-				"\u1EB3": "a",
-				"\u0227": "a",
-				"\u01E1": "a",
-				"\u00E4": "a",
-				"\u01DF": "a",
-				"\u1EA3": "a",
-				"\u00E5": "a",
-				"\u01FB": "a",
-				"\u01CE": "a",
-				"\u0201": "a",
-				"\u0203": "a",
-				"\u1EA1": "a",
-				"\u1EAD": "a",
-				"\u1EB7": "a",
-				"\u1E01": "a",
-				"\u0105": "a",
-				"\u2C65": "a",
-				"\u0250": "a",
-				"\uA733": "aa",
-				"\u00E6": "ae",
-				"\u01FD": "ae",
-				"\u01E3": "ae",
-				"\uA735": "ao",
-				"\uA737": "au",
-				"\uA739": "av",
-				"\uA73B": "av",
-				"\uA73D": "ay",
-				"\u24D1": "b",
-				"\uFF42": "b",
-				"\u1E03": "b",
-				"\u1E05": "b",
-				"\u1E07": "b",
-				"\u0180": "b",
-				"\u0183": "b",
-				"\u0253": "b",
-				"\u24D2": "c",
-				"\uFF43": "c",
-				"\u0107": "c",
-				"\u0109": "c",
-				"\u010B": "c",
-				"\u010D": "c",
-				"\u00E7": "c",
-				"\u1E09": "c",
-				"\u0188": "c",
-				"\u023C": "c",
-				"\uA73F": "c",
-				"\u2184": "c",
-				"\u24D3": "d",
-				"\uFF44": "d",
-				"\u1E0B": "d",
-				"\u010F": "d",
-				"\u1E0D": "d",
-				"\u1E11": "d",
-				"\u1E13": "d",
-				"\u1E0F": "d",
-				"\u0111": "d",
-				"\u018C": "d",
-				"\u0256": "d",
-				"\u0257": "d",
-				"\uA77A": "d",
-				"\u01F3": "dz",
-				"\u01C6": "dz",
-				"\u24D4": "e",
-				"\uFF45": "e",
-				"\u00E8": "e",
-				"\u00E9": "e",
-				"\u00EA": "e",
-				"\u1EC1": "e",
-				"\u1EBF": "e",
-				"\u1EC5": "e",
-				"\u1EC3": "e",
-				"\u1EBD": "e",
-				"\u0113": "e",
-				"\u1E15": "e",
-				"\u1E17": "e",
-				"\u0115": "e",
-				"\u0117": "e",
-				"\u00EB": "e",
-				"\u1EBB": "e",
-				"\u011B": "e",
-				"\u0205": "e",
-				"\u0207": "e",
-				"\u1EB9": "e",
-				"\u1EC7": "e",
-				"\u0229": "e",
-				"\u1E1D": "e",
-				"\u0119": "e",
-				"\u1E19": "e",
-				"\u1E1B": "e",
-				"\u0247": "e",
-				"\u025B": "e",
-				"\u01DD": "e",
-				"\u24D5": "f",
-				"\uFF46": "f",
-				"\u1E1F": "f",
-				"\u0192": "f",
-				"\uA77C": "f",
-				"\u24D6": "g",
-				"\uFF47": "g",
-				"\u01F5": "g",
-				"\u011D": "g",
-				"\u1E21": "g",
-				"\u011F": "g",
-				"\u0121": "g",
-				"\u01E7": "g",
-				"\u0123": "g",
-				"\u01E5": "g",
-				"\u0260": "g",
-				"\uA7A1": "g",
-				"\u1D79": "g",
-				"\uA77F": "g",
-				"\u24D7": "h",
-				"\uFF48": "h",
-				"\u0125": "h",
-				"\u1E23": "h",
-				"\u1E27": "h",
-				"\u021F": "h",
-				"\u1E25": "h",
-				"\u1E29": "h",
-				"\u1E2B": "h",
-				"\u1E96": "h",
-				"\u0127": "h",
-				"\u2C68": "h",
-				"\u2C76": "h",
-				"\u0265": "h",
-				"\u0195": "hv",
-				"\u24D8": "i",
-				"\uFF49": "i",
-				"\u00EC": "i",
-				"\u00ED": "i",
-				"\u00EE": "i",
-				"\u0129": "i",
-				"\u012B": "i",
-				"\u012D": "i",
-				"\u00EF": "i",
-				"\u1E2F": "i",
-				"\u1EC9": "i",
-				"\u01D0": "i",
-				"\u0209": "i",
-				"\u020B": "i",
-				"\u1ECB": "i",
-				"\u012F": "i",
-				"\u1E2D": "i",
-				"\u0268": "i",
-				"\u0131": "i",
-				"\u24D9": "j",
-				"\uFF4A": "j",
-				"\u0135": "j",
-				"\u01F0": "j",
-				"\u0249": "j",
-				"\u24DA": "k",
-				"\uFF4B": "k",
-				"\u1E31": "k",
-				"\u01E9": "k",
-				"\u1E33": "k",
-				"\u0137": "k",
-				"\u1E35": "k",
-				"\u0199": "k",
-				"\u2C6A": "k",
-				"\uA741": "k",
-				"\uA743": "k",
-				"\uA745": "k",
-				"\uA7A3": "k",
-				"\u24DB": "l",
-				"\uFF4C": "l",
-				"\u0140": "l",
-				"\u013A": "l",
-				"\u013E": "l",
-				"\u1E37": "l",
-				"\u1E39": "l",
-				"\u013C": "l",
-				"\u1E3D": "l",
-				"\u1E3B": "l",
-				"\u0142": "l",
-				"\u019A": "l",
-				"\u026B": "l",
-				"\u2C61": "l",
-				"\uA749": "l",
-				"\uA781": "l",
-				"\uA747": "l",
-				"\u01C9": "lj",
-				"\u24DC": "m",
-				"\uFF4D": "m",
-				"\u1E3F": "m",
-				"\u1E41": "m",
-				"\u1E43": "m",
-				"\u0271": "m",
-				"\u026F": "m",
-				"\u24DD": "n",
-				"\uFF4E": "n",
-				"\u01F9": "n",
-				"\u0144": "n",
-				"\u00F1": "n",
-				"\u1E45": "n",
-				"\u0148": "n",
-				"\u1E47": "n",
-				"\u0146": "n",
-				"\u1E4B": "n",
-				"\u1E49": "n",
-				"\u019E": "n",
-				"\u0272": "n",
-				"\u0149": "n",
-				"\uA791": "n",
-				"\uA7A5": "n",
-				"\u01CC": "nj",
-				"\u24DE": "o",
-				"\uFF4F": "o",
-				"\u00F2": "o",
-				"\u00F3": "o",
-				"\u00F4": "o",
-				"\u1ED3": "o",
-				"\u1ED1": "o",
-				"\u1ED7": "o",
-				"\u1ED5": "o",
-				"\u00F5": "o",
-				"\u1E4D": "o",
-				"\u022D": "o",
-				"\u1E4F": "o",
-				"\u014D": "o",
-				"\u1E51": "o",
-				"\u1E53": "o",
-				"\u014F": "o",
-				"\u022F": "o",
-				"\u0231": "o",
-				"\u00F6": "o",
-				"\u022B": "o",
-				"\u1ECF": "o",
-				"\u0151": "o",
-				"\u01D2": "o",
-				"\u020D": "o",
-				"\u020F": "o",
-				"\u01A1": "o",
-				"\u1EDD": "o",
-				"\u1EDB": "o",
-				"\u1EE1": "o",
-				"\u1EDF": "o",
-				"\u1EE3": "o",
-				"\u1ECD": "o",
-				"\u1ED9": "o",
-				"\u01EB": "o",
-				"\u01ED": "o",
-				"\u00F8": "o",
-				"\u01FF": "o",
-				"\u0254": "o",
-				"\uA74B": "o",
-				"\uA74D": "o",
-				"\u0275": "o",
-				"\u0153": "oe",
-				"\u0276": "oe",
-				"\u01A3": "oi",
-				"\u0223": "ou",
-				"\uA74F": "oo",
-				"\u24DF": "p",
-				"\uFF50": "p",
-				"\u1E55": "p",
-				"\u1E57": "p",
-				"\u01A5": "p",
-				"\u1D7D": "p",
-				"\uA751": "p",
-				"\uA753": "p",
-				"\uA755": "p",
-				"\u24E0": "q",
-				"\uFF51": "q",
-				"\u024B": "q",
-				"\uA757": "q",
-				"\uA759": "q",
-				"\u24E1": "r",
-				"\uFF52": "r",
-				"\u0155": "r",
-				"\u1E59": "r",
-				"\u0159": "r",
-				"\u0211": "r",
-				"\u0213": "r",
-				"\u1E5B": "r",
-				"\u1E5D": "r",
-				"\u0157": "r",
-				"\u1E5F": "r",
-				"\u024D": "r",
-				"\u027D": "r",
-				"\uA75B": "r",
-				"\uA7A7": "r",
-				"\uA783": "r",
-				"\u24E2": "s",
-				"\uFF53": "s",
-				"\u015B": "s",
-				"\u1E65": "s",
-				"\u015D": "s",
-				"\u1E61": "s",
-				"\u0161": "s",
-				"\u1E67": "s",
-				"\u1E63": "s",
-				"\u1E69": "s",
-				"\u0219": "s",
-				"\u015F": "s",
-				"\u023F": "s",
-				"\uA7A9": "s",
-				"\uA785": "s",
-				"\u017F": "s",
-				"\u1E9B": "s",
-				"\u00DF": "ss",
-				"\u24E3": "t",
-				"\uFF54": "t",
-				"\u1E6B": "t",
-				"\u1E97": "t",
-				"\u0165": "t",
-				"\u1E6D": "t",
-				"\u021B": "t",
-				"\u0163": "t",
-				"\u1E71": "t",
-				"\u1E6F": "t",
-				"\u0167": "t",
-				"\u01AD": "t",
-				"\u0288": "t",
-				"\u2C66": "t",
-				"\uA787": "t",
-				"\uA729": "tz",
-				"\u24E4": "u",
-				"\uFF55": "u",
-				"\u00F9": "u",
-				"\u00FA": "u",
-				"\u00FB": "u",
-				"\u0169": "u",
-				"\u1E79": "u",
-				"\u016B": "u",
-				"\u1E7B": "u",
-				"\u016D": "u",
-				"\u00FC": "u",
-				"\u01DC": "u",
-				"\u01D8": "u",
-				"\u01D6": "u",
-				"\u01DA": "u",
-				"\u1EE7": "u",
-				"\u016F": "u",
-				"\u0171": "u",
-				"\u01D4": "u",
-				"\u0215": "u",
-				"\u0217": "u",
-				"\u01B0": "u",
-				"\u1EEB": "u",
-				"\u1EE9": "u",
-				"\u1EEF": "u",
-				"\u1EED": "u",
-				"\u1EF1": "u",
-				"\u1EE5": "u",
-				"\u1E73": "u",
-				"\u0173": "u",
-				"\u1E77": "u",
-				"\u1E75": "u",
-				"\u0289": "u",
-				"\u24E5": "v",
-				"\uFF56": "v",
-				"\u1E7D": "v",
-				"\u1E7F": "v",
-				"\u028B": "v",
-				"\uA75F": "v",
-				"\u028C": "v",
-				"\uA761": "vy",
-				"\u24E6": "w",
-				"\uFF57": "w",
-				"\u1E81": "w",
-				"\u1E83": "w",
-				"\u0175": "w",
-				"\u1E87": "w",
-				"\u1E85": "w",
-				"\u1E98": "w",
-				"\u1E89": "w",
-				"\u2C73": "w",
-				"\u24E7": "x",
-				"\uFF58": "x",
-				"\u1E8B": "x",
-				"\u1E8D": "x",
-				"\u24E8": "y",
-				"\uFF59": "y",
-				"\u1EF3": "y",
-				"\u00FD": "y",
-				"\u0177": "y",
-				"\u1EF9": "y",
-				"\u0233": "y",
-				"\u1E8F": "y",
-				"\u00FF": "y",
-				"\u1EF7": "y",
-				"\u1E99": "y",
-				"\u1EF5": "y",
-				"\u01B4": "y",
-				"\u024F": "y",
-				"\u1EFF": "y",
-				"\u24E9": "z",
-				"\uFF5A": "z",
-				"\u017A": "z",
-				"\u1E91": "z",
-				"\u017C": "z",
-				"\u017E": "z",
-				"\u1E93": "z",
-				"\u1E95": "z",
-				"\u01B6": "z",
-				"\u0225": "z",
-				"\u0240": "z",
-				"\u2C6C": "z",
-				"\uA763": "z",
-				"\uFF10": "0",
-				"\u2080": "0",
-				"\u24EA": "0",
-				"\u2070": "0",
-				"\u00B9": "1",
-				"\u2474": "1",
-				"\u2081": "1",
-				"\u2776": "1",
-				"\u24F5": "1",
-				"\u2488": "1",
-				"\u2460": "1",
-				"\uFF11": "1",
-				"\u00B2": "2",
-				"\u2777": "2",
-				"\u2475": "2",
-				"\uFF12": "2",
-				"\u2082": "2",
-				"\u24F6": "2",
-				"\u2461": "2",
-				"\u2489": "2",
-				"\u00B3": "3",
-				"\uFF13": "3",
-				"\u248A": "3",
-				"\u2476": "3",
-				"\u2083": "3",
-				"\u2778": "3",
-				"\u24F7": "3",
-				"\u2462": "3",
-				"\u24F8": "4",
-				"\u2463": "4",
-				"\u248B": "4",
-				"\uFF14": "4",
-				"\u2074": "4",
-				"\u2084": "4",
-				"\u2779": "4",
-				"\u2477": "4",
-				"\u248C": "5",
-				"\u2085": "5",
-				"\u24F9": "5",
-				"\u2478": "5",
-				"\u277A": "5",
-				"\u2464": "5",
-				"\uFF15": "5",
-				"\u2075": "5",
-				"\u2479": "6",
-				"\u2076": "6",
-				"\uFF16": "6",
-				"\u277B": "6",
-				"\u2086": "6",
-				"\u2465": "6",
-				"\u24FA": "6",
-				"\u248D": "6",
-				"\uFF17": "7",
-				"\u2077": "7",
-				"\u277C": "7",
-				"\u24FB": "7",
-				"\u248E": "7",
-				"\u2087": "7",
-				"\u247A": "7",
-				"\u2466": "7",
-				"\u2467": "8",
-				"\u248F": "8",
-				"\u24FC": "8",
-				"\u247B": "8",
-				"\u2078": "8",
-				"\uFF18": "8",
-				"\u277D": "8",
-				"\u2088": "8",
-				"\u24FD": "9",
-				"\uFF19": "9",
-				"\u2490": "9",
-				"\u277E": "9",
-				"\u247C": "9",
-				"\u2089": "9",
-				"\u2468": "9",
-				"\u2079": "9"
-			},
-			chars = str.split( "" ),
-			len = chars.length,
-			normalized = false,
-			i, character;
-		for ( i = 0; i !== len; i += 1 ) {
-			character = chars[ i ];
-			if ( diacritics.hasOwnProperty( character ) ) {
-				chars[ i ] = diacritics[ character ];
-				normalized = true;
-			}
+// Based upon https://gist.github.com/instanceofme/1731620
+// Licensed under WTFPL v2 http://sam.zoy.org/wtfpl/COPYING
+wb.normalizeDiacritics = function( str ) {
+	var diacritics = {
+			"\u24B6": "A",
+			"\uFF21": "A",
+			"\u00C0": "A",
+			"\u00C1": "A",
+			"\u00C2": "A",
+			"\u1EA6": "A",
+			"\u1EA4": "A",
+			"\u1EAA": "A",
+			"\u1EA8": "A",
+			"\u00C3": "A",
+			"\u0100": "A",
+			"\u0102": "A",
+			"\u1EB0": "A",
+			"\u1EAE": "A",
+			"\u1EB4": "A",
+			"\u1EB2": "A",
+			"\u0226": "A",
+			"\u01E0": "A",
+			"\u00C4": "A",
+			"\u01DE": "A",
+			"\u1EA2": "A",
+			"\u00C5": "A",
+			"\u01FA": "A",
+			"\u01CD": "A",
+			"\u0200": "A",
+			"\u0202": "A",
+			"\u1EA0": "A",
+			"\u1EAC": "A",
+			"\u1EB6": "A",
+			"\u1E00": "A",
+			"\u0104": "A",
+			"\u023A": "A",
+			"\u2C6F": "A",
+			"\uA732": "AA",
+			"\u00C6": "AE",
+			"\u01FC": "AE",
+			"\u01E2": "AE",
+			"\uA734": "AO",
+			"\uA736": "AU",
+			"\uA738": "AV",
+			"\uA73A": "AV",
+			"\uA73C": "AY",
+			"\u24B7": "B",
+			"\uFF22": "B",
+			"\u1E02": "B",
+			"\u1E04": "B",
+			"\u1E06": "B",
+			"\u0243": "B",
+			"\u0182": "B",
+			"\u0181": "B",
+			"\u24B8": "C",
+			"\uFF23": "C",
+			"\u0106": "C",
+			"\u0108": "C",
+			"\u010A": "C",
+			"\u010C": "C",
+			"\u00C7": "C",
+			"\u1E08": "C",
+			"\u0187": "C",
+			"\u023B": "C",
+			"\uA73E": "C",
+			"\u24B9": "D",
+			"\uFF24": "D",
+			"\u1E0A": "D",
+			"\u010E": "D",
+			"\u1E0C": "D",
+			"\u1E10": "D",
+			"\u1E12": "D",
+			"\u1E0E": "D",
+			"\u0110": "D",
+			"\u018B": "D",
+			"\u018A": "D",
+			"\u0189": "D",
+			"\uA779": "D",
+			"\u01F1": "DZ",
+			"\u01C4": "DZ",
+			"\u01F2": "Dz",
+			"\u01C5": "Dz",
+			"\u24BA": "E",
+			"\uFF25": "E",
+			"\u00C8": "E",
+			"\u00C9": "E",
+			"\u00CA": "E",
+			"\u1EC0": "E",
+			"\u1EBE": "E",
+			"\u1EC4": "E",
+			"\u1EC2": "E",
+			"\u1EBC": "E",
+			"\u0112": "E",
+			"\u1E14": "E",
+			"\u1E16": "E",
+			"\u0114": "E",
+			"\u0116": "E",
+			"\u00CB": "E",
+			"\u1EBA": "E",
+			"\u011A": "E",
+			"\u0204": "E",
+			"\u0206": "E",
+			"\u1EB8": "E",
+			"\u1EC6": "E",
+			"\u0228": "E",
+			"\u1E1C": "E",
+			"\u0118": "E",
+			"\u1E18": "E",
+			"\u1E1A": "E",
+			"\u0190": "E",
+			"\u018E": "E",
+			"\u24BB": "F",
+			"\uFF26": "F",
+			"\u1E1E": "F",
+			"\u0191": "F",
+			"\uA77B": "F",
+			"\u24BC": "G",
+			"\uFF27": "G",
+			"\u01F4": "G",
+			"\u011C": "G",
+			"\u1E20": "G",
+			"\u011E": "G",
+			"\u0120": "G",
+			"\u01E6": "G",
+			"\u0122": "G",
+			"\u01E4": "G",
+			"\u0193": "G",
+			"\uA7A0": "G",
+			"\uA77D": "G",
+			"\uA77E": "G",
+			"\u24BD": "H",
+			"\uFF28": "H",
+			"\u0124": "H",
+			"\u1E22": "H",
+			"\u1E26": "H",
+			"\u021E": "H",
+			"\u1E24": "H",
+			"\u1E28": "H",
+			"\u1E2A": "H",
+			"\u0126": "H",
+			"\u2C67": "H",
+			"\u2C75": "H",
+			"\uA78D": "H",
+			"\u24BE": "I",
+			"\uFF29": "I",
+			"\u00CC": "I",
+			"\u00CD": "I",
+			"\u00CE": "I",
+			"\u0128": "I",
+			"\u012A": "I",
+			"\u012C": "I",
+			"\u0130": "I",
+			"\u00CF": "I",
+			"\u1E2E": "I",
+			"\u1EC8": "I",
+			"\u01CF": "I",
+			"\u0208": "I",
+			"\u020A": "I",
+			"\u1ECA": "I",
+			"\u012E": "I",
+			"\u1E2C": "I",
+			"\u0197": "I",
+			"\u24BF": "J",
+			"\uFF2A": "J",
+			"\u0134": "J",
+			"\u0248": "J",
+			"\u24C0": "K",
+			"\uFF2B": "K",
+			"\u1E30": "K",
+			"\u01E8": "K",
+			"\u1E32": "K",
+			"\u0136": "K",
+			"\u1E34": "K",
+			"\u0198": "K",
+			"\u2C69": "K",
+			"\uA740": "K",
+			"\uA742": "K",
+			"\uA744": "K",
+			"\uA7A2": "K",
+			"\u24C1": "L",
+			"\uFF2C": "L",
+			"\u013F": "L",
+			"\u0139": "L",
+			"\u013D": "L",
+			"\u1E36": "L",
+			"\u1E38": "L",
+			"\u013B": "L",
+			"\u1E3C": "L",
+			"\u1E3A": "L",
+			"\u0141": "L",
+			"\u023D": "L",
+			"\u2C62": "L",
+			"\u2C60": "L",
+			"\uA748": "L",
+			"\uA746": "L",
+			"\uA780": "L",
+			"\u01C7": "LJ",
+			"\u01C8": "Lj",
+			"\u24C2": "M",
+			"\uFF2D": "M",
+			"\u1E3E": "M",
+			"\u1E40": "M",
+			"\u1E42": "M",
+			"\u2C6E": "M",
+			"\u019C": "M",
+			"\u24C3": "N",
+			"\uFF2E": "N",
+			"\u01F8": "N",
+			"\u0143": "N",
+			"\u00D1": "N",
+			"\u1E44": "N",
+			"\u0147": "N",
+			"\u1E46": "N",
+			"\u0145": "N",
+			"\u1E4A": "N",
+			"\u1E48": "N",
+			"\u0220": "N",
+			"\u019D": "N",
+			"\uA790": "N",
+			"\uA7A4": "N",
+			"\u01CA": "NJ",
+			"\u01CB": "Nj",
+			"\u24C4": "O",
+			"\uFF2F": "O",
+			"\u00D2": "O",
+			"\u00D3": "O",
+			"\u00D4": "O",
+			"\u1ED2": "O",
+			"\u1ED0": "O",
+			"\u1ED6": "O",
+			"\u1ED4": "O",
+			"\u00D5": "O",
+			"\u1E4C": "O",
+			"\u022C": "O",
+			"\u1E4E": "O",
+			"\u014C": "O",
+			"\u1E50": "O",
+			"\u1E52": "O",
+			"\u014E": "O",
+			"\u022E": "O",
+			"\u0230": "O",
+			"\u00D6": "O",
+			"\u022A": "O",
+			"\u1ECE": "O",
+			"\u0150": "O",
+			"\u01D1": "O",
+			"\u020C": "O",
+			"\u020E": "O",
+			"\u01A0": "O",
+			"\u1EDC": "O",
+			"\u1EDA": "O",
+			"\u1EE0": "O",
+			"\u1EDE": "O",
+			"\u1EE2": "O",
+			"\u1ECC": "O",
+			"\u1ED8": "O",
+			"\u01EA": "O",
+			"\u01EC": "O",
+			"\u00D8": "O",
+			"\u01FE": "O",
+			"\u0186": "O",
+			"\u019F": "O",
+			"\uA74A": "O",
+			"\uA74C": "O",
+			"\u0152": "OE",
+			"\u01A2": "OI",
+			"\uA74E": "OO",
+			"\u0222": "OU",
+			"\u24C5": "P",
+			"\uFF30": "P",
+			"\u1E54": "P",
+			"\u1E56": "P",
+			"\u01A4": "P",
+			"\u2C63": "P",
+			"\uA750": "P",
+			"\uA752": "P",
+			"\uA754": "P",
+			"\u24C6": "Q",
+			"\uFF31": "Q",
+			"\uA756": "Q",
+			"\uA758": "Q",
+			"\u024A": "Q",
+			"\u24C7": "R",
+			"\uFF32": "R",
+			"\u0154": "R",
+			"\u1E58": "R",
+			"\u0158": "R",
+			"\u0210": "R",
+			"\u0212": "R",
+			"\u1E5A": "R",
+			"\u1E5C": "R",
+			"\u0156": "R",
+			"\u1E5E": "R",
+			"\u024C": "R",
+			"\u2C64": "R",
+			"\uA75A": "R",
+			"\uA7A6": "R",
+			"\uA782": "R",
+			"\u24C8": "S",
+			"\uFF33": "S",
+			"\u015A": "S",
+			"\u1E64": "S",
+			"\u015C": "S",
+			"\u1E60": "S",
+			"\u0160": "S",
+			"\u1E66": "S",
+			"\u1E62": "S",
+			"\u1E68": "S",
+			"\u0218": "S",
+			"\u015E": "S",
+			"\u2C7E": "S",
+			"\uA7A8": "S",
+			"\uA784": "S",
+			"\u1E9E": "SS",
+			"\u24C9": "T",
+			"\uFF34": "T",
+			"\u1E6A": "T",
+			"\u0164": "T",
+			"\u1E6C": "T",
+			"\u021A": "T",
+			"\u0162": "T",
+			"\u1E70": "T",
+			"\u1E6E": "T",
+			"\u0166": "T",
+			"\u01AC": "T",
+			"\u01AE": "T",
+			"\u023E": "T",
+			"\uA786": "T",
+			"\uA728": "TZ",
+			"\u24CA": "U",
+			"\uFF35": "U",
+			"\u00D9": "U",
+			"\u00DA": "U",
+			"\u00DB": "U",
+			"\u0168": "U",
+			"\u1E78": "U",
+			"\u016A": "U",
+			"\u1E7A": "U",
+			"\u016C": "U",
+			"\u00DC": "U",
+			"\u01DB": "U",
+			"\u01D7": "U",
+			"\u01D5": "U",
+			"\u01D9": "U",
+			"\u1EE6": "U",
+			"\u016E": "U",
+			"\u0170": "U",
+			"\u01D3": "U",
+			"\u0214": "U",
+			"\u0216": "U",
+			"\u01AF": "U",
+			"\u1EEA": "U",
+			"\u1EE8": "U",
+			"\u1EEE": "U",
+			"\u1EEC": "U",
+			"\u1EF0": "U",
+			"\u1EE4": "U",
+			"\u1E72": "U",
+			"\u0172": "U",
+			"\u1E76": "U",
+			"\u1E74": "U",
+			"\u0244": "U",
+			"\u24CB": "V",
+			"\uFF36": "V",
+			"\u1E7C": "V",
+			"\u1E7E": "V",
+			"\u01B2": "V",
+			"\uA75E": "V",
+			"\u0245": "V",
+			"\uA760": "VY",
+			"\u24CC": "W",
+			"\uFF37": "W",
+			"\u1E80": "W",
+			"\u1E82": "W",
+			"\u0174": "W",
+			"\u1E86": "W",
+			"\u1E84": "W",
+			"\u1E88": "W",
+			"\u2C72": "W",
+			"\u24CD": "X",
+			"\uFF38": "X",
+			"\u1E8A": "X",
+			"\u1E8C": "X",
+			"\u24CE": "Y",
+			"\uFF39": "Y",
+			"\u1EF2": "Y",
+			"\u00DD": "Y",
+			"\u0176": "Y",
+			"\u1EF8": "Y",
+			"\u0232": "Y",
+			"\u1E8E": "Y",
+			"\u0178": "Y",
+			"\u1EF6": "Y",
+			"\u1EF4": "Y",
+			"\u01B3": "Y",
+			"\u024E": "Y",
+			"\u1EFE": "Y",
+			"\u24CF": "Z",
+			"\uFF3A": "Z",
+			"\u0179": "Z",
+			"\u1E90": "Z",
+			"\u017B": "Z",
+			"\u017D": "Z",
+			"\u1E92": "Z",
+			"\u1E94": "Z",
+			"\u01B5": "Z",
+			"\u0224": "Z",
+			"\u2C7F": "Z",
+			"\u2C6B": "Z",
+			"\uA762": "Z",
+			"\u24D0": "a",
+			"\uFF41": "a",
+			"\u1E9A": "a",
+			"\u00E0": "a",
+			"\u00E1": "a",
+			"\u00E2": "a",
+			"\u1EA7": "a",
+			"\u1EA5": "a",
+			"\u1EAB": "a",
+			"\u1EA9": "a",
+			"\u00E3": "a",
+			"\u0101": "a",
+			"\u0103": "a",
+			"\u1EB1": "a",
+			"\u1EAF": "a",
+			"\u1EB5": "a",
+			"\u1EB3": "a",
+			"\u0227": "a",
+			"\u01E1": "a",
+			"\u00E4": "a",
+			"\u01DF": "a",
+			"\u1EA3": "a",
+			"\u00E5": "a",
+			"\u01FB": "a",
+			"\u01CE": "a",
+			"\u0201": "a",
+			"\u0203": "a",
+			"\u1EA1": "a",
+			"\u1EAD": "a",
+			"\u1EB7": "a",
+			"\u1E01": "a",
+			"\u0105": "a",
+			"\u2C65": "a",
+			"\u0250": "a",
+			"\uA733": "aa",
+			"\u00E6": "ae",
+			"\u01FD": "ae",
+			"\u01E3": "ae",
+			"\uA735": "ao",
+			"\uA737": "au",
+			"\uA739": "av",
+			"\uA73B": "av",
+			"\uA73D": "ay",
+			"\u24D1": "b",
+			"\uFF42": "b",
+			"\u1E03": "b",
+			"\u1E05": "b",
+			"\u1E07": "b",
+			"\u0180": "b",
+			"\u0183": "b",
+			"\u0253": "b",
+			"\u24D2": "c",
+			"\uFF43": "c",
+			"\u0107": "c",
+			"\u0109": "c",
+			"\u010B": "c",
+			"\u010D": "c",
+			"\u00E7": "c",
+			"\u1E09": "c",
+			"\u0188": "c",
+			"\u023C": "c",
+			"\uA73F": "c",
+			"\u2184": "c",
+			"\u24D3": "d",
+			"\uFF44": "d",
+			"\u1E0B": "d",
+			"\u010F": "d",
+			"\u1E0D": "d",
+			"\u1E11": "d",
+			"\u1E13": "d",
+			"\u1E0F": "d",
+			"\u0111": "d",
+			"\u018C": "d",
+			"\u0256": "d",
+			"\u0257": "d",
+			"\uA77A": "d",
+			"\u01F3": "dz",
+			"\u01C6": "dz",
+			"\u24D4": "e",
+			"\uFF45": "e",
+			"\u00E8": "e",
+			"\u00E9": "e",
+			"\u00EA": "e",
+			"\u1EC1": "e",
+			"\u1EBF": "e",
+			"\u1EC5": "e",
+			"\u1EC3": "e",
+			"\u1EBD": "e",
+			"\u0113": "e",
+			"\u1E15": "e",
+			"\u1E17": "e",
+			"\u0115": "e",
+			"\u0117": "e",
+			"\u00EB": "e",
+			"\u1EBB": "e",
+			"\u011B": "e",
+			"\u0205": "e",
+			"\u0207": "e",
+			"\u1EB9": "e",
+			"\u1EC7": "e",
+			"\u0229": "e",
+			"\u1E1D": "e",
+			"\u0119": "e",
+			"\u1E19": "e",
+			"\u1E1B": "e",
+			"\u0247": "e",
+			"\u025B": "e",
+			"\u01DD": "e",
+			"\u24D5": "f",
+			"\uFF46": "f",
+			"\u1E1F": "f",
+			"\u0192": "f",
+			"\uA77C": "f",
+			"\u24D6": "g",
+			"\uFF47": "g",
+			"\u01F5": "g",
+			"\u011D": "g",
+			"\u1E21": "g",
+			"\u011F": "g",
+			"\u0121": "g",
+			"\u01E7": "g",
+			"\u0123": "g",
+			"\u01E5": "g",
+			"\u0260": "g",
+			"\uA7A1": "g",
+			"\u1D79": "g",
+			"\uA77F": "g",
+			"\u24D7": "h",
+			"\uFF48": "h",
+			"\u0125": "h",
+			"\u1E23": "h",
+			"\u1E27": "h",
+			"\u021F": "h",
+			"\u1E25": "h",
+			"\u1E29": "h",
+			"\u1E2B": "h",
+			"\u1E96": "h",
+			"\u0127": "h",
+			"\u2C68": "h",
+			"\u2C76": "h",
+			"\u0265": "h",
+			"\u0195": "hv",
+			"\u24D8": "i",
+			"\uFF49": "i",
+			"\u00EC": "i",
+			"\u00ED": "i",
+			"\u00EE": "i",
+			"\u0129": "i",
+			"\u012B": "i",
+			"\u012D": "i",
+			"\u00EF": "i",
+			"\u1E2F": "i",
+			"\u1EC9": "i",
+			"\u01D0": "i",
+			"\u0209": "i",
+			"\u020B": "i",
+			"\u1ECB": "i",
+			"\u012F": "i",
+			"\u1E2D": "i",
+			"\u0268": "i",
+			"\u0131": "i",
+			"\u24D9": "j",
+			"\uFF4A": "j",
+			"\u0135": "j",
+			"\u01F0": "j",
+			"\u0249": "j",
+			"\u24DA": "k",
+			"\uFF4B": "k",
+			"\u1E31": "k",
+			"\u01E9": "k",
+			"\u1E33": "k",
+			"\u0137": "k",
+			"\u1E35": "k",
+			"\u0199": "k",
+			"\u2C6A": "k",
+			"\uA741": "k",
+			"\uA743": "k",
+			"\uA745": "k",
+			"\uA7A3": "k",
+			"\u24DB": "l",
+			"\uFF4C": "l",
+			"\u0140": "l",
+			"\u013A": "l",
+			"\u013E": "l",
+			"\u1E37": "l",
+			"\u1E39": "l",
+			"\u013C": "l",
+			"\u1E3D": "l",
+			"\u1E3B": "l",
+			"\u0142": "l",
+			"\u019A": "l",
+			"\u026B": "l",
+			"\u2C61": "l",
+			"\uA749": "l",
+			"\uA781": "l",
+			"\uA747": "l",
+			"\u01C9": "lj",
+			"\u24DC": "m",
+			"\uFF4D": "m",
+			"\u1E3F": "m",
+			"\u1E41": "m",
+			"\u1E43": "m",
+			"\u0271": "m",
+			"\u026F": "m",
+			"\u24DD": "n",
+			"\uFF4E": "n",
+			"\u01F9": "n",
+			"\u0144": "n",
+			"\u00F1": "n",
+			"\u1E45": "n",
+			"\u0148": "n",
+			"\u1E47": "n",
+			"\u0146": "n",
+			"\u1E4B": "n",
+			"\u1E49": "n",
+			"\u019E": "n",
+			"\u0272": "n",
+			"\u0149": "n",
+			"\uA791": "n",
+			"\uA7A5": "n",
+			"\u01CC": "nj",
+			"\u24DE": "o",
+			"\uFF4F": "o",
+			"\u00F2": "o",
+			"\u00F3": "o",
+			"\u00F4": "o",
+			"\u1ED3": "o",
+			"\u1ED1": "o",
+			"\u1ED7": "o",
+			"\u1ED5": "o",
+			"\u00F5": "o",
+			"\u1E4D": "o",
+			"\u022D": "o",
+			"\u1E4F": "o",
+			"\u014D": "o",
+			"\u1E51": "o",
+			"\u1E53": "o",
+			"\u014F": "o",
+			"\u022F": "o",
+			"\u0231": "o",
+			"\u00F6": "o",
+			"\u022B": "o",
+			"\u1ECF": "o",
+			"\u0151": "o",
+			"\u01D2": "o",
+			"\u020D": "o",
+			"\u020F": "o",
+			"\u01A1": "o",
+			"\u1EDD": "o",
+			"\u1EDB": "o",
+			"\u1EE1": "o",
+			"\u1EDF": "o",
+			"\u1EE3": "o",
+			"\u1ECD": "o",
+			"\u1ED9": "o",
+			"\u01EB": "o",
+			"\u01ED": "o",
+			"\u00F8": "o",
+			"\u01FF": "o",
+			"\u0254": "o",
+			"\uA74B": "o",
+			"\uA74D": "o",
+			"\u0275": "o",
+			"\u0153": "oe",
+			"\u0276": "oe",
+			"\u01A3": "oi",
+			"\u0223": "ou",
+			"\uA74F": "oo",
+			"\u24DF": "p",
+			"\uFF50": "p",
+			"\u1E55": "p",
+			"\u1E57": "p",
+			"\u01A5": "p",
+			"\u1D7D": "p",
+			"\uA751": "p",
+			"\uA753": "p",
+			"\uA755": "p",
+			"\u24E0": "q",
+			"\uFF51": "q",
+			"\u024B": "q",
+			"\uA757": "q",
+			"\uA759": "q",
+			"\u24E1": "r",
+			"\uFF52": "r",
+			"\u0155": "r",
+			"\u1E59": "r",
+			"\u0159": "r",
+			"\u0211": "r",
+			"\u0213": "r",
+			"\u1E5B": "r",
+			"\u1E5D": "r",
+			"\u0157": "r",
+			"\u1E5F": "r",
+			"\u024D": "r",
+			"\u027D": "r",
+			"\uA75B": "r",
+			"\uA7A7": "r",
+			"\uA783": "r",
+			"\u24E2": "s",
+			"\uFF53": "s",
+			"\u015B": "s",
+			"\u1E65": "s",
+			"\u015D": "s",
+			"\u1E61": "s",
+			"\u0161": "s",
+			"\u1E67": "s",
+			"\u1E63": "s",
+			"\u1E69": "s",
+			"\u0219": "s",
+			"\u015F": "s",
+			"\u023F": "s",
+			"\uA7A9": "s",
+			"\uA785": "s",
+			"\u017F": "s",
+			"\u1E9B": "s",
+			"\u00DF": "ss",
+			"\u24E3": "t",
+			"\uFF54": "t",
+			"\u1E6B": "t",
+			"\u1E97": "t",
+			"\u0165": "t",
+			"\u1E6D": "t",
+			"\u021B": "t",
+			"\u0163": "t",
+			"\u1E71": "t",
+			"\u1E6F": "t",
+			"\u0167": "t",
+			"\u01AD": "t",
+			"\u0288": "t",
+			"\u2C66": "t",
+			"\uA787": "t",
+			"\uA729": "tz",
+			"\u24E4": "u",
+			"\uFF55": "u",
+			"\u00F9": "u",
+			"\u00FA": "u",
+			"\u00FB": "u",
+			"\u0169": "u",
+			"\u1E79": "u",
+			"\u016B": "u",
+			"\u1E7B": "u",
+			"\u016D": "u",
+			"\u00FC": "u",
+			"\u01DC": "u",
+			"\u01D8": "u",
+			"\u01D6": "u",
+			"\u01DA": "u",
+			"\u1EE7": "u",
+			"\u016F": "u",
+			"\u0171": "u",
+			"\u01D4": "u",
+			"\u0215": "u",
+			"\u0217": "u",
+			"\u01B0": "u",
+			"\u1EEB": "u",
+			"\u1EE9": "u",
+			"\u1EEF": "u",
+			"\u1EED": "u",
+			"\u1EF1": "u",
+			"\u1EE5": "u",
+			"\u1E73": "u",
+			"\u0173": "u",
+			"\u1E77": "u",
+			"\u1E75": "u",
+			"\u0289": "u",
+			"\u24E5": "v",
+			"\uFF56": "v",
+			"\u1E7D": "v",
+			"\u1E7F": "v",
+			"\u028B": "v",
+			"\uA75F": "v",
+			"\u028C": "v",
+			"\uA761": "vy",
+			"\u24E6": "w",
+			"\uFF57": "w",
+			"\u1E81": "w",
+			"\u1E83": "w",
+			"\u0175": "w",
+			"\u1E87": "w",
+			"\u1E85": "w",
+			"\u1E98": "w",
+			"\u1E89": "w",
+			"\u2C73": "w",
+			"\u24E7": "x",
+			"\uFF58": "x",
+			"\u1E8B": "x",
+			"\u1E8D": "x",
+			"\u24E8": "y",
+			"\uFF59": "y",
+			"\u1EF3": "y",
+			"\u00FD": "y",
+			"\u0177": "y",
+			"\u1EF9": "y",
+			"\u0233": "y",
+			"\u1E8F": "y",
+			"\u00FF": "y",
+			"\u1EF7": "y",
+			"\u1E99": "y",
+			"\u1EF5": "y",
+			"\u01B4": "y",
+			"\u024F": "y",
+			"\u1EFF": "y",
+			"\u24E9": "z",
+			"\uFF5A": "z",
+			"\u017A": "z",
+			"\u1E91": "z",
+			"\u017C": "z",
+			"\u017E": "z",
+			"\u1E93": "z",
+			"\u1E95": "z",
+			"\u01B6": "z",
+			"\u0225": "z",
+			"\u0240": "z",
+			"\u2C6C": "z",
+			"\uA763": "z",
+			"\uFF10": "0",
+			"\u2080": "0",
+			"\u24EA": "0",
+			"\u2070": "0",
+			"\u00B9": "1",
+			"\u2474": "1",
+			"\u2081": "1",
+			"\u2776": "1",
+			"\u24F5": "1",
+			"\u2488": "1",
+			"\u2460": "1",
+			"\uFF11": "1",
+			"\u00B2": "2",
+			"\u2777": "2",
+			"\u2475": "2",
+			"\uFF12": "2",
+			"\u2082": "2",
+			"\u24F6": "2",
+			"\u2461": "2",
+			"\u2489": "2",
+			"\u00B3": "3",
+			"\uFF13": "3",
+			"\u248A": "3",
+			"\u2476": "3",
+			"\u2083": "3",
+			"\u2778": "3",
+			"\u24F7": "3",
+			"\u2462": "3",
+			"\u24F8": "4",
+			"\u2463": "4",
+			"\u248B": "4",
+			"\uFF14": "4",
+			"\u2074": "4",
+			"\u2084": "4",
+			"\u2779": "4",
+			"\u2477": "4",
+			"\u248C": "5",
+			"\u2085": "5",
+			"\u24F9": "5",
+			"\u2478": "5",
+			"\u277A": "5",
+			"\u2464": "5",
+			"\uFF15": "5",
+			"\u2075": "5",
+			"\u2479": "6",
+			"\u2076": "6",
+			"\uFF16": "6",
+			"\u277B": "6",
+			"\u2086": "6",
+			"\u2465": "6",
+			"\u24FA": "6",
+			"\u248D": "6",
+			"\uFF17": "7",
+			"\u2077": "7",
+			"\u277C": "7",
+			"\u24FB": "7",
+			"\u248E": "7",
+			"\u2087": "7",
+			"\u247A": "7",
+			"\u2466": "7",
+			"\u2467": "8",
+			"\u248F": "8",
+			"\u24FC": "8",
+			"\u247B": "8",
+			"\u2078": "8",
+			"\uFF18": "8",
+			"\u277D": "8",
+			"\u2088": "8",
+			"\u24FD": "9",
+			"\uFF19": "9",
+			"\u2490": "9",
+			"\u277E": "9",
+			"\u247C": "9",
+			"\u2089": "9",
+			"\u2468": "9",
+			"\u2079": "9"
+		},
+		chars = str.split( "" ),
+		len = chars.length,
+		normalized = false,
+		i, character;
+	for ( i = 0; i !== len; i += 1 ) {
+		character = chars[ i ];
+		if ( Object.prototype.hasOwnProperty.call( diacritics, character ) ) {
+			chars[ i ] = diacritics[ character ];
+			normalized = true;
 		}
-		return ( normalized ? chars.join( "" ) : str );
-	};
+	}
+	return ( normalized ? chars.join( "" ) : str );
+};
 
-	/**
-	 * @namespace wb.string
-	 */
-	wb.string = {
-		/*
-		 * Left-pads a number with zeros.
-		 * @memberof wb.string
-		 * @param {number} number The original number to pad.
-		 * @param {number} length The width of the resulting padded number, not the number of zeros to add to the front of the string.
-		 * @return {string} The padded string
-		 */
-		pad: function( number, length ) {
-			var str = number + "",
-				diff = length - str.length,
-				i;
-			for ( i = 0; i !== diff; i += 1 ) {
-				str = "0" + str;
-			}
-			return str;
-		}
-	};
+/**
+ * @namespace wb.string
+ */
+wb.string = {
 
 	/*
-	 * A suite of date related functions for easier parsing of dates
-	 * @namespace wb.date
+	 * Left-pads a number with zeros.
+	 * @memberof wb.string
+	 * @param {number} number The original number to pad.
+	 * @param {number} length The width of the resulting padded number, not the number of zeros to add to the front of the string.
+	 * @return {string} The padded string
 	 */
-	wb.date = {
-		/*
-		 * Converts the date to a date-object. The input can be:
-		 * <ul>
-		 * <li>a Date object: returned without modification.</li>
-		 * <li>an array: Interpreted as [year,month,day]. NOTE: month is 0-11.</li>
-		 * <li>a number: Interpreted as number of milliseconds since 1 Jan 1970 (a timestamp).</li>
-		 * <li>a string: Any format supported by the javascript engine, like 'YYYY/MM/DD', 'MM/DD/YYYY', 'Jan 31 2009' etc.</li>
-		 * <li>an object: Interpreted as an object with year, month and date attributes. **NOTE** month is 0-11.</li>
-		 * </ul>
-		 * @memberof wb.date
-		 * @param {Date | number[] | number | string | object} dateValue
-		 * @return {Date | NaN}
-		 */
-		convert: function( dateValue ) {
-			var dateConstructor = dateValue.constructor;
-
-			switch ( dateConstructor ) {
-			case Date:
-				return dateConstructor;
-			case Array:
-				return new Date( dateValue[ 0 ], dateValue[ 1 ], dateValue[ 2 ] );
-			case Number:
-			case String:
-				return new Date( dateValue );
-			default:
-				return typeof dateValue === "object" ? new Date( dateValue.year, dateValue.month, dateValue.date ) : NaN;
-			}
-		},
-
-		/*
-		 * Compares two dates (input can be any type supported by the convert function).
-		 * @memberof wb.date
-		 * @param {Date | number[] | number | string | object} dateValue1
-		 * @param {Date | number[] | number | string | object} dateValue2
-		 * @return {number | NaN}
-		 * @example returns
-		 * -1 if dateValue1 < dateValue2
-		 * 0 if dateValue1 = dateValue2
-		 * 1 if dateValue1 > dateValue2
-		 * NaN if dateValue1 or dateValue2 is an illegal date
-		 */
-		compare: function( dateValue1, dateValue2 ) {
-			var convert = wb.date.convert;
-
-			if ( isFinite( dateValue1 = convert( dateValue1 ).valueOf() ) && isFinite( dateValue2 = convert( dateValue2 ).valueOf() ) ) {
-				return ( dateValue1 > dateValue2 ) - ( dateValue1 < dateValue2 );
-			}
-			return NaN;
-		},
-
-		/*
-		 * Cross-browser safe way of translating a date to ISO format
-		 * @memberof wb.date
-		 * @param {Date | number[] | number | string | object} dateValue
-		 * @param {boolean} withTime Optional. Whether to include the time in the result, or just the date. False if blank.
-		 * @return {string}
-		 * @example
-		 * toDateISO( new Date() )
-		 * returns "2012-04-27"
-		 * toDateISO( new Date(), true )
-		 * returns "2012-04-27 13:46"
-		 */
-		toDateISO: function( dateValue, withTime ) {
-			var date = wb.date.convert( dateValue ),
-				pad = wb.string.pad;
-
-			return date.getFullYear() + "-" + pad( date.getMonth() + 1, 2, "0" ) + "-" + pad( date.getDate(), 2, "0" ) +
-				( withTime ? " " + pad( date.getHours(), 2, "0" ) + ":" + pad( date.getMinutes(), 2, "0" ) : "" );
-		},
-
-		/*
-		 * Cross-browser safe way of creating a date object from a date string in ISO format
-		 * @memberof wb.date
-		 * @param {string} dateISO Date string in ISO format
-		 * @return {Date}
-		 */
-		fromDateISO: function( dateISO ) {
-			var date = null;
-
-			if ( dateISO && dateISO.match( /\d{4}-\d{2}-\d{2}/ ) ) {
-				date = new Date( dateISO.substr( 0, 4 ), dateISO.substr( 5, 2 ) - 1, dateISO.substr( 8, 2 ), 0, 0, 0, 0 );
-			}
-			return date;
+	pad: function( number, length ) {
+		var str = number + "",
+			diff = length - str.length,
+			i;
+		for ( i = 0; i !== diff; i += 1 ) {
+			str = "0" + str;
 		}
-	};
+		return str;
+	}
+};
+
+/*
+ * A suite of date related functions for easier parsing of dates
+ * @namespace wb.date
+ */
+wb.date = {
 
 	/*
-	 * Returns a RFC4122 compliant Global Unique ID (GUID).
-	 * Originally from http://stackoverflow.com/a/2117523/455535
+	 * Converts the date to a date-object. The input can be:
+	 * <ul>
+	 * <li>a Date object: returned without modification.</li>
+	 * <li>an array: Interpreted as [year,month,day]. NOTE: month is 0-11.</li>
+	 * <li>a number: Interpreted as number of milliseconds since 1 Jan 1970 (a timestamp).</li>
+	 * <li>a string: Any format supported by the javascript engine, like 'YYYY/MM/DD', 'MM/DD/YYYY', 'Jan 31 2009' etc.</li>
+	 * <li>an object: Interpreted as an object with year, month and date attributes. **NOTE** month is 0-11.</li>
+	 * </ul>
+	 * @memberof wb.date
+	 * @param {Date | number[] | number | string | object} dateValue
+	 * @return {Date | NaN}
 	 */
-	wb.guid = function() {
-		return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace( /[xy]/g, function( replacementChar ) {
-			var rand = Math.random() * 16 | 0,
-				newChar = replacementChar === "x" ? rand : ( rand & 0x3 | 0x8 );
-			return newChar.toString( 16 );
-		} );
-	};
+	convert: function( dateValue ) {
+		var dateConstructor = dateValue.constructor;
 
-	wb.escapeAttribute = function( str ) {
-		return str.replace( /'/g, "&#39;" ).replace( /"/g, "&#34;" );
-	};
+		switch ( dateConstructor ) {
+		case Date:
+			return dateConstructor;
+		case Array:
+			return new Date( dateValue[ 0 ], dateValue[ 1 ], dateValue[ 2 ] );
+		case Number:
+		case String:
+			return new Date( dateValue );
+		default:
+			return typeof dateValue === "object" ? new Date( dateValue.year, dateValue.month, dateValue.date ) : NaN;
+		}
+	},
+
+	/*
+	 * Compares two dates (input can be any type supported by the convert function).
+	 * @memberof wb.date
+	 * @param {Date | number[] | number | string | object} dateValue1
+	 * @param {Date | number[] | number | string | object} dateValue2
+	 * @return {number | NaN}
+	 * @example returns
+	 * -1 if dateValue1 < dateValue2
+	 * 0 if dateValue1 = dateValue2
+	 * 1 if dateValue1 > dateValue2
+	 * NaN if dateValue1 or dateValue2 is an illegal date
+	 */
+	compare: function( dateValue1, dateValue2 ) {
+		var convert = wb.date.convert;
+
+		if ( isFinite( dateValue1 = convert( dateValue1 ).valueOf() ) && isFinite( dateValue2 = convert( dateValue2 ).valueOf() ) ) {
+			return ( dateValue1 > dateValue2 ) - ( dateValue1 < dateValue2 );
+		}
+		return NaN;
+	},
+
+	/*
+	 * Cross-browser safe way of translating a date to ISO format
+	 * @memberof wb.date
+	 * @param {Date | number[] | number | string | object} dateValue
+	 * @param {boolean} withTime Optional. Whether to include the time in the result, or just the date. False if blank.
+	 * @return {string}
+	 * @example
+	 * toDateISO( new Date() )
+	 * returns "2012-04-27"
+	 * toDateISO( new Date(), true )
+	 * returns "2012-04-27 13:46"
+	 */
+	toDateISO: function( dateValue, withTime ) {
+		var date = wb.date.convert( dateValue ),
+			pad = wb.string.pad;
+
+		return date.getFullYear() + "-" + pad( date.getMonth() + 1, 2, "0" ) + "-" + pad( date.getDate(), 2, "0" ) +
+			( withTime ? " " + pad( date.getHours(), 2, "0" ) + ":" + pad( date.getMinutes(), 2, "0" ) : "" );
+	},
+
+	/*
+	 * Cross-browser safe way of creating a date object from a date string in ISO format
+	 * @memberof wb.date
+	 * @param {string} dateISO Date string in ISO format
+	 * @return {Date}
+	 */
+	fromDateISO: function( dateISO ) {
+		var date = null;
+
+		if ( dateISO && dateISO.match( /\d{4}-\d{2}-\d{2}/ ) ) {
+			date = new Date( dateISO.substr( 0, 4 ), dateISO.substr( 5, 2 ) - 1, dateISO.substr( 8, 2 ), 0, 0, 0, 0 );
+		}
+		return date;
+	}
+};
+
+/*
+ * Returns a RFC4122 compliant Global Unique ID (GUID).
+ * Originally from https://stackoverflow.com/a/2117523/455535
+ */
+wb.guid = function() {
+	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace( /[xy]/g, function( replacementChar ) {
+		var rand = Math.random() * 16 | 0,
+			newChar = replacementChar === "x" ? rand : ( rand & 0x3 | 0x8 );
+		return newChar.toString( 16 );
+	} );
+};
+
+wb.escapeAttribute = function( str ) {
+	return str.replace( /'/g, "&#39;" ).replace( /"/g, "&#34;" );
+};
 
 } )( wb );
 
 ( function( $, undef ) {
-	"use strict";
+"use strict";
 
-	var methods,
-		settings = {
-			"default": "wet-boew"
-		};
+var methods,
+	settings = {
+		"default": "wet-boew"
+	};
 
-	methods = {
+methods = {
 
-		init: function( options ) {
-			return $.extend( settings, options || {} );
-		},
+	init: function( options ) {
+		return $.extend( settings, options || {} );
+	},
 
-		show: function( onlyAria ) {
-			$( this ).each( function() {
+	show: function( onlyAria ) {
+		$( this ).each( function() {
+			var $elm = $( this );
+			$elm.attr( "aria-hidden", "false" );
+			if ( onlyAria === undef ) {
+				$elm.removeClass( "wb-inv" );
+			}
+		} );
+	},
+
+	hide: function( onlyAria ) {
+		$( this )
+			.each( function() {
 				var $elm = $( this );
-				$elm.attr( "aria-hidden", "false" );
+				$elm.attr( "aria-hidden", "true" );
 				if ( onlyAria === undef ) {
-					$elm.removeClass( "wb-inv" );
+					return $elm.addClass( "wb-inv" );
 				}
 			} );
-		},
+	},
 
-		hide: function( onlyAria ) {
-			$( this )
-				.each( function() {
-					var $elm = $( this );
-					$elm.attr( "aria-hidden", "true" );
-					if ( onlyAria === undef ) {
-						return $elm.addClass( "wb-inv" );
-					}
-				} );
-		},
+	toggle: function( to, from ) {
+		$( this )
+			.addClass( to )
+			.removeClass( from );
+	}
+};
 
-		toggle: function( to, from ) {
-			$( this )
-				.addClass( to )
-				.removeClass( from );
-		}
-	};
+$.fn.wb = function( method ) {
 
-	$.fn.wb = function( method ) {
-
-		if ( methods[ method ] ) {
-			methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ) );
-		} else if ( typeof method === "object" || !method ) {
-			methods.init.apply( this, arguments );
-		} else {
-			$.error( "Method " + method + " does not exist on jquery.wb" );
-		}
-	};
+	if ( methods[ method ] ) {
+		methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ) );
+	} else if ( typeof method === "object" || !method ) {
+		methods.init.apply( this, arguments );
+	} else {
+		$.error( "Method " + method + " does not exist on jquery.wb" );
+	}
+};
 
 } )( jQuery );
 
@@ -1171,70 +1316,237 @@
 :focusable and :tabable jQuery helper expressions - https://github.com/jquery/jquery-ui/blob/24756a978a977d7abbef5e5bce403837a01d964f/ui/jquery.ui.core.js
 */
 ( function( $ ) {
-	"use strict";
 
-	function focusable( element, isTabIndexNotNaN, visibility ) {
-		var map, mapName, img,
-			nodeName = element.nodeName.toLowerCase( );
-		if ( nodeName === "area" ) {
-			map = element.parentNode;
-			mapName = map.name;
-			if ( !element.href || !mapName || map.nodeName.toLowerCase( ) !== "map" ) {
-				return false;
-			}
-			img = $( "img[usemap=#" + mapName + "]" )[ 0 ];
-			return !!img && visible( img );
+"use strict";
+
+function focusable( element, isTabIndexNotNaN, visibility ) {
+	var map, mapName, img,
+		nodeName = element.nodeName.toLowerCase( );
+	if ( nodeName === "area" ) {
+		map = element.parentNode;
+		mapName = map.name;
+		if ( !element.href || !mapName || map.nodeName.toLowerCase( ) !== "map" ) {
+			return false;
 		}
-		if ( visibility ) {
-			return ( /input|select|textarea|button|object/.test( nodeName ) ? !element.disabled :
-				nodeName === "a" ?
+		img = $( "img[usemap=#" + mapName + "]" )[ 0 ];
+		return !!img && visible( img );
+	}
+	if ( visibility ) {
+		return ( /input|select|textarea|button|object/.test( nodeName ) ? !element.disabled :
+			nodeName === "a" ?
 				element.href || isTabIndexNotNaN :
 				isTabIndexNotNaN ) &&
-			visible( element ); /* the element and all of its ancestors must be visible */
-		} else {
-			return ( /input|select|textarea|button|object/.test( nodeName ) ? !element.disabled :
-				nodeName === "a" ?
+		visible( element ); /* the element and all of its ancestors must be visible */
+	} else {
+		return ( /input|select|textarea|button|object/.test( nodeName ) ? !element.disabled :
+			nodeName === "a" ?
 				element.href || isTabIndexNotNaN :
 				isTabIndexNotNaN );
-		}
 	}
+}
 
-	function visible( element ) {
-		return $.expr.filters.visible( element ) && !$( element )
-			.parents( )
-			.addBack( )
-			.filter( function() {
-				return $.css( this, "visibility" ) === "hidden";
-			} )
-			.length;
-	}
+function visible( element ) {
+	return $.expr.filters.visible( element ) && !$( element )
+		.parents( )
+		.addBack( )
+		.filter( function() {
+			return $.css( this, "visibility" ) === "hidden";
+		} )
+		.length;
+}
 
-	$.extend( $.expr[ ":" ], {
-		data: $.expr.createPseudo ? $.expr.createPseudo( function( dataName ) {
-			return function( elem ) {
-				return !!$.data( elem, dataName );
-			};
-		} ) :
+$.extend( $.expr[ ":" ], {
+	data: $.expr.createPseudo ? $.expr.createPseudo( function( dataName ) {
+		return function( elem ) {
+			return !!$.data( elem, dataName );
+		};
+	} ) :
 
-		// support: jQuery <1.8
+	// support: jQuery <1.8
 
 		function( elem, i, match ) {
 			return !!$.data( elem, match[ 3 ] );
 		},
-		focusable: function( element ) {
-			return focusable( element, !isNaN( $.attr( element, "tabindex" ) ), true );
-		},
-		discoverable: function( element ) {
-			return focusable( element, !isNaN( $.attr( element, "tabindex" ) ) );
-		},
-		tabbable: function( element ) {
-			var tabIndex = $.attr( element, "tabindex" ),
-				isTabIndexNaN = isNaN( tabIndex );
-			return ( isTabIndexNaN || tabIndex >= 0 ) && focusable( element, !isTabIndexNaN );
-		}
-	} );
+	focusable: function( element ) {
+		return focusable( element, !isNaN( $.attr( element, "tabindex" ) ), true );
+	},
+	discoverable: function( element ) {
+		return focusable( element, !isNaN( $.attr( element, "tabindex" ) ) );
+	},
+	tabbable: function( element ) {
+		var tabIndex = $.attr( element, "tabindex" ),
+			isTabIndexNaN = isNaN( tabIndex );
+		return ( isTabIndexNaN || tabIndex >= 0 ) && focusable( element, !isTabIndexNaN );
+	}
+} );
 
 } )( jQuery );
+
+/**
+ * @title WET-BOEW Add to calendar
+ * @overview Create an add to calendar button for an event
+ * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ * @author @ricokola
+ */
+( function( $, wb ) {
+"use strict";
+
+/*
+ * Variable and function definitions.
+ * These are global to the plugin - meaning that they will be initialized once per page,
+ * not once per instance of plugin on the page. So, this is a good place to define
+ * variables that are common to all instances of the plugin on a page.
+ */
+var componentName = "wb-addcal",
+	selector = ".provisional." + componentName,
+	initEvent = "wb-init." + componentName,
+	$document = wb.doc,
+
+	/**
+	* @method init
+	* @param {jQuery Event} event Event that triggered the function call
+	*/
+	init = function( event ) {
+
+		// Start initialization
+		// returns DOM object = proceed with init
+		// returns undefined = do not proceed with init (e.g., already initialized)
+		var elm = wb.init( event, componentName, selector ),
+			$elm = $( elm );
+
+		if ( elm ) {
+
+			wb.ready( $( elm ), componentName );
+
+			var properties = elm.querySelectorAll( "[property]" ),
+				event_details = new Object(),
+				place_details = [],
+				i,
+				i_len,
+				prop_cache,
+				googleLink,
+				icsFile,
+				i18nDict = {
+					en: {
+						"addcal-addto": "Add to",
+						"addcal-calendar": "calendar",
+						"addcal-ical": "iCal format (iPhone, Outlook...)"
+					},
+					fr: {
+						"addcal-addto": "Ajouter au",
+						"addcal-calendar": "calendrier",
+						"addcal-ical": "Format iCal (iPhone, Outlook....)"
+					}
+				};
+
+			// Initiate dictionary
+			i18nDict = i18nDict[ $( "html" ).attr( "lang" ) || "en" ];
+			i18nDict = {
+				addto: i18nDict[ "addcal-addto" ],
+				calendar: i18nDict[ "addcal-calendar" ],
+				ical: i18nDict[ "addcal-ical" ]
+			};
+
+			// Set date stamp with the date modified
+			event_details.dtStamp = dtToISOString( $( "time[property='dateModified']" ) );
+
+			i_len = properties.length;
+			for ( i = 0; i < i_len; i++ ) {
+				prop_cache = properties[ i ];
+				switch ( prop_cache.getAttribute( "property" ) ) {
+				case "name":
+					if ( $( prop_cache ).parentsUntil( ( "." + componentName ), "[typeof=Place]" ).length ) {
+						event_details.placeName = prop_cache.textContent;
+					} else {
+						event_details.name = prop_cache.textContent;
+					}
+					break;
+				case "description":
+					event_details.description = prop_cache.textContent.replace( /(\r\n|\n|\r)/gm, " " );
+					break;
+				case "startDate":
+					event_details.sDate = dtToISOString( $( "time[property='startDate']" ) );
+					break;
+				case "endDate":
+					event_details.eDate = dtToISOString( $( "time[property='endDate']" ) );
+					break;
+				case "location":
+					if ( !prop_cache.getAttribute( "typeof" ) ) {
+						event_details.placeName = prop_cache.textContent;
+					}
+					break;
+				case "streetAddress":
+					event_details.placeAddress = prop_cache.textContent;
+					break;
+				case "addressLocality":
+					event_details.placeLocality = prop_cache.textContent;
+					break;
+				case "addressRegion":
+					event_details.placeRegion = prop_cache.textContent;
+					break;
+				case "postalCode":
+					event_details.placePostalCode = prop_cache.textContent;
+					break;
+				}
+			}
+
+			place_details.push( ( event_details.placeName || "" ), ( event_details.placeAddress || "" ), ( event_details.placeLocality || "" ), ( event_details.placeRegion || "" ), ( event_details.placePostalCode || "" ) );
+
+			// Error handling
+			if ( !event_details.name ) {
+				throw componentName + ": Event title is missing.";
+			} else if ( !event_details.sDate ) {
+				throw componentName + ": Start date is missing.";
+			} else if ( !event_details.eDate ) {
+				throw componentName + ": End date is missing.";
+			}
+
+			// Set Unique Identifier (UID) and Date Stamp (DSTAMP)
+			event_details.uid = window.location.href.replace( /\.|-|\/|:|[G-Zg-z]/g, "" ).toUpperCase().substr( -10 ) + "-" + event_details.sDate + "-" + event_details.dtStamp;
+
+			// Set google calendar link
+			googleLink = encodeURI( "https://www.google.com/calendar/render?action=TEMPLATE" +  "&text=" + event_details.name +  "&details=" +
+			event_details.description +  "&dates=" + event_details.sDate + "/" + event_details.eDate + "&location=" + place_details.join( " " ) );
+
+			// Set ICS file for Outlook, Apple and other calendars
+			icsFile = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//WET-BOEW//Add to Calendar v4.0//\nBEGIN:VEVENT\nDTSTAMP:" + event_details.dtStamp + "\nSUMMARY:" + event_details.name +  "\nDESCRIPTION:" + event_details.description + "\nUID:" + event_details.uid + "\nDTSTART:" + event_details.sDate + "\nDTEND:" + event_details.eDate + "\nLOCATION:" + place_details.join( " " ) + "\nEND:VEVENT\nEND:VCALENDAR";
+
+			elm.dataset.icsFile = icsFile;
+
+			// Create and add details summary to the wb-addcal event and initiate the unordered list
+			$elm.append( "<details class='max-content " + componentName + "-buttons'><summary>" + i18nDict.addto + " " + i18nDict.calendar +
+			"</summary><ul class='list-unstyled mrgn-bttm-0 mrgn-tp-sm'><li><a class='btn btn-link btn-lg mrgn-top-lg' href='" + googleLink.replace( /'/g, "%27" ) + "'>Google<span class='sr-only'>" + i18nDict.calendar + "</span></a></li><li><button class='btn btn-link btn-lg download-ics'>" + i18nDict.ical +
+			"<span class='sr-only'>Calendar</span></button></li></ul></details>" );
+		}
+
+		wb.ready( $( elm ), componentName );
+
+	};
+
+// Convert date to ISO string and formating for ICS file
+var dtToISOString = function( date ) {
+	if ( date.is( "[datetime]" ) ) {
+		date = date.attr( "datetime" );
+	} else {
+		date = date.text();
+	}
+
+	return new Date( date ).toISOString().replace( /\..*[0-9]/g, "" ).replace( /-|:|\./g, "" );
+};
+
+$document.on( "click", ".download-ics", function( event ) {
+	var icsFile = $( event.currentTarget ).parentsUntil( "." + componentName ).parent()[ 0 ];
+	icsFile =  $( icsFile ).attr( "data-ics-file" );
+	wb.download( new Blob( [ icsFile ], { type: "text/calendar;charset=utf-8" } ), "evenement-gc-event.ics" );
+} );
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, wb );
 
 /**
  * @title WET-BOEW Ajax Fetch [ ajax-fetch ]
@@ -1261,13 +1573,34 @@ $document.on( "ajax-fetch.wb", function( event ) {
 		fetchOpts = event.fetch,
 		urlParts = fetchOpts.url.split( " " ),
 		url = urlParts[ 0 ],
-		urlHash = url.split( "#" )[ 1 ],
+		urlSubParts = url.split( "#" ),
+		urlHash = urlSubParts[ 1 ],
 		selector = urlParts[ 1 ] || ( urlHash ? "#" + urlHash : false ),
-		fetchData, callerId;
+		fetchData, callerId, fetchNoCacheURL, urlSub,
+		fetchNoCache = fetchOpts.nocache,
+		fetchNoCacheKey = fetchOpts.nocachekey || wb.cacheBustKey || "wbCacheBust";
 
 	// Separate the URL from the filtering criteria
 	if ( selector ) {
 		fetchOpts.url = urlParts[ 0 ];
+	}
+
+	if ( fetchNoCache ) {
+		if ( fetchNoCache === "nocache" ) {
+			fetchNoCacheURL = wb.guid();
+		} else {
+			fetchNoCacheURL = wb.sessionGUID();
+		}
+		fetchNoCacheURL = fetchNoCacheKey + "=" + fetchNoCacheURL;
+
+		urlSub = urlSubParts[ 0 ];
+		if ( urlSub.indexOf( "?" ) !== -1 ) {
+			url = urlSub + "&" + fetchNoCacheURL + ( urlHash ? "#" + urlHash : "" );
+		} else {
+			url = urlSub + "?" + fetchNoCacheURL + ( urlHash ? "#" + urlHash : "" );
+		}
+
+		fetchOpts.url = url;
 	}
 
 	// Filter out any events triggered by descendants
@@ -1293,7 +1626,7 @@ $document.on( "ajax-fetch.wb", function( event ) {
 				};
 
 				fetchData.pointer = $( "<div id='" + wb.getId() + "' data-type='" + responseType + "' />" )
-										.append( responseType === "string" ? response : "" );
+					.append( responseType === "string" ? response : "" );
 
 				$( "#" + callerId ).trigger( {
 					type: "ajax-fetched.wb",
@@ -1312,6 +1645,130 @@ $document.on( "ajax-fetch.wb", function( event ) {
 			}, this );
 	}
 } );
+
+} )( jQuery, wb );
+
+/**
+ * @title WET-BOEW Set background image
+ * @overview Apply a background image or detects the change in screen width and replace the background image accordingly
+ * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ * @author @namjohn920, @duboisp
+ */
+( function( $, wb ) {
+"use strict";
+
+/*
+ * Variable and function definitions.
+ * These are global to the plugin - meaning that they will be initialized once per page,
+ * not once per instance of plugin on the page. So, this is a good place to define
+ * variables that are common to all instances of the plugin on a page.
+ */
+var $document = wb.doc,
+	$window = wb.win,
+	componentName = "wb-bgimg",
+	selector = "[data-bgimg-srcset], [data-bgimg]",
+	bgViews = {},
+	ids = [],
+
+	init = function( event ) {
+
+		var elm, elmId,
+			bgImg, bgimgSrcset, bgRawViews,
+			i, i_len, i_views,
+			imgSrc, imgSize;
+
+		// Start initialization
+		// returns DOM object = proceed with init
+		// returns undefined = do not proceed with init (e.g., already initialized)
+		elm = wb.init( event, componentName, selector );
+
+		if ( elm ) {
+
+			// Ensure the feature have an ID.
+			if ( !elm.id ) {
+				elm.id = wb.getId();
+			}
+			elmId = elm.id;
+
+			// Apply default background image
+			bgImg = elm.dataset.bgimg;
+			if ( bgImg ) {
+				elm.style.backgroundImage = "url(" + bgImg + ")";
+			}
+
+			// Apply background image set if defined
+			bgimgSrcset = elm.dataset.bgimgSrcset;
+			if ( bgimgSrcset ) {
+				ids.push( elm.id );
+				bgRawViews = elm.dataset.bgimgSrcset.split( "," );
+				i_len = bgRawViews.length;
+				bgViews[ elmId ] = [];
+
+				for ( i = 0; i < i_len; i++ ) {
+					i_views = bgRawViews[ i ].trim().split( " " );
+
+					imgSrc = i_views[ 0 ];
+					imgSize =  i_views[ i_views.length - 1 ];
+
+					imgSize = parseInt( imgSize.substring( 0, imgSize.length - 1 ) );
+					bgViews[ elmId ].push( [ imgSrc, imgSize ] );
+				}
+
+				bgViews[ elmId ].sort(
+					function( a, b ) {
+						return a[ 1 ] > b[ 1 ] ? 1 : -1;
+					}
+				);
+
+				selectImage();
+
+				// Add the resize listener
+				$window.on( "resize", selectImage );
+			}
+
+			// Identify that initialization has completed
+			wb.ready( $( elm ), componentName );
+		}
+	},
+
+	selectImage = function() {
+		var screenWidth = window.innerWidth,
+			optimizedLink = {},
+			i, i_len = ids.length, j,
+			optimizedSize, currentId, currentId_len,
+			currentInput,
+			link, elm;
+
+		for ( i = 0; i < i_len; i++ ) {
+			optimizedSize = Infinity;
+			currentId = bgViews[ ids[ i ] ];
+			currentId_len = currentId.length;
+
+			for ( j = 0; j < currentId_len; j++ ) {
+				currentInput = currentId[ j ];
+				if ( currentInput[ 1 ] >= screenWidth ) {
+					if ( optimizedSize > currentInput[ 1 ] ) {
+						optimizedSize = currentInput[ 1 ];
+						optimizedLink[ ids[ i ] ] = currentInput[ 0 ];
+					}
+				}
+			}
+			if ( optimizedSize === Infinity ) {
+				optimizedLink[ ids[ i ] ] = currentId[ currentId_len - 1 ][ 0 ];
+			}
+		}
+
+		for ( link in optimizedLink ) {
+			elm = document.getElementById( link );
+			elm.style.backgroundImage = "url(" + optimizedLink[ link ] + ")";
+		}
+	};
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb wb-init." + componentName, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
 
 } )( jQuery, wb );
 
@@ -1398,21 +1855,44 @@ var componentName = "wb-calevt",
 
 	processEvents = function( $elm ) {
 		var settings = $.extend( {}, window[ componentName ], $elm.data( dataAttr ) ),
-			year, month, events, minDate, containerId, $container, $calendar;
+			year, month, events, containerId, $container,
+			minDate, maxDate, minDateTime, maxDateTime,
+			currDate = new Date(),
+			currDateTime = currDate.getTime();
 
 		events = getEvents( $elm );
 		containerId = $elm.data( "calevtSrc" );
 		$container = $( "#" + containerId ).addClass( componentName + "-cal" );
 
-		minDate = events.minDate;
-		year = settings.year || minDate.getFullYear();
-		month = settings.month || minDate.getMonth();
+		year = settings.year;
+		month = settings.month;
 
-		$calendar = wb.calendar.create( $container, {
+		minDate = events.minDate;
+		maxDate = events.maxDate;
+		minDateTime = minDate.getTime();
+		maxDateTime = maxDate.getTime();
+
+		if ( !year && minDateTime < currDateTime && currDateTime < maxDateTime ) {
+			year = currDate.getFullYear();
+		} else if ( !year && currDateTime < minDateTime ) {
+			year = minDate.getFullYear();
+		} else if ( !year && maxDateTime < currDateTime ) {
+			year = maxDate.getFullYear();
+		}
+
+		if ( !month && minDateTime < currDateTime && currDate.getTime() < maxDateTime ) {
+			month = currDate.getMonth();
+		} else if ( !month && currDateTime < minDateTime ) {
+			month = minDate.getMonth();
+		} else if ( !month && maxDateTime < currDateTime ) {
+			month = maxDate.getMonth();
+		}
+
+		wb.calendar.create( $container, {
 			year: year,
 			month: month,
 			minDate: minDate,
-			maxDate: events.maxDate,
+			maxDate: maxDate,
 			daysCallback: addEvents,
 			events: events.list,
 			$events: $elm
@@ -1464,7 +1944,7 @@ var componentName = "wb-calevt",
 			},
 			objEventsList = obj.find( "ol > li, ul > li" ),
 			iLen = objEventsList.length,
-			dateTimeRegExp = /datetime\s+\{date\:\s*(\d+-\d+-\d+)\}/,
+			dateTimeRegExp = /datetime\s+\{date:\s*(\d+-\d+-\d+)\}/,
 			i, $event, event, $objTitle, title, link, href, target,
 			linkId, date, tCollection, tCollectionTemp,	strDate1,
 			strDate2, z, zLen, className, dateClass;
@@ -1472,10 +1952,10 @@ var componentName = "wb-calevt",
 		for ( i = 0; i !== iLen; i += 1 ) {
 			$event = objEventsList.eq( i );
 			event = $event[ 0 ];
-			$objTitle = $event.find( "*:header:first" ),
-			className = $objTitle.attr( "class" ),
-			title = $objTitle.text(),
-			link = $event.find( "a" )[ 0 ],
+			$objTitle = $event.find( "*:header:first" );
+			className = $objTitle.attr( "class" );
+			title = $objTitle.text();
+			link = $event.find( "a" )[ 0 ];
 			href = link.getAttribute( "href" );
 			target = link.getAttribute( "target" );
 			zLen = 1;
@@ -1581,12 +2061,9 @@ var componentName = "wb-calevt",
 		return events;
 	},
 
-	addEvents = function( year, month, $days, range ) {
-		var $inRange = $days,
-			today = new Date(),
-			eventsList = this.events,
-			firstDay = true,
-			i, eLen, date, $day, $dayLink, $dayEvents, event, eventMonth, linkFocus;
+	addEvents = function( year, month, $days ) {
+		var eventsList = this.events,
+			i, eLen, date, dayIndex, $day, $dayEvents, event, eventMonth;
 
 		// Fix required to make up with the IE z-index behaviour mismatch
 		// TODO: Move ot IE CSS? Which versions of IE should this fix be limited to?
@@ -1595,18 +2072,6 @@ var componentName = "wb-calevt",
 				$days.eq( i ).css( "z-index", 31 - i );
 			}
 		}
-
-		if ( range ) {
-			if ( range.max ) {
-				$inRange = $inRange.filter( ":lt(" + ( range.max + 1 ) + ")" );
-			}
-
-			if ( range.min ) {
-				$inRange = $inRange.filter( ":gt(" + ( range.min - 1 ) + ")" );
-			}
-		}
-
-		$inRange.wrap( "<a href='javascript:;' tabindex='-1'></a>" );
 
 		/*
 		 * Determines for each event, if it occurs in the display month
@@ -1622,34 +2087,33 @@ var componentName = "wb-calevt",
 					//End the loop if the next event is in a future month because events are sorted chronologically
 					break;
 				} else if ( date.getMonth() === month ) {
-					$day = $( $days[ date.getDate() - 1 ] );
-					$dayLink = $day.parent();
+					dayIndex = date.getDate() - 1;
+					$day = $( $days[ dayIndex ] );
 
-					//Create the link for the events if it doesn't exist
-					$dayLink.addClass( "cal-evt" );
-
-					//Create the event list container if it doesn't exist
-					$dayEvents = $dayLink.next();
-					if ( $dayEvents.length !== 1 ) {
-						$dayEvents = $( "<ul></ul>" ).insertAfter( $dayLink );
+					//Get the appropriate day events if a day link exists
+					if ( $day.parent().get( 0 ).nodeName !== "A" ) {
+						$dayEvents = $day.next();
+					} else {
+						$dayEvents = $day.parent().next();
 					}
 
-					///Add the event to the list
-					$dayEvents.append( "<li><a tabindex='-1' class='cal-evt-lnk' href='" + event.href + "'>" + event.title + "</a></li>" );
+					//Create the event list container if it doesn't exist
+					if ( $dayEvents.length !== 1 ) {
+						$dayEvents = $( "<ul></ul>" ).insertAfter( $day );
 
-					firstDay = false;
+						//Determine the focus based on the day before
+						if ( dayIndex && $days[ dayIndex - 1 ].parentNode.nodeName === "A" ) {
+							$day.wrap( "<a href='javascript:;' class='cal-evt' tabindex='-1'></a>" );
+						} else {
+							$day.wrap( "<a href='javascript:;' class='cal-evt'></a>" );
+						}
+					}
+
+					//Add the event to the list
+					$dayEvents.append( "<li><a tabindex='-1' class='cal-evt-lnk' href='" + event.href + "'>" + event.title + "</a></li>" );
 				}
 			}
 		}
-
-		//Determines the focus
-		if ( year === today.getFullYear() && month === today.getMonth() ) {
-			linkFocus = $days.eq( today.getDate() - 1 );
-		} else {
-			linkFocus = $inRange.eq( 0 );
-		}
-
-		linkFocus.parent().removeAttr( "tabindex" );
 	},
 
 	filterEvents = function( year, month ) {
@@ -1704,18 +2168,18 @@ $document.on( "focusin focusout keydown", ".wb-calevt-cal .cal-days td > a", fun
 		$link;
 
 	switch ( eventType ) {
-		case "focusin":
-			showEvents.call( event.target );
-			break;
-		case "focusout":
-			hideEvents.call( event.target );
-			break;
-		case "keydown":
-			$link = $( event.target );
-			if ( ( event.which === 13 || event.which === 32 ) && $link.hasClass( "cal-evt" ) ) {
-				$( event.target ).next().find( "a:first" ).trigger( setFocusEvent );
-			}
-			break;
+	case "focusin":
+		showEvents.call( event.target );
+		break;
+	case "focusout":
+		hideEvents.call( event.target );
+		break;
+	case "keydown":
+		$link = $( event.target );
+		if ( ( event.which === 13 || event.which === 32 ) && $link.hasClass( "cal-evt" ) ) {
+			$( event.target ).next().find( "a:first" ).trigger( setFocusEvent );
+		}
+		break;
 	}
 } );
 
@@ -1724,24 +2188,24 @@ $document.on( "keydown", ".wb-calevt-cal .cal-days td > ul li", function( event 
 		$toFocus, $itemParent;
 
 	switch ( event.which ) {
-		case 38:
-			$toFocus = $item.prev().find( "a" );
-			if ( $toFocus.length === 0 ) {
-				$toFocus = $item.siblings( ":last" ).find( "a" );
-			}
-			$toFocus.trigger( setFocusEvent );
-			break;
-		case 40:
-			$toFocus = $item.next().find( "a" );
-			if ( $toFocus.length === 0 ) {
-				$toFocus = $item.siblings( ":first" ).find( "a" );
-			}
-			$toFocus.trigger( setFocusEvent );
-			break;
-		case 27:
-			$itemParent = $item.closest( "td" ).children( "a" );
-			$itemParent.trigger( setFocusEvent );
-			break;
+	case 38:
+		$toFocus = $item.prev().find( "a" );
+		if ( $toFocus.length === 0 ) {
+			$toFocus = $item.siblings( ":last" ).find( "a" );
+		}
+		$toFocus.trigger( setFocusEvent );
+		break;
+	case 40:
+		$toFocus = $item.next().find( "a" );
+		if ( $toFocus.length === 0 ) {
+			$toFocus = $item.siblings( ":first" ).find( "a" );
+		}
+		$toFocus.trigger( setFocusEvent );
+		break;
+	case 27:
+		$itemParent = $item.closest( "td" ).children( "a" );
+		$itemParent.trigger( setFocusEvent );
+		break;
 	}
 } );
 
@@ -1781,7 +2245,7 @@ var i18nText,
 			dayNames: i18n( "days" ),
 			currDay: i18n( "currDay" ),
 			format: i18n( "cal-format" )
-		},
+		};
 
 		textWeekDayNames = i18nText.dayNames;
 		textMonthNames = i18nText.monthNames;
@@ -1824,7 +2288,7 @@ var i18nText,
 							}
 
 							return days;
-					} )() +
+						} )() +
 					"</tr>" +
 				"</thead>" +
 				"<tbody class='cal-days'></tbody>" +
@@ -1836,8 +2300,8 @@ var i18nText,
 
 	createCalendar = function( $container, settings ) {
 		var calendar = {
-			reInit: initCalendar
-		}, $calendarObj, calendarObj;
+				reInit: initCalendar
+			}, $calendarObj, calendarObj;
 
 		if ( !inited ) {
 			init();
@@ -1878,7 +2342,7 @@ var i18nText,
 		lastYear = this.maxDate.getFullYear();
 		$yearField = $calendarObj.find( ".cal-year" ).empty();
 		for ( y = this.minDate.getFullYear(); y <= lastYear; y += 1 ) {
-			years += "<option value='" + y + "'>" + y + "</option>" ;
+			years += "<option value='" + y + "'>" + y + "</option>";
 		}
 		$yearField.append( years );
 
@@ -1970,14 +2434,14 @@ var i18nText,
 
 		return i18nText.format.replace( /\{ddd\}|\{d\}|\{M\}|\{Y\}/g, function( match ) {
 			switch ( match ) {
-				case "{ddd}":
-					return textWeekDayNames[ parseInt( date.getDay(), 10 ) ];
-				case "{d}":
-					return parseInt( date.getDate(), 10 );
-				case "{M}":
-					return textMonthNames[ parseInt( date.getMonth(), 10 ) ];
-				case "{Y}":
-					return date.getFullYear();
+			case "{ddd}":
+				return textWeekDayNames[ parseInt( date.getDay(), 10 ) ];
+			case "{d}":
+				return parseInt( date.getDate(), 10 );
+			case "{M}":
+				return textMonthNames[ parseInt( date.getMonth(), 10 ) ];
+			case "{Y}":
+				return date.getFullYear();
 			}
 		} );
 	};
@@ -2074,6 +2538,9 @@ $document.on( "click vclick touchstart", ".cal-month-prev, .cal-month-next", fun
 		year: date.getFullYear(),
 		month: date.getMonth()
 	} );
+	if ( wb.ie11 ) {
+		$calendar.trigger( "focusin" );
+	}
 } );
 
 $document.on( "keydown", selector, function( event ) {
@@ -2097,21 +2564,21 @@ $document.on( "keydown", selector, function( event ) {
 		//Key binding for the entire calendar
 		switch ( which ) {
 
-			//page up
-			case 33:
-				date.setDate( minDate.getDate() );
-				/* falls through */
+		//page up
+		case 33:
+			date.setDate( minDate.getDate() );
 
 			//page down
-			case 34:
-				modifier = ( which === 33 ? -1 : 1 );
+			/* falls through */
+		case 34:
+			modifier = ( which === 33 ? -1 : 1 );
 
-				if ( event.ctrlKey || event.shiftKey || event.altKey ) {
-					date.setYear( date.getFullYear() + modifier );
-				} else {
-					date.setMonth( date.getMonth() + modifier );
-				}
-				break;
+			if ( event.ctrlKey || event.shiftKey || event.altKey ) {
+				date.setYear( date.getFullYear() + modifier );
+			} else {
+				date.setMonth( date.getMonth() + modifier );
+			}
+			break;
 		}
 
 		//Key binding for navigating calendar days
@@ -2123,27 +2590,27 @@ $document.on( "keydown", selector, function( event ) {
 
 			switch ( which ) {
 
-				// end / home
-				case 35:
-					date.setDate( lastDay );
-					break;
-				case 36:
-					date.setDate( 1 );
-					break;
+			// end / home
+			case 35:
+				date.setDate( lastDay );
+				break;
+			case 36:
+				date.setDate( 1 );
+				break;
 
-				// left / up / right / down arrows
-				case 37:
-					date.setDate( day - 1 );
-					break;
-				case 38:
-					date.setDate( day - 7 );
-					break;
-				case 39:
-					date.setDate( day + 1 );
-					break;
-				case 40:
-					date.setDate( day + 7 );
-					break;
+			// left / up / right / down arrows
+			case 37:
+				date.setDate( day - 1 );
+				break;
+			case 38:
+				date.setDate( day - 7 );
+				break;
+			case 39:
+				date.setDate( day + 1 );
+				break;
+			case 40:
+				date.setDate( day + 7 );
+				break;
 			}
 		}
 
@@ -2234,7 +2701,7 @@ $document.on( "keydown", selector, function( event ) {
  * not once per instance of plugin on the page. So, this is a good place to define
  * variables that are common to all instances of the plugin on a page.
  */
- var componentName = "wb-charts",
+var componentName = "wb-charts",
 	selector = "." + componentName,
 	initEvent = "wb-init" + selector,
 	tableParsingEvent = "passiveparse.wb-tableparser",
@@ -2256,7 +2723,7 @@ $document.on( "keydown", selector, function( event ) {
 			captionHtml = $caption.html() || "",
 			captionText = $caption.text() || "",
 			valuePoint = 0,
-			dataCellUnitRegExp = /[^\+\-\.\, 0-9]+[^\-\+0-9]*/,
+			dataCellUnitRegExp = /[^+\-., 0-9]+[^\-+0-9]*/,
 			lowestFlotDelta, $imgContainer, $placeHolder,
 			$wetChartContainer, htmlPlaceHolder, figurehtml,
 			cellValue, datacolgroupfound, dataGroup, header,
@@ -2333,6 +2800,29 @@ $document.on( "keydown", selector, function( event ) {
 						grid: {
 							hoverable: true
 						}
+					},
+					slicelegend: {
+						base: "pie",
+						series: {
+							pie: {
+								radius: 1,
+								label: {
+									radius: 1,
+									show: true,
+									threshold: 0.05
+								},
+								combine: {
+									threshold: 0.05,
+									color: "#555",
+									label: i18nText.slicelegend
+								}
+							}
+						},
+						fn: {
+							"/series/pie/label/formatter": function( label ) {
+								return label;
+							}
+						}
 					}
 				},
 
@@ -2397,7 +2887,7 @@ $document.on( "keydown", selector, function( event ) {
 							"/getcellvalue": function( elem ) {
 
 								// Get the number from the data cell, #3267
-								var cellValue = $.trim( $( elem ).text() );
+								var cellValue = $.trim( elem.dataset.wbChartsValue || $( elem ).text() );
 								return [
 									parseFloat( cellValue.replace( /(\d{1,3}(?:(?: |,)\d{3})*)(?:(?:.|,)(\d{1,2}))?$/, function( a, b, c ) {
 										return b.replace( / |,/g, "" ) + "." + c || "0";
@@ -2430,7 +2920,7 @@ $document.on( "keydown", selector, function( event ) {
 				return target;
 			}
 			for ( key in cachedObj ) {
-				if ( !cachedObj.hasOwnProperty( key ) ) {
+				if ( !Object.prototype.hasOwnProperty.call( cachedObj, key ) ) {
 					continue;
 				}
 				target[ scopekey ][ key ] = cachedObj[ key ];
@@ -2517,7 +3007,7 @@ $document.on( "keydown", selector, function( event ) {
 
 			// Merge and override the function.
 			for ( key in fn ) {
-				if ( !fn.hasOwnProperty( key ) ) {
+				if ( !Object.prototype.hasOwnProperty.call( fn, key ) ) {
 					continue;
 				}
 				tblFn = key.split( "/" );
@@ -3313,7 +3803,8 @@ $document.on( "keydown", selector, function( event ) {
 				i18n = wb.i18n;
 				i18nText = {
 					tableMention: i18n( "hyphen" ) + i18n( "tbl-txt" ),
-					tableFollowing: i18n( "hyphen" ) + i18n( "tbl-dtls" )
+					tableFollowing: i18n( "hyphen" ) + i18n( "tbl-dtls" ),
+					slicelegend: i18n( "chrt-cmbslc" )
 				};
 			}
 
@@ -3390,7 +3881,7 @@ var componentName = "wb-collapsible",
 	selector = "details.alert",
 	initEvent = "wb-init." + componentName,
 	$document = wb.doc,
-	details, key,
+	key,
 
 	/**
 	 * @method init
@@ -3401,9 +3892,11 @@ var componentName = "wb-collapsible",
 		// Start initialization
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
-		details = wb.init( event, componentName, selector );
+		var details = wb.init( event, componentName, selector ),
+			$details;
 
 		if ( details ) {
+			$details = $( details );
 
 			key = "alert-collapsible-state-" + details.getAttribute( "id" );
 
@@ -3429,59 +3922,59 @@ var componentName = "wb-collapsible",
 					}
 
 				}
-			} catch ( e ) {}
+			} catch ( e ) {
+				/* swallow error */}
 
 			// Identify that initialization has completed
-			wb.ready( $document, componentName );
+			wb.ready( $details, componentName );
 		}
 	};
 
 // Bind the init event of the plugin
 $document.on( "timerpoke.wb " + initEvent, selector, init );
 
-$document.on( "timerpoke.wb", function() {
+// Do not bind events if details polyfill is active
+if ( Modernizr.details ) {
 
-	// Do not bind events if details polyfill is active
-	if ( Modernizr.details ) {
+	// Bind the the event handlers of the plugin
+	$document.on( "click keydown toggle." + componentName, selector + " summary", function( event ) {
+		var which = event.which,
+			currentTarget = event.currentTarget,
+			isClosed,
+			details;
 
-		// Bind the the event handlers of the plugin
-		$document.on( "click keydown toggle." + componentName, selector + " summary", function( event ) {
-			var which = event.which,
-				currentTarget = event.currentTarget,
-				isClosed;
+		// Ignore middle/right mouse buttons and wb-toggle enhanced summary elements (except for toggle)
+		if ( ( !which || which === 1 ) &&
+			( currentTarget.className.indexOf( "wb-toggle" ) === -1 ||
+			( event.type === "toggle" && event.namespace === componentName ) ) ) {
 
-			// Ignore middle/right mouse buttons and wb-toggle enhanced summary elements (except for toggle)
-			if ( ( !which || which === 1 ) &&
-				( currentTarget.className.indexOf( "wb-toggle" ) === -1 ||
-				( event.type === "toggle" && event.namespace === componentName ) ) ) {
+			details = currentTarget.parentNode;
+			isClosed = details.getAttribute( "open" ) === null;
+			key = "alert-collapsible-state-" + details.getAttribute( "id" );
 
-				details = currentTarget.parentNode;
-				isClosed = details.getAttribute( "open" ) === null ;
-				key = "alert-collapsible-state-" + details.getAttribute( "id" );
-
-				if ( isClosed ) {
-					try {
-						localStorage.setItem( key, "open" );
-					} catch ( e ) {}
-				} else {
-					try {
-						localStorage.setItem( key, "closed" );
-					} catch ( e ) {}
-				}
-			} else if ( which === 13 || which === 32 ) {
-				event.preventDefault();
-				$( currentTarget ).trigger( "click" );
+			if ( isClosed ) {
+				try {
+					localStorage.setItem( key, "open" );
+				} catch ( e ) {
+					/* swallow error */}
+			} else {
+				try {
+					localStorage.setItem( key, "closed" );
+				} catch ( e ) {
+					/* swallow error */}
 			}
+		} else if ( which === 13 || which === 32 ) {
+			event.preventDefault();
+			$( currentTarget ).trigger( "click" );
+		}
 
-			/*
-			 * Since we are working with events we want to ensure that we are being passive about our control,
-			 * so returning true allows for events to always continue
-			 */
-			return true;
-		} );
-	}
-
-} );
+		/*
+		 * Since we are working with events we want to ensure that we are being passive about our control,
+		 * so returning true allows for events to always continue
+		 */
+		return true;
+	} );
+}
 
 // Add the timer poke to initialize the plugin
 wb.add( selector );
@@ -3490,7 +3983,7 @@ wb.add( selector );
 
 /**
  * @title WET-BOEW Country Content
- * @overview A basic AjaxLoader wrapper that inserts AJAXed in content based on a visitors country as resolved by http://freegeoip.net
+ * @overview A basic AjaxLoader wrapper that inserts AJAXed in content based on a visitors country as resolved by freegeoip.app
  * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
  * @author @nschonni
  */
@@ -3555,7 +4048,7 @@ var componentName = "wb-ctrycnt",
 
 			// From https://github.com/aFarkas/webshim/blob/master/src/shims/geolocation.js#L89-L127
 			$.ajax( {
-				url: "http://freegeoip.net/json/",
+				url: "https://freegeoip.app/json/",
 				dataType: "jsonp",
 				cache: true,
 				jsonp: "callback",
@@ -3565,6 +4058,8 @@ var componentName = "wb-ctrycnt",
 						try {
 							localStorage.setItem( "countryCode", countryCode );
 						} catch ( error ) {
+
+							/* swallow error */
 						}
 					}
 
@@ -3607,12 +4102,21 @@ wb.add( selector );
  * page.
  */
 var componentName = "wb-data-ajax",
+	shortName = "wb-ajax",
 	selectors = [
 		"[data-ajax-after]",
 		"[data-ajax-append]",
 		"[data-ajax-before]",
 		"[data-ajax-prepend]",
-		"[data-ajax-replace]"
+		"[data-ajax-replace]",
+		"[data-" + shortName + "]"
+	],
+	ajaxTypes = [
+		"before",
+		"replace",
+		"after",
+		"append",
+		"prepend"
 	],
 	selectorsLength = selectors.length,
 	selector = selectors.join( "," ),
@@ -3627,31 +4131,41 @@ var componentName = "wb-data-ajax",
 	 * @param {jQuery Event} event Event that triggered this handler
 	 * @param {string} ajaxType The type of AJAX operation, either after, append, before or replace
 	 */
-	init = function( event, ajaxType ) {
+	init = function( event ) {
 
 		// Start initialization
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
-		var elm = wb.init( event, componentName + "-" + ajaxType, selector );
+		var ajxInfo = getAjxInfo( event.target ),
+			ajaxType = ajxInfo.type,
+			elm = wb.init( event, componentName + "-" + ajaxType, selector );
 
-		if ( elm ) {
+		if ( elm && ajxInfo.url ) {
 
-			ajax.apply( this, arguments );
+			ajax.call( this, event, ajxInfo );
 
 			// Identify that initialization has completed
 			wb.ready( $( elm ), componentName, [ ajaxType ] );
 		}
 	},
 
-	ajax = function( event, ajaxType ) {
+	ajax = function( event, ajxInfo ) {
 		var elm = event.target,
 			$elm = $( elm ),
 			settings = window[ componentName ],
-			url = elm.getAttribute( "data-ajax-" + ajaxType ),
-			fetchObj = {
-				url: url
-			},
+			url,
+			fetchObj,
 			urlParts;
+
+		if ( !ajxInfo ) {
+			ajxInfo = getAjxInfo( elm );
+		}
+		url = ajxInfo.url;
+		fetchObj = {
+			url: url,
+			nocache: ajxInfo.nocache,
+			nocachekey: ajxInfo.nocachekey
+		};
 
 		// Detect CORS requests
 		if ( settings && ( url.substr( 0, 4 ) === "http" || url.substr( 0, 2 ) === "//" ) ) {
@@ -3669,62 +4183,126 @@ var componentName = "wb-data-ajax",
 			type: "ajax-fetch.wb",
 			fetch: fetchObj
 		} );
+	},
+
+	// Get Info and return { "url": "the/ajax/URL", "atype" }
+	getAjxInfo = function( elm ) {
+		var ajaxType,
+			len = ajaxTypes.length,
+			i, url, dtAttr, nocache, nocachekey;
+
+		for ( i = 0; i !== len; i += 1 ) {
+			ajaxType = ajaxTypes[ i ];
+			url = elm.getAttribute( "data-ajax-" + ajaxType );
+			if ( url ) {
+				break;
+			}
+		}
+
+		if ( !url ) {
+			dtAttr = wb.getData( $( elm ), shortName );
+
+			// Abort the init when called on an invalid element (related to #8058)
+			if ( !dtAttr ) {
+				return {};
+			}
+
+			url = getURL( dtAttr.url, dtAttr.httpref );
+			if ( !url ) {
+				return {};
+			}
+			ajaxType = dtAttr.type;
+			if ( ajaxTypes.indexOf( ajaxType ) === -1 ) {
+				throw "Invalid ajax type";
+			}
+			nocache = dtAttr.nocache;
+			nocachekey = dtAttr.nocachekey;
+		}
+
+		return {
+			"url": url,
+			"type": ajaxType,
+			"nocache": nocache,
+			"nocachekey": nocachekey
+		};
+	},
+
+	// Return url for conditional display if regexp match http refer
+	getURL = function( url, referer ) {
+		var refers, httpRef, regHttpRef,
+			i, i_len;
+
+		if ( referer ) {
+			if ( !$.isArray( referer ) ) {
+				refers = [];
+				refers.push( referer );
+			} else {
+				refers = referer;
+			}
+
+			httpRef = window.document.referrer;
+			i_len = refers.length;
+			for ( i = 0; i !== i_len; i += 1 ) {
+				regHttpRef = new RegExp( refers[ i ] );
+				if ( regHttpRef.test( httpRef ) ) {
+					if ( $.isArray( url ) && url.length === i_len ) {
+						return url[ i ];
+					} else {
+						return url;
+					}
+				}
+			}
+		} else {
+			return url;
+		}
+		return "";
+	},
+
+	ajxFetched = function( elm, fetchObj ) {
+		var $elm = $( elm ),
+			ajxInfo = getAjxInfo( elm ),
+			ajaxType = ajxInfo.type,
+			content, jQueryCaching;
+
+		// ajax-fetched event
+		content = fetchObj.response;
+		if ( content &&  content.length > 0 ) {
+
+			//Prevents the force caching of nested resources
+			jQueryCaching = jQuery.ajaxSettings.cache;
+			jQuery.ajaxSettings.cache = true;
+
+			// "replace" is the only event that doesn't map to a jQuery function
+			if ( ajaxType === "replace" ) {
+				$elm.html( content );
+			} else {
+				$elm[ ajaxType ]( content );
+			}
+
+			//Resets the initial jQuery caching setting
+			jQuery.ajaxSettings.cache = jQueryCaching;
+
+			$elm.trigger( contentUpdatedEvent, { "ajax-type": ajaxType, "content": content } );
+		}
 	};
 
 $document.on( "timerpoke.wb " + initEvent + " " + updateEvent + " ajax-fetched.wb", selector, function( event ) {
-	var eventTarget = event.target,
-		ajaxTypes = [
-			"before",
-			"replace",
-			"after",
-			"append",
-			"prepend"
-		],
-		len = ajaxTypes.length,
-		$elm, ajaxType, i, content, jQueryCaching;
-
-	for ( i = 0; i !== len; i += 1 ) {
-		ajaxType = ajaxTypes[ i ];
-		if ( this.getAttribute( "data-ajax-" + ajaxType ) !== null ) {
-			break;
-		}
-	}
+	var eventTarget = event.target;
 
 	switch ( event.type ) {
 
 	case "timerpoke":
 	case "wb-init":
-		init( event, ajaxType );
+		init( event );
 		break;
 	case "wb-update":
-		ajax( event, ajaxType );
+		ajax( event );
 		break;
 	default:
 
 		// Filter out any events triggered by descendants
 		if ( event.currentTarget === eventTarget ) {
-			$elm = $( eventTarget );
-
-			// ajax-fetched event
-			content = event.fetch.response;
-			if ( content &&  content.length > 0 ) {
-
-				//Prevents the force caching of nested resources
-				jQueryCaching = jQuery.ajaxSettings.cache;
-				jQuery.ajaxSettings.cache = true;
-
-				// "replace" is the only event that doesn't map to a jQuery function
-				if ( ajaxType === "replace" ) {
-					$elm.html( content );
-				} else {
-					$elm[ ajaxType ]( content );
-				}
-
-				//Resets the initial jQuery caching setting
-				jQuery.ajaxSettings.cache = jQueryCaching;
-
-				$elm.trigger( contentUpdatedEvent, { "ajax-type": ajaxType, "content": content } );
-			}
+			ajxFetched( eventTarget, event.fetch );
 		}
 	}
 
@@ -3867,10 +4445,15 @@ var componentName = "wb-inview",
 							noFocus: true
 						} );
 					} else {
-						$dataInView
-							.attr( "aria-hidden", !show )
-							.toggleClass( "in", !show )
-							.toggleClass( "out", show );
+						if ( !$dataInView.attr( "data-hasPlayed" ) ) {
+							$dataInView.toggleClass( "in", !show );
+							if ( !$dataInView.hasClass( "in-only" ) ) {
+								$dataInView.toggleClass( "out", show );
+							}
+						}
+						if ( wb.isReady && viewState === "all" && $dataInView.hasClass( "in-only" ) ) {
+							$dataInView.attr( "data-hasPlayed", "true" );
+						}
 					}
 				}
 			}
@@ -4176,8 +4759,60 @@ wb.add( selector );
 } )( jQuery, window, wb );
 
 /**
+ * @title eqht
+ * @overview Provide ability to have equal height containers and nested containers inside a WET-BOEW grid
+ * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ * @author @luc-bertrand-hrsdc
+ */
+( function( $, window, wb ) {
+"use strict";
+
+/*
+ * Variable and function definitions.
+ * These are global to the plugin - meaning that they will be initialized once per page,
+ * not once per instance of plugin on the page. So, this is a good place to define
+ * variables that are common to all instances of the plugin on a page.
+ */
+var componentName = "wb-eqht-grd",
+	selector = "." + componentName + " .eqht-trgt",
+	initEvent = "wb-init" + selector,
+	$document = wb.doc,
+
+	/**
+	 * @method init
+	 * @param {jQuery Event} event Event that triggered the function call
+	 */
+	init = function( event ) {
+
+		// Start initialization
+		// returns DOM object = proceed with init
+		// returns undefined = do not proceed with init (e.g., already initialized)
+		var elm = wb.init( event, componentName, selector ),
+			$elm,
+			$eqhtParents;
+
+		if ( elm ) {
+			$elm = $( elm );
+			$elm.addClass( "hght-inhrt" );
+			$eqhtParents = $elm.parentsUntil( "[class*='" + componentName + "']" );
+			$eqhtParents.addClass( "hght-inhrt" );
+
+			// Identify that initialization has completed
+			wb.ready( $elm, componentName );
+		}
+	};
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, window, wb );
+
+/**
  * @title WET-BOEW Responsive equal height
- * @overview Sets the same height for all elements in a container that are rendered on the same baseline (row). Adapted from http://codepen.io/micahgodbolt/pen/FgqLc.
+ * @overview Sets the same height for all elements in a container that are rendered on the same baseline (row). Adapted from https://codepen.io/micahgodbolt/pen/FgqLc.
  * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
  * @author @thomasgohard
  */
@@ -4244,7 +4879,10 @@ var componentName = "wb-eqht",
 
 		for ( i = $elms.length - 1; i !== -1; i -= 1 ) {
 			$elm = $elms.eq( i );
-			$children = $elm.children();
+			$children = $elm.find( ".eqht-trgt" );
+			if ( !$children.length ) {
+				$children = $elm.children();
+			}
 
 			// Reinitialize the row at the beginning of each section of equal height
 			row = [];
@@ -4389,6 +5027,217 @@ wb.add( selector );
 } )( jQuery, window, wb );
 
 /**
+* @title WET-BOEW Exit script plugin
+* @overview Plugin redirects users to non secure site
+* @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+* @author @ipaksc
+*/
+( function( $, window, wb ) {
+"use strict";
+var componentName = "wb-exitscript",
+	selector = "." + componentName,
+	initEvent = "wb-init" + selector,
+	$document = wb.doc,
+	exiturlparam = componentName + "-urlparam",
+	moDalId = componentName + "-modal",
+	i18n,
+	i18nDict = {
+		en: {
+			"msgboxHeader": "Warning",
+			"exitMsg": "You are about to leave a secure site, do you wish to continue?",
+			"targetWarning": "The link will open in a new browser window.",
+			"yesBtn": "Yes",
+			"cancelBtn": "Cancel"
+
+		},
+		fr: {
+			"msgboxHeader": "Avertissement",
+			"exitMsg": "Vous êtes sur le point de quitter un site sécurisé. Voulez-vous continuer?",
+			"targetWarning": "Le lien s'ouvrira dans une nouvelle fenêtre de navigateur.",
+			"yesBtn": "Oui",
+			"cancelBtn": "Annuler"
+
+		}
+	},
+
+	/**
+	 * @method init
+	 * @param {jQuery Event} event Event that triggered the function call
+	 */
+	init = function( event ) {
+		var elm = wb.init( event, componentName, selector ),
+			settings,
+			queryString = window.location.search,
+			urlParams = new URLSearchParams( queryString ),
+			originalURL = urlParams.get( "exturl" ),
+			$elm;
+		if ( elm ) {
+			$elm = $( elm );
+			settings = $.extend(
+				true,
+				window[ componentName ],
+				wb.getData( $elm, componentName )
+
+			);
+
+			$elm.data( componentName, settings );
+
+			if ( settings.url ) {
+				$( this ).attr( "href", settings.url + "?exturl=" +  encodeURIComponent( this.href ) );
+			}
+
+			i18n = i18nDict[ wb.lang || "en" ];
+
+			// This conditional statement for a middle static exit page, to retrieve the URL to the non-secure site.
+			if ( $elm.hasClass( exiturlparam ) ) {
+				this.outerHTML = "<a href='" + originalURL + "'>" + originalURL + "</a>";
+			}
+			wb.ready( $elm, componentName );
+		}
+	};
+
+$document.on( "click", selector, function( event ) {
+
+	var elm = event.currentTarget,
+		$elm = $( elm ),
+		wrapper,
+		targetAttribute = "",
+		moDal = document.createDocumentFragment(),
+		tpl = document.createElement( "div" ),
+		settings =  $elm.data( componentName ),
+		msgboxHeader = i18n.msgboxHeader,
+		yesBtn = i18n.yesBtn,
+		cancelBtn = i18n.cancelBtn,
+		exitMsg = i18n.exitMsg,
+		targetWarning = i18n.targetWarning;
+
+	if ( settings.i18n ) {
+		msgboxHeader =  settings.i18n.msgboxHeader || i18n.msgboxHeader;
+		yesBtn = settings.i18n.yesBtn || i18n.yesBtn;
+		cancelBtn = settings.i18n.cancelBtn || i18n.cancelBtn;
+		exitMsg = settings.i18n.exitMsg || i18n.exitMsg;
+		targetWarning = settings.i18n.targetWarning || i18n.targetWarning;
+	}
+
+	if ( !settings.url ) {
+
+		event.preventDefault();
+	}
+
+	if ( this.hasAttribute( "target" ) ) {
+		targetAttribute = "target='" + this.getAttribute( "target" ) + "'";
+	} else {
+		targetAttribute = "target='" + targetAttribute + "'";
+	}
+
+	if ( this.getAttribute( "target" ) === "_blank" ) {
+		exitMsg = exitMsg  + " " + targetWarning;
+	}
+
+	if ( document.getElementById( moDalId ) ) {
+		document.getElementById( moDalId ).remove();
+
+	}
+
+	if ( !settings.url ) {
+		tpl.innerHTML = "<section id='" + moDalId + "' " + "class='mfp-hide modal-dialog modal-content overlay-def'>" +
+			"<header class='modal-header'><h2 class='modal-title'>" + msgboxHeader + "</h2></header>" +
+			"<div class='modal-body'>" +
+			"<p>" + exitMsg + "</p>" +
+			"</div>" +
+			"<div class='modal-footer'>" +
+			"<ul class='list-inline text-center'>" +
+			"<li><a class='btn btn-default pull-right popup-modal-dismiss'" + targetAttribute + " href='" + this.getAttribute( "href" ) + "'>" + yesBtn + "</a></li>" +
+			"<li><button class='btn btn-primary popup-modal-dismiss pull-left'>" + cancelBtn + "</button></li>" +
+			"</ul></div></section>";
+		moDal.appendChild( tpl );
+		wrapper = moDal.firstChild;
+		wrapper = wrapper.firstChild;
+		document.body.appendChild( wrapper );
+
+		$( wrapper ).trigger( "open.wb-lbx", [
+			[ {
+				src: "#" + moDalId,
+				type: "inline"
+			} ],
+
+			true
+
+		] );
+
+	}
+
+} );
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, window, wb );
+
+/**
+* @title WET-BOEW Facebook embedded page
+* @overview Helps with implementing Facebook embedded pages.
+* @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+* @author @pjackson28
+*/
+( function( $, window, wb ) {
+"use strict";
+
+/*
+* Variable and function definitions.
+* These are global to the plugin - meaning that they will be initialized once per page,
+* not once per instance of plugin on the page. So, this is a good place to define
+* variables that are common to all instances of the plugin on a page.
+*/
+var componentName = "wb-facebook",
+	selector = "." + componentName,
+	initEvent = "wb-init" + selector,
+	$document = wb.doc,
+	fbinited = false,
+
+	/**
+	* @method init
+	* @param {jQuery Event} event Event that triggered the function call
+	*/
+	init = function( event ) {
+
+		// Start initialization
+		// returns DOM object = proceed with init
+		// returns undefined = do not proceed with init (e.g., already initialized)
+		var ele = wb.init( event, componentName, selector ),
+			protocol = wb.pageUrlParts.protocol;
+
+		if ( ele ) {
+			Modernizr.load(
+				{
+					load: [ ( protocol.indexOf( "http" ) === -1 ? "http:" : protocol ) + "//connect.facebook.net/" + wb.lang + "_US/sdk.js" ],
+					complete: function() {
+						if ( !fbinited ) {
+							window.FB.init( {
+								version: "v2.4"
+							} );
+							fbinited = true;
+						}
+
+						window.FB.XFBML.parse( ele[ 0 ] );
+						wb.ready( $( ele ), componentName );
+					}
+				}
+			);
+		}
+	};
+
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, window, wb );
+
+/**
  * @title WET-BOEW Favicon Plugin
  * @overview Provides the ability to add and update a page's favicons
  * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
@@ -4396,7 +5245,7 @@ wb.add( selector );
  *
  * This plugin provides the ability to add and update the favicon's on a web page. Its default behaviour is to add a mobile favicon to web pages that have a favicon defined by a `<link rel='icon'>` element.
  *
- * The mobile favicon's file name, rel, path and sizes can be set with data attributes on the `<link rel='icon'>`:
+ * The mobile favicon's file name, rel, path and sizes can be set with data attributes on the `<link rel='icon'/>`:
  *
  * -**data-filename:** filename of the mobile favicon (defaults to "favicon-mobile.png"). This will be appended to the favicon's path.
  * -**data-path:** path to the mobile favicon (defaults to using the same path as the shortcut icon).
@@ -4405,7 +5254,7 @@ wb.add( selector );
  *
  * For example, the following overides the rel and file name attributes of the mobile favicon:
  *
- *     <link href="favion.ico" rel='icon' data-rel="apple-touch-icon-precomposed" data-filename="my-mobile-favicon.ico">
+ *     <link href="favion.ico" rel='icon' data-rel="apple-touch-icon-precomposed" data-filename="my-mobile-favicon.ico"/>
  */
 ( function( $, window, wb ) {
 "use strict";
@@ -4476,7 +5325,7 @@ var componentName = "wb-favicon",
 
 		// Create the mobile favicon if it doesn't exist
 		if ( !isFaviconMobile ) {
-			faviconMobile = $( "<link rel='" + data.rel + "' sizes='" + data.sizes + "' class='" + componentName + "'>" );
+			faviconMobile = $( "<link rel='" + data.rel + "' sizes='" + data.sizes + "' class='" + componentName + "'/>" );
 		}
 
 		// Only add/update a mobile favicon that was created by the plugin
@@ -4579,32 +5428,6 @@ var componentName = "wb-feeds",
 	Templates = {
 
 		/**
-		 * [facebook template]
-		 * @param  {entry object} data
-		 * @return {string}	HTML string of formatted using Media Object (twitter bootstrap)
-		 */
-		facebook: function( data ) {
-
-			// Facebook feeds does not really do titles in ATOM RSS. It simply truncates content at 150 characters. We are using a JS based sentence
-			// detection algorithm to better split content and titles
-			var content = fromCharCode( data.content ),
-				title = content.replace( /(<([^>]+)>)/ig, "" ).match( /\(?[^\.\?\!]+[\.!\?]\)?/g ),
-				author = data.author.replace( /&amp;/g, "&" );
-
-			// Sanitize the HTML from Facebook - extra 'br' tags
-			content = content.replace( /(<br>\n?)+/gi, "<br />" );
-
-			return "<li class='media'><a class='pull-left' href=''><img src='" +
-				data.fIcon + "' alt='" + author +
-				"' height='64px' width='64px' class='media-object'/></a><div class='media-body'>" +
-				"<h4 class='media-heading'><a href='" + data.link + "'><span class='wb-inv'>" +
-				title[ 0 ] + " - </span>" + author + "</a><br />" +
-				( data.publishedDate !== "" ? " <small class='feeds-date text-right'><time>" +
-				wb.date.toDateISO( data.publishedDate, true ) + "</time></small>" : "" ) +
-				"</h4><p>" + content + "</p></div></li>";
-		},
-
-		/**
 		 * [fickr template]
 		 * @param  {entry object} data
 		 * @return {string}	HTML string for creating a photowall effect
@@ -4619,7 +5442,10 @@ var componentName = "wb-feeds",
 				};
 
 			// due to CORS we cannot default to simple ajax pulls of the image. We have to inline the content box
-			return "<li><a class='feed-flickr' href='javascript:;' data-flickr='" + wb.escapeAttribute( JSON.stringify( flickrData ) ) + "'><img src='" + flickrData.thumbnail + "' alt='" + wb.escapeAttribute( flickrData.title ) + "' title='" + wb.escapeAttribute( flickrData.title ) + "' class='img-responsive'/></a></li>";
+			return "<li><a class='feed-flickr' href='javascript:;' data-flickr='" +
+				wb.escapeAttribute( JSON.stringify( flickrData ) ) + "'><img src='" + flickrData.thumbnail + "' alt='" +
+				wb.escapeAttribute( flickrData.title ) + "' title='" + wb.escapeAttribute( flickrData.title ) +
+				"' class='img-responsive'/></a></li>";
 		},
 
 		/**
@@ -4634,27 +5460,42 @@ var componentName = "wb-feeds",
 			};
 
 			// Due to CORS we cannot default to simple ajax pulls of the image. We have to inline the content box
-			return "<li class='col-md-4 col-sm-6 feed-youtube' data-youtube='" + wb.escapeAttribute( JSON.stringify( youtubeDate ) ) + "'><a href='javascript:;'><img src='http://img.youtube.com/vi/" + youtubeDate.videoId + "/mqdefault.jpg' alt='" + wb.escapeAttribute( youtubeDate.title ) + "' title='" + wb.escapeAttribute( youtubeDate.title ) + "' class='img-responsive' /></a></li>";
+			return "<li class='col-md-4 col-sm-6 feed-youtube' data-youtube='" +
+				wb.escapeAttribute( JSON.stringify( youtubeDate ) ) + "'><a href='javascript:;'><img src='" +
+				wb.pageUrlParts.protocol + "//img.youtube.com/vi/" + youtubeDate.videoId + "/mqdefault.jpg' alt='" +
+				wb.escapeAttribute( youtubeDate.title ) + "' title='" + wb.escapeAttribute( youtubeDate.title ) +
+				"' class='img-responsive' /></a></li>";
 		},
+
 		/**
 		 * [pinterest template]
 		 * @param  {entry object}    data
 		 * @return {string}    HTML string of formatted using a simple list / anchor view
 		 */
 		pinterest: function( data ) {
-			var content = fromCharCode( data.content ).replace( /<a href="\/pin[^"]*"><img ([^>]*)><\/a>([^<]*)(<a .*)?/, "<a href='" + data.link + "'><img alt='' class='center-block' $1><br/>$2</a>$3" );
+			var content = fromCharCode( data.description ).replace( /<a href="\/pin[^"]*"><img ([^>]*)><\/a>([^<]*)(<a .*)?/, "<a href='" +
+				data.link + "'><img alt='' class='center-block' $1><br/>$2</a>$3" );
 			return "<li class='media'>" + content +
 			( data.publishedDate !== "" ? " <small class='small feeds-date'><time>" +
 			wb.date.toDateISO( data.publishedDate, true ) + "</time></small>" : "" ) + "</li>";
 		},
+
 		/**
 		 * [generic template]
 		 * @param  {entry object}	data
 		 * @return {string}	HTML string of formatted using a simple list / anchor view
 		 */
 		generic: function( data ) {
+			var title = data.title;
 
-			return "<li><a href='" + data.link + "'>" + data.title + "</a><br />" +
+			if ( typeof( title ) === "object" ) {
+				if ( title.content ) {
+					title = title.content;
+				} else if ( title.type === "xhtml" && title.div ) {
+					title = title.div.content;
+				}
+			}
+			return "<li><a href='" + data.link + "'>" + title + "</a><br />" +
 				( data.publishedDate !== "" ? " <small class='feeds-date'><time>" +
 				wb.date.toDateISO( data.publishedDate, true ) + "</time></small>" : "" ) + "</li>";
 		}
@@ -4696,21 +5537,6 @@ var componentName = "wb-feeds",
 	},
 
 	/**
-	 * Helper function that builds the URL for the JSON request
-	 * @method jsonRequest
-	 * http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=?&q=https%3A%2F%2Fwww.facebook.com%2Ffeeds%2Fpage.php%3Fid%3D318424514044%26format%3Drss20&num=20
-	 * @param {url} url URL of the feed.
-	 * @param {integer} limit Limit on the number of results for the JSON request to return.
-	 * @return {url} The URL for the JSON request
-	 */
-	jsonRequest = function( url, limit ) {
-
-		var requestURL = wb.pageUrlParts.protocol + "//query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%20%3D%20'" + encodeURIComponent( decodeURIComponent( url ) ) + "'%20limit%20" + ( limit ? limit : 4 ) + "&format=json";
-
-		return requestURL;
-	},
-
-	/**
 	 * @method init
 	 * @param {jQuery Event} event Event that triggered the function call
 	 */
@@ -4720,10 +5546,10 @@ var componentName = "wb-feeds",
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
 		var elm = wb.init( event, componentName, selector ),
-			fetch, url, $content, limit, feeds, fType, last, i, callback, fElem, fIcon, youtubeData;
-
+			fetch, url, $content, limit, feeds, fType, last, i, callback, fElem, fIcon, youtubeData, $elm;
 		if ( elm ) {
-			$content = $( elm ).find( ".feeds-cont" );
+			$elm = $( elm );
+			$content = $elm.find( ".feeds-cont" );
 			limit = getLimit( elm );
 			feeds = $content.find( feedLinkSelector );
 			last = feeds.length - 1;
@@ -4731,8 +5557,8 @@ var componentName = "wb-feeds",
 			// Lets bind some variables to the node to ensure safe ajax thread counting
 
 			$content.data( "toProcess", feeds.length )
-					.data( "feedLimit", limit )
-					.data( "entries", [] );
+				.data( "feedLimit", limit )
+				.data( "entries", [] );
 
 			for ( i = last; i !== -1; i -= 1 ) {
 				fElem = feeds.eq( i );
@@ -4751,7 +5577,8 @@ var componentName = "wb-feeds",
 						$content.data( componentName + "-postProcess", [ ".wb-lbx" ] );
 					} else {
 						fType = "generic";
-						callback = "callback";
+						callback = false;
+						fetch.dataType = "json";
 					}
 
 					// We need a Gallery so lets add another plugin
@@ -4774,13 +5601,13 @@ var componentName = "wb-feeds",
 					}
 
 				} else {
-					url = jsonRequest( fElem.attr( "href" ), limit );
+
+					url = fElem.attr( "href" );
+					fetch.dataType = "xml";
 					fetch.url = url;
 
 					// Let's bind the template to the Entries
-					if ( url.indexOf( "facebook.com" ) !== -1 ) {
-						fType = "facebook";
-					} else if ( url.indexOf( "pinterest.com" ) > -1  ) {
+					if ( url.indexOf( "pinterest.com" ) > -1  ) {
 						fType = "pinterest";
 					} else {
 						fType = "generic";
@@ -4804,10 +5631,91 @@ var componentName = "wb-feeds",
 	},
 
 	/**
+	 * Process Feed/JSON Entries for CORS Enabled
+	 * @method corsEntry
+	 */
+	corsEntry = function( xmlDoc, limit ) {
+		var entries = xmlDoc.getElementsByTagName( "entry" ).length,
+			arr_entry = [],
+			corsObj = {},
+			jsonString = JSON.stringify( xmlToJson( xmlDoc ) ),
+			jsonObj = JSON.parse( jsonString ),
+			i, iCache;
+		if ( limit > entries || limit === 0 || limit === null ) {
+			limit = entries;
+		}
+		if ( entries === 1 ) {
+			iCache = jsonObj.feed.entry;
+			corsObj = {
+				title: iCache.title[ "#text" ],
+				link: ( iCache.link ? iCache.link[ "@attributes" ].href : iCache.id[ "#text" ] ),
+				updated: iCache.updated[ "#text" ]
+			};
+			arr_entry.push( corsObj );
+		} else if ( entries ) {
+			for ( i = 0; i < limit; i++ ) {
+				iCache = jsonObj.feed.entry[ i ];
+				corsObj = {
+					title: iCache.title[ "#text" ],
+					link: ( iCache.link ? iCache.link[ "@attributes" ].href : iCache.id[ "#text" ] ),
+					updated: iCache.updated[ "#text" ]
+				};
+				arr_entry.push( corsObj );
+			}
+		}
+		return arr_entry;
+	},
+
+	/**
+	 * Process XML to JSON
+	 * @method xmlToJson
+	 * @param  {xml}
+	 */
+	xmlToJson = function( xml ) {
+
+		var obj = {},
+			i, iCache, nodeName, old,
+			xmlAttributes, xmlChildNodes,
+			xmlNodeType = xml.nodeType;
+
+		if ( xmlNodeType === 1 ) {
+			xmlAttributes = xml.attributes;
+			if ( xmlAttributes.length ) {
+				obj[ "@attributes" ] = {};
+				for ( i = 0; i < xmlAttributes.length; i++ ) {
+					iCache = xmlAttributes.item( i );
+					obj[ "@attributes" ][ iCache.nodeName ] = iCache.nodeValue;
+				}
+			}
+		} else if ( xmlNodeType === 3 ) {
+			obj = xml.nodeValue;
+		}
+
+		if ( xml.hasChildNodes() ) {
+			xmlChildNodes = xml.childNodes;
+			for ( i = 0; i < xmlChildNodes.length; i++ ) {
+				iCache = xmlChildNodes.item( i );
+				nodeName = iCache.nodeName;
+				if ( typeof( obj[ nodeName ] ) === "undefined" ) {
+					obj[ nodeName ] = xmlToJson( iCache );
+				} else {
+					if ( typeof( obj[ nodeName ].push ) === "undefined" ) {
+						old = obj[ nodeName ];
+						obj[ nodeName ] = [];
+						obj[ nodeName ].push( old );
+					}
+					obj[ nodeName ].push( xmlToJson( iCache ) );
+				}
+			}
+		}
+		return obj;
+	},
+
+	/**
 	 * Process Feed/JSON Entries
 	 * @method processEntries
 	 * @param  {data} JSON formatted data to process
-	 * @return {string}	of HTML output
+	 * @return {string} of HTML output
 	 */
 	processEntries = function( data ) {
 		var items = data,
@@ -4819,7 +5727,7 @@ var componentName = "wb-feeds",
 
 		len = items.length;
 		for ( i = 0; i !== len; i += 1 ) {
-			items[ i ].fIcon =  icon ;
+			items[ i ].fIcon =  icon;
 
 			if ( items[ i ].publishedDate === undef ) {
 				items[ i ].publishedDate = ( items[ i ].published || items[ i ].pubDate || items[ i ].updated || "" );
@@ -4842,7 +5750,7 @@ var componentName = "wb-feeds",
 			return 0;
 		}
 
-		toProcess -= 1 ;
+		toProcess -= 1;
 		$content.data( {
 			"toProcess": toProcess,
 			"entries": entries
@@ -4907,10 +5815,10 @@ var componentName = "wb-feeds",
 				$elm.empty().addClass( "waiting" );
 				$details
 					.children( "summary" )
-						.on( "click.wb-feeds", function( event ) {
-							var $summary = $( event.currentTarget ).off( "click.wb-feeds" );
-							activateFeed( $summary.parent().find( feedContSelector ) );
-						} );
+					.on( "click.wb-feeds", function( event ) {
+						var $summary = $( event.currentTarget ).off( "click.wb-feeds" );
+						activateFeed( $summary.parent().find( feedContSelector ) );
+					} );
 			}
 		}
 
@@ -4950,33 +5858,33 @@ var componentName = "wb-feeds",
 
 $document.on( "ajax-fetched.wb data-ready.wb-feeds", selector + " " + feedLinkSelector, function( event, context ) {
 	var eventTarget = event.target,
-		data, response;
+		data, response, $emlRss, limit, results;
 
 	// Filter out any events triggered by descendants
 	if ( event.currentTarget === eventTarget ) {
+		$emlRss = $( eventTarget ).parentsUntil( selector ).parent();
 		switch ( event.type ) {
-			case "ajax-fetched":
-				response = event.fetch.response;
-
-				if ( response.query ) {
-					var results = response.query.results;
-
-					if ( results ) {
-						data = results.entry ? results.entry : results.item;
-
-						if ( !Array.isArray( data ) ) {
-							data = [ data ];
-						}
-					} else {
-						data = [];
+		case "ajax-fetched":
+			response = event.fetch.response;
+			if ( response.documentElement ) {
+				limit = getLimit( $emlRss[ Object.keys( $emlRss )[ 0 ] ] );
+				data = corsEntry( response, limit );
+			} else if ( response.query ) {
+				results = response.query.results;
+				if ( !results ) {
+					data = results.item; // Flicker feeds
+					if ( !Array.isArray( data ) ) {
+						data = [ data ];
 					}
 				} else {
-					data = ( response.responseData ) ? response.responseData.feed.entries : response.items || response.feed.entry;
+					data = [];
 				}
-
-				break;
-			default:
-				data = event.feedsData;
+			} else {
+				data = ( response.responseData ) ? response.responseData.feed.entries : response.items || response.feed.entry;
+			}
+			break;
+		default:
+			data = event.feedsData;
 		}
 
 		// Identify that initialization has completed
@@ -4991,7 +5899,7 @@ $document.on( "click", selector + " .feed-youtube", function( event ) {
 	var youTubeOverlaySelector  = "#wb-feeds-youtube-lbx",
 		$youTubeOverlay = $( youTubeOverlaySelector ),
 		youtubeData = wb.getData( event.currentTarget, "youtube" ),
-		videoUrl = "http://www.youtube.com/watch?v=" + youtubeData.videoId,
+		videoUrl = wb.pageUrlParts.protocol + "//www.youtube.com/watch?v=" + youtubeData.videoId,
 		videoSource = "<figure class='wb-mltmd'><video title='" + youtubeData.title + "'>" +
 			"<source type='video/youtube' src='" + videoUrl + "' />" +
 			"</video><figcaption><p>" +  youtubeData.title + "</p>" +
@@ -5051,6 +5959,236 @@ wb.add( selector );
 
 } )( jQuery, window, wb );
 
+( function( $, window, wb ) {
+"use strict";
+
+var componentName = "wb-filter",
+	selector = "." + componentName,
+	initEvent = "wb-init" + selector,
+	$document = wb.doc,
+	filterClass = "wb-fltr-out",
+	notFilterClassSel = ":not(." + filterClass + ")",
+	inputClass = "wb-fltr-inpt",
+	dtNameFltrArea = "wbfltrid",
+	visibleSelector = ":visible",
+	selectorInput = "." + inputClass,
+	defaults = {
+		std: {
+			selector: "li"
+		},
+		grp: {
+			selector: "li",
+			section: ">section"
+		},
+		tbl: {
+			selector: "tr",
+			section: ">tbody"
+		},
+		tblgrp: {
+			selector: "th:not([scope])",
+			hdnparentuntil: "tbody",
+			section: ">tbody"
+		}
+	},
+	i18n, i18nText,
+	infoText,
+	wait,
+
+	init = function( event ) {
+		var elm = wb.init( event, componentName, selector ),
+			$elm, elmTagName, filterUI, prependUI,
+			settings, setDefault,
+			inptId, totalEntries;
+
+		if ( elm ) {
+			$elm = $( elm );
+			elmTagName = elm.nodeName;
+
+			if ( [ "DIV", "SECTION", "ARTICLE" ].indexOf( elm.nodeName ) >= 0 ) {
+				setDefault = defaults.grp;
+				prependUI = true;
+			} else if ( elmTagName === "TABLE" ) {
+				if ( $elm.find( "tbody" ).length > 1 ) {
+					setDefault = defaults.tblgrp;
+				} else {
+					setDefault = defaults.tbl;
+				}
+			} else {
+				setDefault = defaults.std;
+			}
+
+			settings = $.extend( true, {}, setDefault, window[ componentName ], wb.getData( $elm, componentName ) );
+			$elm.data( settings );
+
+			if ( !i18nText ) {
+				i18n = wb.i18n;
+				i18nText = {
+					filter_label: i18n( "fltr-lbl" ),
+					fltr_info: i18n( "fltr-info" )
+				};
+
+				infoText = i18nText.fltr_info;
+			}
+
+			Modernizr.addTest( "stringnormalize", "normalize" in String );
+			Modernizr.load( {
+				test: Modernizr.stringnormalize,
+				nope: [
+					"site!deps/unorm" + wb.getMode() + ".js"
+				]
+			} );
+
+			if ( !elm.id ) {
+				elm.id = wb.getId();
+			}
+			inptId = elm.id + "-inpt";
+
+			totalEntries = $elm.find( ( settings.section || "" ) + " " + settings.selector ).length;
+
+			filterUI = "<div class=\"input-group\"><label for=\"" + inptId + "\" class=\"input-group-addon\"><span class=\"glyphicon glyphicon-filter\" aria-hidden=\"true\"></span> " + i18nText.filter_label + "</label><input id=\"" + inptId + "\" class=\"form-control " + inputClass + "\" data-" + dtNameFltrArea + "=\"" + elm.id + "\" type=\"search\"></div>" + "<p aria-live=\"polite\" id=\"" + elm.id + "-info\">" + infoFormater( totalEntries, totalEntries ) + "</p>";
+
+			if ( prependUI ) {
+				$elm.prepend( filterUI );
+			} else {
+				$elm.before( filterUI );
+			}
+
+			wb.ready( $elm, componentName );
+		}
+	},
+	infoFormater = function( nbItem, total ) {
+		return infoText.
+			replace( /_NBITEM_/g, nbItem ).
+			replace( /_TOTAL_/g, total );
+	},
+
+	/*
+	 * Takes in the text from the filter box
+	 * Returns:
+	 *  An array of search words
+	 *      Special characters are escaped
+	 *      Double and single quotes removed
+	 */
+	filterQueryParser = function( filter ) {
+
+		// Pattern to seperate the filter text into "words"
+		var pattern = /[^\s"]+|"([^"]*)"/gi;
+
+		// Make strings safe again for regex
+		// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+		filter = filter.replace( /[.*+?^${}()|[\]\\]/g, "\\$&" );
+
+		// Apply the word match pattern and return
+		return filter.match( pattern );
+	},
+
+	/**
+	 * Build the Regular Expression that we are going
+	 * to use to filter content
+	 * This involves identifying the type of search being
+	 * applied and then breaking up the search string into
+	 * words
+	 */
+	buildSearchFilterRegularExp =  function( filterType, filter ) {
+
+		var words, wordRegExFilter = filter,
+			i, i_len;
+
+		switch ( filterType ) {
+
+		case "and":
+			words = filterQueryParser( filter );
+			if ( words ) {
+				wordRegExFilter = ".*";
+				i_len = words.length;
+				for ( i = 0; i < i_len; i++ ) {
+					wordRegExFilter = wordRegExFilter + ( "(?=.*" + words[ i ] + ")" );
+				}
+			}
+			break;
+
+		case "or": // If one word fall back on default
+			words = filterQueryParser( filter );
+			if ( words ) {
+				wordRegExFilter =  words.join( "|" );
+			}
+			break;
+
+		default:
+			break;
+
+		}
+
+		return new RegExp( wordRegExFilter, "i" );
+
+	},
+
+	filter = function( $field, $elm, settings ) {
+		var unAccent = function( str ) {
+				return str.normalize( "NFD" ).replace( /[\u0300-\u036f]/g, "" );
+			},
+			filter = unAccent( $field.val().trim() ),
+			fCallBack = settings.filterCallback,
+			secSelector = ( settings.section || "" )  + " ",
+			hndParentSelector = settings.hdnparentuntil,
+			$items = $elm.find( secSelector + settings.selector ),
+			itemsLength = $items.length,
+			i, $item, text, searchFilterRegularExp;
+
+		$elm.find( "." + filterClass ).removeClass( filterClass );
+
+		searchFilterRegularExp = buildSearchFilterRegularExp( settings.filterType, filter );
+
+		for ( i = 0; i < itemsLength; i += 1 ) {
+			$item = $items.eq( i );
+			text = unAccent( $item.text() );
+
+			if ( !text.match( searchFilterRegularExp ) ) {
+				if ( hndParentSelector ) {
+					$item = $item.parentsUntil( hndParentSelector );
+				}
+				$item.addClass( filterClass );
+			}
+		}
+
+		if ( !fCallBack || typeof fCallBack !== "function"  ) {
+			fCallBack = filterCallback;
+		}
+		fCallBack.apply( this, arguments );
+
+		$( "#" + $elm.get( 0 ).id + "-info" ).html( infoFormater( $elm.find( secSelector + notFilterClassSel + settings.selector + visibleSelector ).length, itemsLength ) );
+	},
+	filterCallback = function( $field, $elm, settings ) {
+		var $sections =	$elm.find( settings.section + visibleSelector ),
+			sectionsLength = $sections.length,
+			fndSelector = notFilterClassSel + settings.selector + visibleSelector,
+			s, $section;
+
+		for ( s = 0; s < sectionsLength; s += 1 ) {
+			$section = $sections.eq( s );
+			if ( $section.find( fndSelector ).length === 0 ) {
+				$section.addClass( filterClass );
+			}
+		}
+	};
+
+$document.on( "keyup", selectorInput, function( event ) {
+	var target = event.target,
+		$input = $( target ),
+		$elm = $( "#" + $input.data( dtNameFltrArea ) );
+
+	if ( wait ) {
+		clearTimeout( wait );
+	}
+	wait = setTimeout( filter.bind( this, $input, $elm, $elm.data() ), 250 );
+
+} );
+
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+wb.add( selector );
+} )( jQuery, window, wb );
+
 /**
  * @title WET-BOEW Footnotes
  * @overview Provides a consistent, accessible way of handling footnotes across websites.
@@ -5082,7 +6220,7 @@ var componentName = "wb-fnote",
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
 		var elm = wb.init( event, componentName, selector ),
-			$elm, footnoteDd, footnoteDt, i, len, dd, dt, dtId, $returnLinks;
+			$elm, footnoteDd, footnoteDt, i, len, dd, dt;
 
 		if ( elm ) {
 			$elm = $( elm );
@@ -5094,14 +6232,53 @@ var componentName = "wb-fnote",
 			for ( i = 0; i !== len; i += 1 ) {
 				dd = footnoteDd[ i ];
 				dt = footnoteDt[ i ];
-				dtId = dd.id + "-dt";
 				dd.setAttribute( "tabindex", "-1" );
-				dd.setAttribute( "aria-labelledby", dtId );
-				dt.id = dtId ;
+				dt.id = dd.id + "-dt";
 			}
 
 			// Remove "first/premier/etc"-style text from certain footnote return links (via the child spans that hold those bits of text)
-			$returnLinks = $elm.find( "dd p.fn-rtn a span span" ).remove();
+			$elm.find( "dd p.fn-rtn a span span" ).remove();
+
+			// Listen for footnote reference links that get clicked
+			$document.on( "click vclick", "main :not(" + selector + ") sup a.fn-lnk", function( event ) {
+				var eventTarget = event.target,
+					which = event.which,
+					refId, $refLinkDest;
+
+				// Ignore middle/right mouse button
+				if ( !which || which === 1 ) {
+					refId = "#" + wb.jqEscape( eventTarget.getAttribute( "href" ).substring( 1 ) );
+					$refLinkDest = $document.find( refId );
+
+					$refLinkDest.find( "p.fn-rtn a" )
+						.attr( "href", "#" + eventTarget.parentNode.id );
+
+					// Assign focus to $refLinkDest
+					$refLinkDest.trigger( setFocusEvent );
+					return false;
+				}
+			} );
+
+			// Listen for footnote return links that get clicked
+			$document.on( "click vclick", selector + " dd p.fn-rtn a", function( event ) {
+				var which = event.which,
+					ref,
+					refId;
+
+				// Ignore middle/right mouse button
+				if ( !which || which === 1 ) {
+					ref = event.target.getAttribute( "href" );
+
+					// Focus on associated referrer link (if the return link points to an ID)
+					if ( ref.charAt( 0 ) === "#" ) {
+						refId = "#" + wb.jqEscape( ref.substring( 1 ) );
+
+						// Assign focus to the link
+						$document.find( refId + " a" ).trigger( setFocusEvent );
+						return false;
+					}
+				}
+			} );
 
 			// Identify that initialization has completed
 			wb.ready( $elm, componentName );
@@ -5110,41 +6287,6 @@ var componentName = "wb-fnote",
 
 // Bind the init event of the plugin
 $document.on( "timerpoke.wb " + initEvent, selector, init );
-
-// Listen for footnote reference links that get clicked
-$document.on( "click vclick", "main :not(" + selector + ") sup a.fn-lnk", function( event ) {
-	var eventTarget = event.target,
-		which = event.which,
-		refId, $refLinkDest;
-
-	// Ignore middle/right mouse button
-	if ( !which || which === 1 ) {
-		refId = "#" + wb.jqEscape( eventTarget.getAttribute( "href" ).substring( 1 ) );
-		$refLinkDest = $document.find( refId );
-
-		$refLinkDest.find( "p.fn-rtn a" )
-					.attr( "href", "#" + eventTarget.parentNode.id );
-
-		// Assign focus to $refLinkDest
-		$refLinkDest.trigger( setFocusEvent );
-		return false;
-	}
-} );
-
-// Listen for footnote return links that get clicked
-$document.on( "click vclick", selector + " dd p.fn-rtn a", function( event ) {
-	var which = event.which,
-		refId;
-
-	// Ignore middle/right mouse button
-	if ( !which || which === 1 ) {
-		refId = "#" + wb.jqEscape( event.target.getAttribute( "href" ).substring( 1 ) );
-
-		// Assign focus to the link
-		$document.find( refId + " a" ).trigger( setFocusEvent );
-		return false;
-	}
-} );
 
 // Add the timer poke to initialize the plugin
 wb.add( selector );
@@ -5161,11 +6303,11 @@ wb.add( selector );
 "use strict";
 
 /*
- * Variable and function definitions.
- * These are global to the plugin - meaning that they will be initialized once per page,
- * not once per instance of plugin on the page. So, this is a good place to define
- * variables that are common to all instances of the plugin on a page.
- */
+* Variable and function definitions.
+* These are global to the plugin - meaning that they will be initialized once per page,
+* not once per instance of plugin on the page. So, this is a good place to define
+* variables that are common to all instances of the plugin on a page.
+*/
 var componentName = "wb-frmvld",
 	selector = "." + componentName,
 	initEvent = "wb-init" + selector,
@@ -5213,7 +6355,8 @@ var componentName = "wb-frmvld",
 					error: i18n( "err" ),
 					errorFound: i18n( "err-fnd" ),
 					errorsFound: i18n( "errs-fnd" ),
-					formNotSubmitted: i18n( "frm-nosubmit" )
+					formNotSubmitted: i18n( "frm-nosubmit" ),
+					errorCorrect: i18n( "err-correct" )
 				};
 			}
 
@@ -5224,17 +6367,16 @@ var componentName = "wb-frmvld",
 					"site!deps/jquery.validate" + modeJS,
 					"site!deps/additional-methods" + modeJS
 				],
+				testReady: function() {
+					return ( $.validator && $.validator.methods.bic );
+				},
 				complete: function() {
 					var $elm = $( "#" + elmId ),
 						$form = $elm.find( "form" ),
 						formDOM = $form.get( 0 ),
 						formId = $form.attr( "id" ),
 						labels = formDOM.getElementsByTagName( "label" ),
-						$formElms = $form.find( "input, select, textarea" ),
-						$inputs = $formElms.filter( "input" ),
-						$pattern = $inputs.filter( "[pattern]" ),
 						submitted = false,
-						$required = $formElms.filter( "[required], [data-rule-required], .required" ),
 						errorFormId = "errors-" + ( !formId ? "default" : formId ),
 						settings = $.extend(
 							true,
@@ -5255,29 +6397,6 @@ var componentName = "wb-frmvld",
 						labels[ i ].innerHTML += " ";
 					}
 
-					// Remove the pattern attribute until it is safe to use with jQuery Validation
-					len = $pattern.length;
-					for ( i = 0; i !== len; i += 1 ) {
-						$pattern.eq( i ).removeAttr( "pattern" );
-					}
-
-					// Change form attributes and values that interfere with validation in IE7/8
-					// TODO: Need better way of dealing with this rather than browser sniffing
-					if ( wb.ieVersion > 0 && wb.ieVersion < 9 ) {
-						len = $required.length;
-						$required.removeAttr( "required" );
-						for ( i = 0; i !== len; i += 1 ) {
-							$required[ i ].setAttribute( "data-rule-required", "true" );
-						}
-						$inputs.filter( "[type=date]" ).each( function() {
-							var $this = $( this ),
-								$parent = $this.wrap( "<div/>" ).parent(),
-								newElm = $( $parent.html().replace( "type=date", "type=text" ) );
-							$parent.replaceWith( newElm );
-						} );
-						$formElms = $form.find( "input, select, textarea" );
-					}
-
 					// The jQuery validation plug-in in action
 					validator = $form.validate( {
 						meta: "validate",
@@ -5291,6 +6410,7 @@ var componentName = "wb-frmvld",
 						// In this case we will place them in the associated label element
 						errorPlacement: function( $error, $element ) {
 							var type = $element.attr( "type" ),
+								group = $element.attr( "data-rule-require_from_group" ),
 								$fieldset, $legend;
 
 							$error.data( "element-id", $element.attr( "id" ) );
@@ -5307,6 +6427,42 @@ var componentName = "wb-frmvld",
 									}
 								}
 							}
+
+							if ( group ) {
+								$fieldset = $element.closest( "fieldset" );
+								if ( $fieldset.length !== 0 ) {
+									$legend = $fieldset.find( "legend" ).first();
+									if ( $legend.length !== 0 && $fieldset.find( "input[name='" + $element.attr( "name" ) + "']" ) !== 1 ) {
+										var $strong = $legend.find( "strong.error" ),
+											id = $legend.attr( "id" );
+
+										if ( $strong.length > 0 ) {
+											$strong.remove();
+										}
+
+										if ( !id ) {
+											id = "required-group-" + idCount;
+											idCount += 1;
+
+											$legend.attr( "id", id );
+										}
+
+										$error.data( "element-id", id );
+										$error.attr( "id", id );
+										$error.appendTo( $legend );
+
+										return;
+									}
+								}
+							}
+
+							//Std If we have a label and the input field is inside the label
+							// need to add a css-implicite-input
+							if ( $form.find( "label" ).find( "input[name='" + $element.attr( "name" ) + "']" ).length > 0 ) {
+								$error.insertBefore( $form.find( "input[name='" + $element.attr( "name" ) + "']" ) );
+								return;
+							}
+
 							$error.appendTo( $form.find( "label[for='" + $element.attr( "id" ) + "']" ) );
 							return;
 						},
@@ -5314,7 +6470,7 @@ var componentName = "wb-frmvld",
 						// Create our error summary that will appear before the form
 						showErrors: function( errorMap ) {
 							this.defaultShowErrors();
-							var $errors = $form.find( "strong.error" ).filter( ":not(:hidden)" ),
+							var $errors = $form.find( ".wb-server-error, strong.error" ).filter( ":not(:hidden)" ),
 								$errorfields = $form.find( "input.error, select.error, textarea.error" ),
 								prefixStart = "<span class='prefix'>" + i18nText.error + "&#160;",
 								prefixEnd = i18nText.colon + " </span>",
@@ -5325,8 +6481,8 @@ var componentName = "wb-frmvld",
 							// Correct the colouring of fields that are no longer invalid
 							$form
 								.find( ".has-error [aria-invalid=false]" )
-									.closest( ".has-error" )
-										.removeClass( "has-error" );
+								.closest( ".has-error" )
+								.removeClass( "has-error" );
 
 							if ( $errors.length !== 0 ) {
 
@@ -5340,7 +6496,7 @@ var componentName = "wb-frmvld",
 									) + "</" + summaryHeading + "><ul>";
 								$errorfields
 									.closest( ".form-group" )
-										.addClass( "has-error" );
+									.addClass( "has-error" );
 								len = $errors.length;
 								for ( i = 0; i !== len; i += 1 ) {
 									$error = $errors.eq( i );
@@ -5356,10 +6512,34 @@ var componentName = "wb-frmvld",
 									}
 
 									$error.find( "span.prefix" ).detach();
-									summary += "<li><a href='#" + $error.data( "element-id" ) +
-										"'>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) +
-										$error.text() + "</a></li>";
-									$error.html( "<span class='label label-danger'>" + prefix + $error.text() + "</span>" );
+
+									//Verify if it is a wb-server-error
+									if ( $errors[ i ].classList.contains( "wb-server-error" ) ) {
+										if ( $errors[ i ].id ) {
+											var myParent = document.getElementById( $errors[ i ].id ).parentElement;
+											if ( myParent === null ) {
+												summary += "<li><a>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) + $error.text() + separator + i18nText.errorCorrect + "</a></li>";
+											} else {
+												if ( myParent.hasAttribute( "for" ) && myParent.getAttribute( "for" ).length > 0 ) {
+													summary += "<li><a href='#" + myParent.getAttribute( "for" ) + "'>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) + $error.text() + separator + i18nText.errorCorrect + "</a></li>";
+												} else {
+													if ( myParent.getElementsByTagName( "input" )[ 0 ] && myParent.getElementsByTagName( "input" )[ 0 ].name.length > 0 ) {
+														summary += "<li><a href='#" + myParent.getElementsByTagName( "input" )[ 0 ].id + "'>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) + $error.text() + separator + i18nText.errorCorrect + "</a></li>";
+													} else {
+														if ( myParent.tagName === ( "LEGEND" ) && ( myParent.parentElement.getElementsByTagName( "input" )[ 0 ].type === "checkbox" || myParent.parentElement.getElementsByTagName( "input" )[ 0 ].type === "radio" && myParent.parentElement.getElementsByTagName( "input" )[ 0 ].name.length > 0 ) ) {
+															summary += "<li><a href='#" + myParent.parentElement.getElementsByTagName( "input" )[ 0 ].id + "'>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) + $error.text() + separator + i18nText.errorCorrect + "</a></li>";
+														} else {
+															summary += "<li><a>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) + $error.text() + separator + i18nText.errorCorrect + "</a></li>";
+														}
+													}
+												}
+											}
+											$error.html( "<strong>" + prefix + $error.text() + "</strong>" );
+										}
+									} else {
+										summary += "<li><a href='#" + $error.data( "element-id" ) + "'>" + prefix + ( $fieldName.length !== 0 ? $fieldName.html() + separator : "" ) + $error.text() + "</a></li>";
+										$error.html( "<span class='label label-danger'>" + prefix + $error.text() + "</span>" );
+									}
 								}
 								summary += "</ul>";
 
@@ -5368,7 +6548,7 @@ var componentName = "wb-frmvld",
 									// Update the aria-live region as necessary
 									i = 0;
 									for ( key in errorMap ) {
-										if ( errorMap.hasOwnProperty( key ) ) {
+										if ( Object.prototype.hasOwnProperty.call( errorMap, key ) ) {
 											i += 1;
 											break;
 										}
@@ -5418,12 +6598,20 @@ var componentName = "wb-frmvld",
 								}
 								$form.find( "#" + errorFormId ).detach();
 							}
+						},
 
-						}, /* End of showErrors() */
+						/* End of showErrors() */
+
 						invalidHandler: function() {
 							submitted = true;
 						}
+
 					} ); /* end of validate() */
+
+					/* fixes validation issue (see PR #7913) */
+					$form.on( "change", "input[type=date], input[type=file], select", function() {
+						$form.validate().element( this );
+					} );
 
 					// Clear the form and remove error messages on reset
 					$document.on( "click vclick touchstart", selector + " input[type=reset]", function( event ) {
@@ -5442,6 +6630,19 @@ var componentName = "wb-frmvld",
 
 							// Correct the colouring of fields that are no longer invalid
 							$form.find( ".has-error" ).removeClass( "has-error" );
+						}
+					} );
+
+					//Trigger validation on wb-server-error
+					$form.find( ".wb-server-error" ).filter( ":not( :hidden )" ).parent().each( function() {
+						if ( this.attributes.for && this.attributes.for.value.length > 0 ) {
+							$( "form" ).validate().element( $( "[id =" + this.attributes.for.value + "]" ) );
+						} else if ( $( this ).find( "input" )[ 0 ] ) {
+							$( "form" ).validate().element( $( this ).find( "input" )[ 0 ] );
+						} else if ( $( this ).next( ".radio, .checkbox" ).children( "label" ).children( "input" )[ 0 ] ) {
+							if ( $( this ).find( $( this ).next( ".radio, .checkbox" ).children( "label" ).children( "input " )[ 0 ].id ) ) {
+								$( "form" ).validate().element( $( this ).next( ".radio, .checkbox" ).children( "label" ).children( "input" )[ 0 ] );
+							}
 						}
 					} );
 
@@ -5487,10 +6688,22 @@ var componentName = "wb-geomap",
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
 		var elm = wb.init( event, componentName, selector ),
-			$elm, modeJS;
+			$elm, $map, $leg, modeJS;
 
 		if ( elm ) {
 			$elm = $( elm );
+			$map = $elm.find( ".wb-geomap-map" );
+			$leg = $elm.find( ".wb-geomap-legend" );
+
+			// Initialize the map height for the loader
+			$map.height( $map.width() * 0.8 );
+			$map.append( "<div class='geomap-progress'><span class='wb-inv'>" + wb.i18n( "load" ) + "</span></div>" );
+			$leg.append( "<div class='skeleton-lgnd-1'><span class='skeleton-lgnd-3'></span></div>" +
+					"<div class='skeleton-lgnd-2'><span class='skeleton-lgnd-3'></span></div>" +
+					"<div class='skeleton-lgnd-2'><span class='skeleton-lgnd-3'></span></div>" +
+					"<div class='skeleton-lgnd-2'><span class='skeleton-lgnd-3'></span></div>" +
+					"<div  class='skeleton-lgnd-1'><span class='skeleton-lgnd-3'></span></div>" );
+
 			modeJS = wb.getMode() + ".js";
 
 			Modernizr.load( [ {
@@ -5498,7 +6711,7 @@ var componentName = "wb-geomap",
 				// For loading multiple dependencies
 				both: [
 					"site!deps/proj4" + modeJS,
-					"site!deps/OpenLayers" + modeJS,
+					"site!deps/ol" + modeJS,
 					"site!deps/geomap-lib" + modeJS
 				],
 				complete: function() {
@@ -5536,7 +6749,7 @@ var componentName = "wb-lbx",
 	initEvent = "wb-init" + selector,
 	setFocusEvent = "setfocus.wb",
 	dependenciesLoadedEvent = "deps-loaded" + selector,
-	extendedGlobal = false,
+	modalHideSelector = "#wb-tphp, body > header, body > main, body > footer",
 	$document = wb.doc,
 	callbacks, i18n, i18nText,
 
@@ -5638,6 +6851,8 @@ var componentName = "wb-lbx",
 		if ( !i18nText ) {
 			i18n = wb.i18n;
 			i18nText = {
+				close: i18n( "close" ),
+				oClose: i18n( "overlay-close" ),
 				tClose: i18n( "overlay-close" ) + i18n( "space" ) + i18n( "esc-key" ),
 				tLoading: i18n( "load" ),
 				gallery: {
@@ -5660,25 +6875,33 @@ var componentName = "wb-lbx",
 					var $item = this.currItem,
 						$content = this.contentContainer,
 						$wrap = this.wrap,
+						$modal = $wrap.find( ".modal-dialog" ),
 						$buttons = $wrap.find( ".mfp-close, .mfp-arrow" ),
 						len = $buttons.length,
-						i, button, $bottomBar;
+						i, button;
 
+					createCloseButton( $modal );
+
+					$document.find( "body" ).addClass( "wb-modal" );
+					$document.find( modalHideSelector ).attr( "aria-hidden", "true" );
 					for ( i = 0; i !== len; i += 1 ) {
 						button = $buttons[ i ];
 						button.innerHTML += "<span class='wb-inv'> " + button.title + "</span>";
 					}
 
 					if ( $item.type === "image" ) {
-						$bottomBar = $content.find( ".mfp-bottom-bar" ).attr( "id", "lbx-title" );
+						$content.find( ".mfp-bottom-bar" ).attr( "id", "lbx-title" );
 					} else {
 						$content.attr( "role", "document" );
 					}
 
-					$wrap.append( "<span tabindex='0' class='lbx-end wb-inv'></span>" )
-                        .find( ".activate-open" )
-                        .trigger( "wb-activate" );
+					this.contentContainer.attr( "data-pgtitle", document.getElementsByTagName( "H1" )[ 0 ].textContent );
 
+					trapTabbing( $wrap );
+				},
+				close: function() {
+					$document.find( "body" ).removeClass( "wb-modal" );
+					$document.find( modalHideSelector ).removeAttr( "aria-hidden" );
 				},
 				change: function() {
 					var $item = this.currItem,
@@ -5743,13 +6966,17 @@ var componentName = "wb-lbx",
 					} else {
 						$response = $( mfpResponse.data );
 					}
+					createCloseButton( $response );
 
 					$response
 						.find( ".modal-title, h1" )
-							.first()
-								.attr( "id", "lbx-title" );
+						.first()
+						.attr( "id", "lbx-title" );
 
 					mfpResponse.data = $response;
+				},
+				ajaxContentAdded: function() {
+					trapTabbing( this.wrap );
 				}
 			};
 		}
@@ -5757,13 +6984,62 @@ var componentName = "wb-lbx",
 		// Load Magnific Popup dependency and bind the init event handler
 		Modernizr.load( {
 			load: "site!deps/jquery.magnific-popup" + wb.getMode() + ".js",
+			testReady: function() {
+				return $.magnificPopup;
+			},
 			complete: function() {
 
 				// Set the dependency i18nText only once
 				$.extend( true, $.magnificPopup.defaults, i18nText );
-				extendedGlobal = true;
 
 				$document.trigger( dependenciesLoadedEvent );
+			}
+		} );
+	},
+	createCloseButton = function( $modal ) {
+		if ( $modal !== null && $modal.hasClass( "modal-dialog" ) ) {
+			var footer = $modal.find( ".modal-footer" ).first(),
+				hasFooter = footer.length,
+				hasButton = hasFooter && $( footer ).find( ".popup-modal-dismiss" ).length !== 0,
+				closeClassFtr = "popup-modal-dismiss",
+				closeTextFtr = i18nText.close,
+				spanTextFtr = i18nText.oClose,
+				overlayCloseFtr;
+
+			if ( !hasButton ) {
+				if ( !hasFooter ) {
+					footer = document.createElement( "div" );
+					footer.setAttribute( "class", "modal-footer" );
+				}
+
+				overlayCloseFtr = "<button type='button' class='btn btn-sm btn-primary pull-left " + closeClassFtr +
+					"' title='" + spanTextFtr + "'>" +
+					closeTextFtr +
+					"<span class='wb-inv'>" + spanTextFtr + "</span></button>";
+
+				$( footer ).append( overlayCloseFtr );
+				if ( !hasFooter ) {
+					$( footer ).insertAfter( $modal.find( ".modal-body" ) );
+				}
+			}
+		}
+	},
+	trapTabbing = function( $wrap ) {
+
+		$wrap.on( "keydown", function( e ) {
+			if ( e.which === 9 ) {
+				var tabbable = $wrap.find( ".mfp-container :tabbable:visible" ),
+					firstTabbable = tabbable.first()[ 0 ],
+					lastTabbable = tabbable.last()[ 0 ],
+					currentFocus = $( document.activeElement )[ 0 ];
+
+				if ( !e.shiftKey && currentFocus === lastTabbable ) {
+					e.preventDefault();
+					firstTabbable.focus();
+				} else if ( e.shiftKey && ( currentFocus === firstTabbable || currentFocus === $wrap[ 0 ] ) ) {
+					e.preventDefault();
+					lastTabbable.focus();
+				}
 			}
 		} );
 	};
@@ -5771,66 +7047,10 @@ var componentName = "wb-lbx",
 // Bind the init event of the plugin
 $document.on( "timerpoke.wb " + initEvent, selector, init );
 
-$document.on( "keydown", ".mfp-wrap", function( event ) {
-	var $elm, $focusable, index, length;
-
-	// If the tab key is used and filter out any events triggered by descendants
-	if ( extendedGlobal && event.which === 9 ) {
-		event.preventDefault();
-		$elm = $( this );
-		$focusable = $elm.find( ":focusable" );
-		length = $focusable.length;
-		index = $focusable.index( event.target ) + ( event.shiftKey ? -1 : 1 );
-		if ( index === -1 ) {
-			index = length - 2;
-		} else if ( index === length - 1 ) {
-			index = 0;
-		}
-		$focusable.eq( index ).trigger( setFocusEvent );
-	}
-
-	/*
-	 * Since we are working with events we want to ensure that we are being passive about our control,
-	 * so returning true allows for events to always continue
-	 */
-	return true;
-} );
-
-/*
- * Sends focus to the close button if focus moves beyond the Lightbox (Jaws fix)
- */
-$document.on( "focus", ".lbx-end", function( event ) {
-	event.preventDefault();
-	$( this )
-		.closest( ".mfp-wrap" )
-			.find( ":focusable" )
-				.eq( 0 )
-					.trigger( setFocusEvent );
-
-	/*
-	 * Since we are working with events we want to ensure that we are being passive about our control,
-	 * so returning true allows for events to always continue
-	 */
-	return true;
-} );
-
-// Outside focus detection (for screen readers that exit the lightbox
-// outside the normal means)
-$document.on( "focusin", "body", function( event ) {
-
-	if ( extendedGlobal && $.magnificPopup.instance.currItem &&
-		$( event.target ).closest( ".mfp-wrap" ).length === 0 &&
-		$( ".popup-modal-dismiss" ).length === 0 ) {
-
-		// Close the popup
-		$.magnificPopup.close();
-	}
-} );
-
 // Handler for clicking on a same page link within the overlay to outside the overlay
 $document.on( "click vclick", ".mfp-wrap a[href^='#']", function( event ) {
 	var which = event.which,
-		eventTarget = event.target,
+		eventTarget = event.currentTarget,
 		$lightbox, linkTarget;
 
 	// Ignore middle/right mouse buttons
@@ -5838,30 +7058,29 @@ $document.on( "click vclick", ".mfp-wrap a[href^='#']", function( event ) {
 		$lightbox = $( eventTarget ).closest( ".mfp-wrap" );
 		linkTarget = document.getElementById( eventTarget.getAttribute( "href" ).substring( 1 ) );
 
-		// Ignore same page links to within the overlay and modal popups
+		// Ignore same page links to within the overlay
 		if ( linkTarget && !$.contains( $lightbox[ 0 ], linkTarget ) ) {
-			if ( $lightbox.find( ".popup-modal-dismiss" ).length === 0 ) {
 
-				// Stop propagation of the click event
-				if ( event.stopPropagation ) {
-					event.stopImmediatePropagation();
-				} else {
-					event.cancelBubble = true;
-				}
-
-				// Close the overlay and set focus to the same page link
-				$.magnificPopup.close();
-				$( linkTarget ).trigger( setFocusEvent );
+			// Stop propagation of the click event
+			if ( event.stopPropagation ) {
+				event.stopImmediatePropagation();
 			} else {
-				return false;
+				event.cancelBubble = true;
 			}
+
+			// Close the overlay and set focus to the same page link
+			$.magnificPopup.close();
+			$( linkTarget ).trigger( setFocusEvent );
 		}
 	}
 } );
 
 // Event handler for closing a modal popup
 $( document ).on( "click", ".popup-modal-dismiss", function( event ) {
-	event.preventDefault();
+	if ( !this.hasAttribute( "target" ) ) {
+		event.preventDefault();
+	}
+
 	$.magnificPopup.close();
 } );
 
@@ -5871,8 +7090,8 @@ $( document ).on( "open" + selector, function( event, items, modal, title, ajax 
 		var isGallery = items.length > 1,
 			isModal = modal && !isGallery ? modal : false,
 			titleSrc = title ? function() {
-					return title[ $.magnificPopup.instance.index ];
-				} : "title";
+				return title[ $.magnificPopup.instance.index ];
+			} : "title";
 
 		event.preventDefault();
 
@@ -6039,11 +7258,11 @@ var componentName = "wb-menu",
 
 			if ( elm && subItemsLength === 0 && elm.nodeName.toLowerCase() === "a" ) {
 				sectionHtml += "<li>" + $item[ 0 ].innerHTML.replace(
-						/(<a\s)/,
-						"$1" + menuitem + itemsLength +
+					/(<a\s)/,
+					"$1" + menuitem + itemsLength +
 							posinset + ( k + 1 ) +
 							"' tabindex='-1' "
-					) + "</li>";
+				) + "</li>";
 			} else {
 				sectionHtml += createCollapsibleSection( elm, k, itemsLength, $subItems, $subItems.length );
 			}
@@ -6060,7 +7279,7 @@ var componentName = "wb-menu",
 	createMobilePanelMenu = function( allProperties ) {
 		var panel = "",
 			sectionHtml, properties, sections, section, parent, $items,
-			href, linkHtml, i, j, len, sectionsLength, itemsLength;
+			linkHtml, i, j, len, sectionsLength, itemsLength;
 
 		// Process the secondary and site menus
 		len = allProperties.length;
@@ -6071,7 +7290,6 @@ var componentName = "wb-menu",
 			sectionsLength = sections.length;
 			for ( j = 0; j !== sectionsLength; j += 1 ) {
 				section = sections[ j ];
-				href = section.getAttribute( "href" );
 				$items = $( section.parentNode ).find( "> ul > li" );
 				itemsLength = $items.length;
 
@@ -6085,7 +7303,11 @@ var componentName = "wb-menu",
 					if ( parent.nodeName.toLowerCase() === "li" ) {
 						linkHtml = parent.innerHTML;
 
-					// Non-list menu item without a section
+					// Non-list menu items without a section and that contain their own link
+					} else if ( parent.getElementsByTagName( "a" )[ 0 ] === section.getElementsByTagName( "a" )[ 0 ] ) {
+						linkHtml = section.innerHTML;
+
+					// Non-list menu item without a section and whose siblings contain a link
 					} else {
 						linkHtml = "<a href='" +
 							parent.getElementsByTagName( "a" )[ 0 ].href + "'>" +
@@ -6111,7 +7333,7 @@ var componentName = "wb-menu",
 				sectionHtml + "</ul></nav>";
 		}
 
-		return panel.replace( /['"]?list-group-item['"]?/gi, "\"\"" ) + "</div>";
+		return panel.replace( /['"]?list-group-item['"]?/gi, "\"\"" );
 	},
 
 	/**
@@ -6120,165 +7342,199 @@ var componentName = "wb-menu",
 	 * @param {jQuery DOM element} $ajaxResult The AJAXed in menu content to import
 	 */
 	onAjaxLoaded = function( $elm, $ajaxResult ) {
-		var $ajaxed = $ajaxResult && $ajaxResult.attr( "data-type" ) === "string" ? $ajaxResult : $elm,
-			$menubar = $ajaxed.find( ".menu" ),
-			$menu = $menubar.find( "> li > a" ),
-			target = $elm.data( "trgt" ),
-			$secnav = $( "#wb-sec" ),
-			$info = $( "#wb-info" ),
-			$language = $( "#wb-lng" ),
-			search = document.getElementById( "wb-srch" ),
-			panel = "",
-			panelDOM = document.getElementById( target ),
-			$panel = $( panelDOM ),
-			allProperties = [],
-			$navCurr, $menuItem, $langItems, len, i;
+		var $info = $( "#wb-info" ),
+			inner = function() {
+				var $ajaxed = $ajaxResult && $ajaxResult.attr( "data-type" ) === "string" ? $ajaxResult : $elm,
+					$menubar = $ajaxed.find( ".menu" ),
+					$menu = $menubar.find( "> li > a" ),
+					target = $elm.data( "trgt" ),
+					$secnav = $( "#wb-sec" ),
+					$language = $( "#wb-lng" ),
+					search = document.getElementById( "wb-srch" ),
+					panel = "",
+					panelDOM = document.getElementById( target ),
+					$panel = $( panelDOM ),
+					allProperties = [],
+					$navCurr, $menuItem, $langItems, len, i;
 
-		/*
-		 * Build the mobile panel
-		 */
+				/*
+				 * Build the mobile panel
+				 */
 
-		// Add search
-		if ( search !== null ) {
-			panel += "<section class='srch-pnl'>" +
-				search.innerHTML
-					.replace( /h2>/i, "h3>" )
-					.replace( /(for|id)="([^"]+)"/gi, "$1='$2-imprt'" ) +
-				"</section>";
-		}
-
-		// Add active language offer
-		if ( $language.length !== 0 ) {
-			$langItems = $language.find( "li:not(.curr)" );
-			len = $langItems.length;
-			panel += "<section class='lng-ofr'>" +
-				"<h3>" + $language.children( "h2" ).html() + "</h3>" +
-				"<ul class='list-inline'>";
-			for ( i = 0; i !== len; i += 1 ) {
-				panel += $langItems[ i ].innerHTML
-					.replace( /(<a\s.*<\/a>?)/, "<li>$1</li>" );
-			}
-			panel += "</ul></section>";
-		}
-
-		// Create menu system
-		if ( $secnav.length !== 0 || $menubar.length !== 0 || $info.length !== 0 ) {
-
-			// Add the secondary menu
-			if ( $secnav.length !== 0 ) {
-				allProperties.push( [
-					$secnav.find( "ul" ).filter( ":not(li > ul)" ).find( " > li > *:first-child" ).get(),
-					"sec-pnl",
-					$secnav.find( "h2" ).html()
-				] );
-
-				if ( $secnav.find( ".wb-navcurr" ).length === 0 ) {
-
-					// Trigger the navcurrent plugin
-					$secnav.trigger( navCurrentEvent, breadcrumb );
-				}
-			}
-
-			// Add the site menu
-			if ( $menubar.length !== 0 ) {
-
-				// Add the menubar role if it is missing
-				if ( !$menubar.attr( "role" ) ) {
-					$menubar.attr( "role", "menubar" );
+				// Add search
+				if ( search !== null ) {
+					panel += "<section class='srch-pnl'>" +
+						search.innerHTML
+							.replace( /h2>/i, "h3>" )
+							.replace( /(for|id)="([^"]+)"/gi, "$1='$2-imprt'" ) +
+						"</section>";
 				}
 
-				allProperties.push( [
-					$menu.get(),
-					"sm-pnl",
-					$ajaxed.find( "h2" ).html()
-				] );
-			}
-
-			// Add the site information
-			if ( $info.length !== 0 ) {
-				allProperties.push( [
-					$info.find( "h3, a" ).not( "section a" ),
-					"info-pnl",
-					$info.find( "h2" ).html()
-				] );
-
-				if ( $info.find( ".wb-navcurr" ).length === 0 ) {
-
-					// Trigger the navcurrent plugin
-					$info.trigger( navCurrentEvent, breadcrumb );
+				// Add active language offer
+				if ( $language.length !== 0 ) {
+					$langItems = $language.find( "li:not(.curr)" );
+					len = $langItems.length;
+					panel += "<section class='lng-ofr'>" +
+						"<h3>" + $language.children( "h2" ).html() + "</h3>" +
+						"<ul class='list-inline'>";
+					for ( i = 0; i !== len; i += 1 ) {
+						panel += $langItems[ i ].innerHTML
+							.replace( /(<a\s.*<\/a>?)/, "<li>$1</li>" );
+					}
+					panel += "</ul></section>";
 				}
-			}
 
-			panel += createMobilePanelMenu( allProperties );
+				// Create menu system
+				if ( $secnav.length !== 0 || $menubar.length !== 0 || $info.length !== 0 ) {
+
+					// Add the secondary menu
+					if ( $secnav.length !== 0 ) {
+						allProperties.push( [
+							$secnav.find( "ul" ).filter( ":not(li > ul)" ).find( " > li > *:first-child" ).get(),
+							"sec-pnl",
+							$secnav.find( "h2" ).html()
+						] );
+
+						if ( $secnav.find( ".wb-navcurr" ).length === 0 ) {
+
+							// Trigger the navcurrent plugin
+							$secnav.trigger( navCurrentEvent, breadcrumb );
+						}
+					}
+
+					// Add the site menu
+					if ( $menubar.length !== 0 ) {
+
+						// Add the menubar role if it is missing
+						if ( !$menubar.attr( "role" ) ) {
+							$menubar.attr( "role", "menubar" );
+						}
+
+						allProperties.push( [
+							$menu.get(),
+							"sm-pnl",
+							$ajaxed.find( "h2" ).html()
+						] );
+					}
+
+					// Add the site information
+					if ( $info.length !== 0 ) {
+						allProperties.push( [
+							$info.find( "h3, a" ).not( "section a" ),
+							"info-pnl",
+							$info.find( "h2" ).html()
+						] );
+
+						if ( $info.find( ".wb-navcurr" ).length === 0 ) {
+
+							// Trigger the navcurrent plugin
+							$info.trigger( navCurrentEvent, breadcrumb );
+						}
+					}
+
+					panel += createMobilePanelMenu( allProperties );
+				}
+
+				// Let's now populate the DOM since we have done all the work in a documentFragment
+				panelDOM.innerHTML = "<header class='modal-header'><div class='modal-title'>" +
+						document.getElementById( "wb-glb-mn" )
+							.getElementsByTagName( "h2" )[ 0 ]
+							.innerHTML +
+						"</div></header><div class='modal-body'>" + panel + "</div>";
+				panelDOM.className += " wb-overlay modal-content overlay-def wb-panel-r";
+
+				// fix #8241
+				if ( $.active > 0 ) {
+					$( document ).ajaxStop( function() {
+						initOverlay( $panel );
+					} );
+				} else {
+					initOverlay( $panel );
+				}
+
+				/*
+				 * Build the regular mega menu
+				 */
+				$ajaxed
+					.find( ":discoverable" )
+					.attr( "tabindex", "-1" );
+
+				if ( $menu.length !== 0 ) {
+					$menu[ 0 ].setAttribute( "tabindex", "0" );
+					drizzleAria( $menu );
+					$menu
+						.filter( "[aria-haspopup=true]" )
+						.append( "<span class='expicon glyphicon glyphicon-chevron-down'></span>" );
+				}
+
+				// Replace elements
+				$elm.html( $ajaxed.html() );
+
+				// Trigger the navcurrent plugin
+				setTimeout( function() {
+					$elm.trigger( navCurrentEvent, breadcrumb );
+					$panel.find( "#sm-pnl" ).trigger( navCurrentEvent, breadcrumb );
+
+					// Ensure that wb-navcurr is reflected in the top level
+					$navCurr = $panel.find( ".wb-navcurr" );
+					len = $navCurr.length;
+					for ( i = 0; i !== len; i += 1 ) {
+						$menuItem = $navCurr.eq( i );
+
+						// If not at the top level, then add wb-navcurr to the top level
+						if ( !$menuItem.hasClass( ".mb-item" ) ) {
+							$menuItem = $menuItem
+								.closest( "details" )
+								.children( "summary" )
+								.addClass( "wb-navcurr" );
+						}
+					}
+
+					// Open up the secondary menu if it has wb-navcurr and has a submenu
+					$menuItem = $panel.find( "#sec-pnl .wb-navcurr.mb-item" );
+					if ( $menuItem.attr( "aria-haspopup" ) === "true" ) {
+						$menuItem
+							.trigger( "click" )
+							.parent()
+							.prop( "open", "open" );
+					}
+
+					// Identify that initialization has completed
+					wb.ready( $elm, componentName );
+				}, 1 );
+			},
+			$footerAjax  = $info.find( "[data-ajax-replace],[data-ajax-append],[data-ajax-prepend]" ),
+			footerAjaxLength = $footerAjax.length,
+			ajaxCount = 0;
+
+		//Delay the execution the menu until any ajaxed footer content is in
+		if ( footerAjaxLength === 0 ) {
+			inner();
+		} else {
+			$info.on( "wb-contentupdated ajax-failed.wb", function() {
+				ajaxCount += 1;
+				if ( ajaxCount === footerAjaxLength ) {
+					inner();
+				}
+			} );
 		}
+	},
 
-		// Let's now populate the DOM since we have done all the work in a documentFragment
-		panelDOM.innerHTML = "<header class='modal-header'><div class='modal-title'>" +
-				document.getElementById( "wb-glb-mn" )
-					.getElementsByTagName( "h2" )[ 0 ]
-						.innerHTML +
-				"</div></header><div class='modal-body'>" + panel + "</div>";
-		panelDOM.className += " wb-overlay modal-content overlay-def wb-panel-r";
+	// fix #8517
+	/**
+	 * @method initOverlay
+	 * @param {jQuery object} $panel Current panel
+	 */
+	initOverlay = function( $panel ) {
 		$panel
 			.trigger( "wb-init.wb-overlay" )
 			.find( "summary" )
-				.attr( "tabindex", "-1" )
-				.trigger( detailsInitEvent );
+			.attr( "tabindex", "-1" )
+			.trigger( detailsInitEvent );
 		$panel
 			.find( ".mb-menu > li:first-child" )
-				.find( ".mb-item" )
-					.attr( "tabindex", "0" );
-
-		/*
-		 * Build the regular mega menu
-		 */
-		$ajaxed
-			.find( ":discoverable" )
-				.attr( "tabindex", "-1" );
-
-		if ( $menu.length !== 0 ) {
-			$menu[ 0 ].setAttribute( "tabindex", "0" );
-			drizzleAria( $menu );
-			$menu
-				.filter( "[aria-haspopup=true]" )
-					.append( "<span class='expicon glyphicon glyphicon-chevron-down'></span>" );
-		}
-
-		// Replace elements
-		$elm.html( $ajaxed.html() );
-
-		// Trigger the navcurrent plugin
-		setTimeout( function() {
-			$elm.trigger( navCurrentEvent, breadcrumb );
-			$panel.find( "#sm-pnl" ).trigger( navCurrentEvent, breadcrumb );
-
-			// Ensure that wb-navcurr is reflected in the top level
-			$navCurr = $panel.find( ".wb-navcurr" );
-			len = $navCurr.length;
-			for ( i = 0; i !== len; i += 1 ) {
-				$menuItem = $navCurr.eq( i );
-
-				// If not at the top level, then add wb-navcurr to the top level
-				if ( !$menuItem.hasClass( ".mb-item" ) ) {
-					$menuItem = $menuItem
-									.closest( "details" )
-										.children( "summary" )
-											.addClass( "wb-navcurr" );
-				}
-			}
-
-			// Open up the secondary menu if it has wb-navcurr and has a submenu
-			$menuItem = $panel.find( "#sec-pnl .wb-navcurr.mb-item" );
-			if ( $menuItem.attr( "aria-haspopup" ) === "true" ) {
-				$menuItem
-					.trigger( "click" )
-					.parent()
-						.prop( "open", "open" );
-			}
-
-			// Identify that initialization has completed
-			wb.ready( $elm, componentName );
-		}, 1 );
+			.find( ".mb-item" )
+			.attr( "tabindex", "0" );
 	},
 
 	/**
@@ -6307,11 +7563,20 @@ var componentName = "wb-menu",
 		$elm
 			.removeClass( "sm-open" )
 			.children( ".open" )
-				.removeClass( "open" )
-				.attr( {
-					"aria-hidden": "true",
-					"aria-expanded": "false"
-				} );
+			.removeClass( "open" )
+			.attr( {
+				"aria-hidden": "true",
+				"aria-expanded": "false"
+			} )
+
+		// Close nested submenus
+			.find( "details" )
+			.removeAttr( "open" )
+			.children( "ul" )
+			.attr( {
+				"aria-hidden": "true",
+				"aria-expanded": "false"
+			} );
 
 		if ( removeActive ) {
 			$elm.removeClass( "active" );
@@ -6328,18 +7593,20 @@ var componentName = "wb-menu",
 
 		menuClose( $elm.find( ".active" ), true );
 
+		menu.addClass( "active" );
+
 		// Ignore if doesn't have a submenu
 		if ( menuLink.attr( "aria-haspopup" ) === "true" ) {
 
 			// Add the open state classes
 			menu
-				.addClass( "active sm-open" )
+				.addClass( "sm-open" )
 				.children( ".sm" )
-					.addClass( "open" )
-					.attr( {
-						"aria-hidden": "false",
-						"aria-expanded": "true"
-					} );
+				.addClass( "open" )
+				.attr( {
+					"aria-hidden": "false",
+					"aria-expanded": "true"
+				} );
 		}
 	},
 
@@ -6402,7 +7669,7 @@ $document.on( "timerpoke.wb " + initEvent + " ajax-fetched.wb ajax-failed.wb", s
 } );
 
 $document.on( "mouseleave", selector + " .menu", function( event ) {
-    var $currentTarget = $( event.currentTarget );
+	var $currentTarget = $( event.currentTarget );
 
 	// Clear the timeout for open/closing menus
 	clearTimeout( globalTimeout );
@@ -6410,6 +7677,13 @@ $document.on( "mouseleave", selector + " .menu", function( event ) {
 	globalTimeout = setTimeout( function() {
 		menuClose( $currentTarget.find( ".active" ), true );
 	}, hoverDelay );
+} );
+
+// Prevent opening another menu if mouse re-enters already opened menu
+$document.on( "mouseenter", selector + " .sm", function() {
+	if ( $( this ).attr( "aria-expanded" ) === "true" ) {
+		clearTimeout( globalTimeout );
+	}
 } );
 
 // Touchscreen "touches" on menubar items should close the submenu if it is open
@@ -6443,25 +7717,25 @@ $document.on( "click", selector + " [role=menu] [aria-haspopup=true]", function(
 		isOpen = submenu.getAttribute( "aria-hidden" ) === "false",
 		menuItemOffsetTop, menuContainer;
 
-		// Close any other open menus
-		if ( !isOpen ) {
-			$( parent )
-				.closest( "[role^='menu']" )
-					.find( "[aria-hidden=false]" )
-						.parent()
-							.find( "[aria-haspopup=true]" )
-								.not( menuItem )
-									.trigger( "click" );
+	// Close any other open menus
+	if ( !isOpen ) {
+		$( parent )
+			.closest( "[role^='menu']" )
+			.find( "[aria-hidden=false]" )
+			.parent()
+			.find( "[aria-haspopup=true]" )
+			.not( menuItem )
+			.trigger( "click" );
 
-			// Ensure the opened menu is in view if in a mobile panel
-			menuContainer = document.getElementById( "mb-pnl" );
-			menuItemOffsetTop = menuItem.offsetTop;
-			if ( $.contains( menuContainer, menuItem ) &&
-				menuItemOffsetTop < menuContainer.scrollTop ) {
+		// Ensure the opened menu is in view if in a mobile panel
+		menuContainer = document.getElementById( "mb-pnl" );
+		menuItemOffsetTop = menuItem.offsetTop;
+		if ( $.contains( menuContainer, menuItem ) &&
+			menuItemOffsetTop < menuContainer.scrollTop ) {
 
-				menuContainer.scrollTop = menuItemOffsetTop;
-			}
+			menuContainer.scrollTop = menuItemOffsetTop;
 		}
+	}
 
 	submenu.setAttribute( "aria-expanded", !isOpen );
 	submenu.setAttribute( "aria-hidden", isOpen );
@@ -6513,26 +7787,44 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 		$menuLink, $parentMenu, $parent, $subMenu, result,
 		menuitemSelector, isOpen, menuItemOffsetTop, menuContainer;
 
+	// Define keycodes. (Make const when WET supports ES6)
+	var TAB_KC = 9,
+		ENTER_KC = 13,
+		ESC_KC = 27,
+		LEFT_KC = 37,
+		UP_KC = 38,
+		RIGHT_KC = 39,
+		DOWN_KC = 40,
+		SPACE_KC = 32;
+
 	if ( !( event.ctrlKey || event.altKey || event.metaKey ) ) {
 
 		// Tab key = Hide all sub-menus
-		if ( which === 9 ) {
+		if ( which === TAB_KC ) {
+			menuClose( $( selector + " .active" ), true );
+
+		//Enter or spacebar on a link = follow the link and close menus
+		} else if ( menuItem.nodeName === "A" && menuItem.hasAttribute( "href" ) &&
+			( which === ENTER_KC || which === SPACE_KC ) ) {
+
+			event.preventDefault();
+			menuItem.click();
 			menuClose( $( selector + " .active" ), true );
 
 		// Menu item is within a menu bar
 		} else if ( inMenuBar ) {
 
 			// Left / right arrow = Previous / next menu item
-			if ( which === 37 || which === 39 ) {
+			if ( which === LEFT_KC || which === RIGHT_KC ) {
 				event.preventDefault();
 				menuIncrement(
 					$menu.find( "> li > a" ),
 					$menuItem,
-					which === 37 ? -1 : 1
+					which === LEFT_KC ? -1 : 1
 				);
 
 			// Enter sub-menu
-			} else if ( hasPopup && ( which === 13 || which === 38 || which === 40 ) ) {
+			} else if ( hasPopup && ( which === ENTER_KC || which === SPACE_KC || which === UP_KC || which === DOWN_KC ) ) {
 				event.preventDefault();
 				$parent = $menuItem.parent();
 				$subMenu = $parent.find( ".sm" );
@@ -6546,7 +7838,7 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 				$subMenu.children( "li" ).eq( 0 ).find( menuItemSelector ).trigger( focusEvent );
 
 			// Hide sub-menus and set focus
-			} else if ( which === 27 ) {
+			} else if ( which === ESC_KC ) {
 				event.preventDefault();
 				menuClose( $menu.closest( selector ).find( ".active" ), false );
 
@@ -6555,7 +7847,7 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 				event.preventDefault();
 				selectByLetter(
 					which,
-					$menuItem.parent().find( "> ul > li > a" ).get()
+					$menuItem.parent().find( "> ul > li > a, > ul > li > details > summary" ).get()
 				);
 			}
 
@@ -6564,21 +7856,21 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 			menuitemSelector = menuItemSelector;
 
 			// Up / down arrow = Previous / next menu item
-			if ( which === 38 || which === 40 ) {
+			if ( which === UP_KC || which === DOWN_KC ) {
 				event.preventDefault();
 				menuIncrement(
 					$menu.children( "li" ).find( menuitemSelector ),
 					$menuItem,
-					which === 38 ? -1 : 1
+					which === UP_KC ? -1 : 1
 				);
 
-			// Enter or right arrow with a submenu
-			} else if ( hasPopup && ( which === 13 || which === 39 ) ) {
+			// Enter, space, or right arrow with a submenu
+			} else if ( hasPopup && ( which === ENTER_KC || which === SPACE_KC || which === RIGHT_KC ) ) {
 				$parent = $menuItem.parent();
 
-				if ( which === 39 ) {
-					event.preventDefault();
-				}
+				// Prevent handling by details.js polyfill
+				event.stopImmediatePropagation();
+				event.preventDefault();
 
 				// If the menu item is a summary element
 				if ( menuItem.nodeName.toLowerCase( "summary" ) ) {
@@ -6588,11 +7880,11 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 					if ( !isOpen ) {
 						$( parent )
 							.closest( "[role^='menu']" )
-								.find( "[aria-hidden=false]" )
-									.parent()
-										.find( "[aria-haspopup=true]" )
-											.not( menuItem )
-												.trigger( "click" );
+							.find( "[aria-hidden=false]" )
+							.parent()
+							.find( "[aria-haspopup=true]" )
+							.not( menuItem )
+							.trigger( "click" );
 
 						// Ensure the opened menu is in view if in a mobile panel
 						menuContainer = document.getElementById( "mb-pnl" );
@@ -6602,10 +7894,8 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 
 							menuContainer.scrollTop = menuItemOffsetTop;
 						}
-					}
 
-					// Ensure the menu is opened or stays open
-					if ( ( !isOpen && which === 39 ) || ( isOpen && which === 13 ) ) {
+						// Ensure the menu is opened or stays open
 						$menuItem.trigger( "click" );
 					}
 
@@ -6617,23 +7907,23 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 							"aria-hidden": "false"
 						} )
 						.find( "[role=menuitem]:first" )
-							.trigger( "setfocus.wb" );
+						.trigger( "setfocus.wb" );
 				}
 
 			// Escape, left / right arrow without a submenu
-			} else if ( which === 27 || which === 37 || which === 39 ) {
+			} else if ( which === ESC_KC || which === LEFT_KC || which === RIGHT_KC ) {
 				$parent = $menu.parent();
 				$parentMenu = $parent.closest( "[role^='menu']" );
-				if ( which === 37 || which === 39 ) {
+				if ( which === LEFT_KC || which === RIGHT_KC ) {
 					event.preventDefault();
 				}
 
 				// If the parent menu is a menubar
 				if ( $parentMenu.attr( "role" ) === "menubar" ) {
-					$menuLink = $parent.children( "[href=#" + $menu.attr( "id" ) + "]" );
+					$menuLink = $menu.siblings( "a" );
 
 					// Escape key = Close menu and return to menu bar item
-					if ( which === 27 ) {
+					if ( which === ESC_KC ) {
 						event.preventDefault();
 						$menuLink.trigger( focusEvent );
 
@@ -6647,13 +7937,13 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 						menuIncrement(
 							$parentMenu.find( "> li > a" ),
 							$menuLink,
-							which === 37 ? -1 : 1
+							which === LEFT_KC ? -1 : 1
 						);
 					}
 
 				// Escape or left arrow: Go up a level if there is a higher-level
 				// menu or close the current submenu if there isn't
-				} else if ( which !== 39 ) {
+				} else if ( which !== RIGHT_KC ) {
 					$subMenu = $parentMenu.length !== 0 ? $menu : $menuItem;
 
 					// There is a higher-level menu
@@ -6661,8 +7951,8 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 						event.preventDefault();
 						$menu.closest( "li" )
 							.find( menuitemSelector )
-								.trigger( "click" )
-								.trigger( "setfocus.wb" );
+							.trigger( "click" )
+							.trigger( "setfocus.wb" );
 
 					// No higher-level menu but the current submenu is open
 					} else if ( $menuItem.parent().children( "ul" ).attr( "aria-hidden" ) === "false" ) {
@@ -6696,6 +7986,12 @@ $document.on( "keydown", selector + " [role=menuitem]", function( event ) {
 	}
 } );
 
+// Prevent Firefox from double-triggering menu behaviour
+$document.on( "keyup", selector + " [role=menuitem]", function( event ) {
+	event.preventDefault();
+	return false;
+} );
+
 // Close the mobile panel if switching to medium, large or extra large view
 $document.on( "mediumview.wb largeview.wb xlargeview.wb", function() {
 	var mobilePanel = document.getElementById( "mb-pnl" );
@@ -6711,7 +8007,7 @@ wb.add( selector );
 
 /**
  * @title WET-BOEW Multimedia PLayer
- * @overview An accessible multimedia player for <audio> and <video> tags, including a Flash fallback
+ * @overview An accessible multimedia player for <audio> and <video> tags
  * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
  * @author WET Community
  */
@@ -6723,6 +8019,8 @@ wb.add( selector );
 var componentName = "wb-mltmd",
 	selector = "." + componentName,
 	initEvent = "wb-init" + selector,
+	ctrls = selector + " .wb-mm-ctrls",
+	dispCtrls = selector + " .display," + ctrls,
 	template,
 	i18n, i18nText,
 	youtubeReadyEvent = "ready.youtube",
@@ -6731,7 +8029,6 @@ var componentName = "wb-mltmd",
 	captionsVisibleChangeEvent = "ccvischange" + selector,
 	renderUIEvent = "renderui" + selector,
 	initializedEvent = "inited" + selector,
-	fallbackEvent = "fallback" + selector,
 	youtubeEvent = "youtube" + selector,
 	resizeEvent = "resize" + selector,
 	templateLoadedEvent = "templateloaded" + selector,
@@ -6746,6 +8043,7 @@ var componentName = "wb-mltmd",
 		"timeupdate",
 		"waiting",
 		"canplay",
+		"seeked",
 		"progress",
 		captionsLoadedEvent,
 		captionsLoadFailedEvent,
@@ -6764,14 +8062,56 @@ var componentName = "wb-mltmd",
 		// Start initialization
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
-		var eventTarget = wb.init( event, componentName, selector ),
-			elmId;
+		var eventTarget = wb.init( event, componentName, selector );
 
 		if ( eventTarget ) {
-			elmId = eventTarget.id;
 
 			// Only initialize the i18nText once
 			if ( !i18nText ) {
+
+				// YT workaround for when played inside a modal dialog, like with lightbox
+				//
+				// the issue is when the iFrame is moved, it reloads and then it doesn't emit the right event to
+				// adjust the WET multimedia controller to represent its current state.
+				//
+				// This needs to be executed only once, that is why it is in the i18nText conditional
+				window.addEventListener( "message", function( e ) {
+					var data, frames, i, i_len, i_cache;
+
+					// Ensure we don't conflict with other postMessage listener
+					try {
+						data = JSON.parse( e.data );
+
+						// Only for a specific YT message
+						if ( data.event && data.event === "infoDelivery" && data.info && data.info.playerState ) {
+
+							// Find the iFrame and evaluate if it needs to be reposted
+							frames = document.getElementsByTagName( "iframe" );
+
+							i_len = frames.length;
+							for ( i = 0; i < i_len; i++ ) {
+								i_cache = frames[ i ];
+								if ( i_cache.dataset.L2 && i_cache.contentWindow === e.source  ) {
+
+									// Prepare the event data and emulate the YT object for our event management need
+									youTubeEvents.call( i_cache, {
+										target: i_cache.parentElement.parentElement.object,
+										data: data.info.playerState
+									} );
+									break;
+								}
+							}
+						}
+					} catch ( err ) {
+
+						/* swallow error */
+					}
+				} );
+
+				//
+				// END YT workaround
+				//
+
 				i18n = wb.i18n;
 				i18nText = {
 					play: i18n( "mmp-play" ),
@@ -7004,12 +8344,20 @@ var componentName = "wb-mltmd",
 				return data.replace( /<img|object [^>]*>/g, "" );
 			},
 			success: function( data ) {
-				elm.trigger( {
-					type: captionsLoadedEvent,
-					captions: data.indexOf( "<html" ) !== -1 ?
-						parseHtml( $( data ) ) :
-						parseXml( $( data ) )
-				} );
+				var captionItems = data.indexOf( "<html" ) !== -1 ?
+					parseHtml( $( data ) ) :
+					parseXml( $( data ) );
+
+				if ( captionItems.length ) {
+					elm.trigger( {
+						type: captionsLoadedEvent,
+						captions: captionItems
+					} );
+				} else {
+					elm.trigger( {
+						type: captionsLoadFailedEvent
+					} );
+				}
 			},
 			error: function( response, textStatus, errorThrown ) {
 				elm.trigger( {
@@ -7028,10 +8376,18 @@ var componentName = "wb-mltmd",
 	 * @fires ccloaded.wb-mltmd
 	 */
 	loadCaptionsInternal = function( elm, obj ) {
-		elm.trigger( {
-			type: captionsLoadedEvent,
-			captions: parseHtml( obj )
-		} );
+		var captionItems = parseHtml( obj );
+
+		if ( captionItems.length ) {
+			elm.trigger( {
+				type: captionsLoadedEvent,
+				captions: captionItems
+			} );
+		} else {
+			elm.trigger( {
+				type: captionsLoadFailedEvent
+			} );
+		}
 	},
 
 	/**
@@ -7047,7 +8403,7 @@ var componentName = "wb-mltmd",
 
 		// added &#160; (non-breaking space) to prevent caption space from collapsing
 		// Used .html() instead of .append for performance purposes
-		// http://jsperf.com/jquery-append-vs-html-list-performance/2
+		// https://jsperf.com/jquery-append-vs-html-list-performance/2
 		area.html( "&#160;" );
 
 		for ( i = 0; i < captionsLength; i += 1 ) {
@@ -7060,7 +8416,7 @@ var componentName = "wb-mltmd",
 
 	/**
 	 * @method playerApi
-	 * @description Normalizes the calls to the HTML5 media API and Flash Fallback
+	 * @description Normalizes the calls to the HTML5 media API
 	 * @param {String} fn The function to call
 	 * @param {object} args The arguments to send to the function call
 	 */
@@ -7197,7 +8553,8 @@ var componentName = "wb-mltmd",
 			$media = $( media ),
 			timeline = function() {
 				$media.trigger( "timeupdate" );
-			};
+			},
+			$mltmPlayerElm;
 
 		switch ( event.data ) {
 		case null:
@@ -7214,6 +8571,12 @@ var componentName = "wb-mltmd",
 			media.timeline = clearInterval( media.timeline );
 			break;
 		case 1:
+			if ( media.dataset.L2 ) {
+
+				// Reset the close caption state when iframe was reloaded
+				$mltmPlayerElm = $media.parentsUntil( selector ).parent();
+				youTubeApi.call( $mltmPlayerElm.get( 0 ), "setCaptionsVisible", $mltmPlayerElm.hasClass( captionClass ) );
+			}
 			$media
 				.trigger( "canplay" )
 				.trigger( "play" )
@@ -7303,7 +8666,7 @@ $document.on( initializedEvent, selector, function( event ) {
 			url = wb.getUrlParts( $this.find( "[type='video/youtube']" ).attr( "src" ) );
 
 			// lets set the flag for the call back
-			data.youTubeId = url.params.v;
+			data.youTubeId = url.params.v ? url.params.v : url.pathname.substr( 1 );
 
 			if ( youTube.ready === false ) {
 				$document.one( youtubeReadyEvent, function() {
@@ -7321,52 +8684,13 @@ $document.on( initializedEvent, selector, function( event ) {
 		} else if ( media.error === null && media.currentSrc !== "" && media.currentSrc !== undef ) {
 			$this.trigger( renderUIEvent, [ type, data ] );
 		} else {
-			$this.trigger( fallbackEvent, data );
+
+			// Do nothing since IE8 support is no longer required
+			return;
 		}
 
 		// Identify that initialization has completed
 		wb.ready( $this, componentName );
-	}
-} );
-
-$document.on( fallbackEvent, selector, function( event, data ) {
-	if ( event.namespace === componentName ) {
-		var $this = $( event.currentTarget ),
-			$media = data.media,
-			type = data.type,
-			source = $media.find( ( type === "video" ? "[type='video/mp4']" : "[type='audio/mp3']" ) ).attr( "src" ),
-			posterUrl = $media.attr( "poster" ),
-			flashvars = "id=" + data.mId,
-			width = data.width,
-			height = data.height > 0 ? data.height : Math.round( data.width / 1.777 ),
-			playerresource = wb.getPath( "/assets" ) + "/multimedia.swf?" + new Date().getTime(),
-			poster, $newMedia;
-
-		flashvars += "&amp;media=" + encodeURI( wb.getUrlParts( source ).absolute );
-		if ( type === "video" ) {
-			poster = "<img src='" + posterUrl + "' class='img-responsive' height='" +
-				height + "' width='" + width + "' alt='" + $media.attr( "title" ) + "'/>";
-
-			flashvars += "&amp;height=" + height + "&amp;width=" +
-				width + "&amp;posterimg=" + encodeURI( wb.getUrlParts( posterUrl ).absolute );
-		}
-
-		$newMedia = $( "<object id='" + data.mId + "' width='" + width +
-			"' height='" + height + "' class='" + type +
-			"' type='application/x-shockwave-flash' data='" +
-			playerresource + "' tabindex='-1' play='' pause=''>" +
-			"<param name='movie' value='" + playerresource + "'/>" +
-			"<param name='flashvars' value='" + flashvars + "'/>" +
-			"<param name='allowScriptAccess' value='always'/>" +
-			"<param name='bgcolor' value='#000000'/>" +
-			"<param name='wmode' value='opaque'/>" +
-			poster + "</object>" );
-
-		$media.replaceWith( $newMedia );
-
-		data.media = $newMedia;
-
-		$this.trigger( renderUIEvent, [ type, data ] );
 	}
 } );
 
@@ -7413,6 +8737,22 @@ $document.on( youtubeEvent, selector, function( event, data ) {
 		data.media = $media;
 		data.ytPlayer = ytPlayer;
 
+		// Detect if the YT player reloads, like when magnific Popup show the modal, because it moves the iframe
+		// and then the iframe gets refreshed and reloaded. So the issue is that the iframe stops emitting the event
+		// needed to adjust the multimedia player controler, like the "onStateChange" event.
+		$media.on( "load", function( evt ) {
+
+			var elm = evt.currentTarget,
+				ds = elm.dataset;
+
+			// Do nothing on the first load and add a flag to indicate it is loaded a second time
+			if ( ds.L1 ) {
+				ds.L2 = true;
+			} else {
+				ds.L1 = true;
+			}
+		} );
+
 		$this.trigger( renderUIEvent, [ "youtube", data ] );
 	}
 } );
@@ -7423,7 +8763,7 @@ $document.on( renderUIEvent, selector, function( event, type, data ) {
 			captionsUrl = wb.getUrlParts( data.captions ),
 			currentUrl = wb.getUrlParts( window.location.href ),
 			$media = data.media,
-			$eventReceiver, $share;
+			$eventReceiver;
 
 		$media
 			.after( tmpl( template, data ) )
@@ -7452,10 +8792,10 @@ $document.on( renderUIEvent, selector, function( event, type, data ) {
 
 		// Create the share widgets if needed
 		if ( data.shareUrl !== undef ) {
-			$share = $( "<div class='wb-share' data-wb-share=\'{\"type\": \"" +
+			$( "<div class='wb-share' data-wb-share='{\"type\": \"" +
 				( type === "audio" ? type : "video" ) + "\", \"title\": \"" +
-				data.title.replace( "'", "&apos;" ) + "\", \"url\": \"" + data.shareUrl +
-				"\", \"pnlId\": \"" + data.id + "-shr\"}\'></div>" )
+				data.title.replace( /'/g, "&apos;" ) + "\", \"url\": \"" + data.shareUrl +
+				"\", \"pnlId\": \"" + data.id + "-shr\"}'></div>" )
 				.insertBefore( $media.parent() )
 				.trigger( "wb-init.wb-share" );
 		}
@@ -7488,10 +8828,10 @@ $document.on( "click", selector, function( event ) {
 
 	// Optimized multiple class tests to include child glyphicon because Safari was reporting the click event
 	// from the child span not the parent button, forcing us to have to check for both elements
-	// JSPerf for multiple class matching http://jsperf.com/hasclass-vs-is-stackoverflow/7
+	// JSPerf for multiple class matching https://jsperf.com/hasclass-vs-is-stackoverflow/7
 	if ( className.match( /playpause|-play|-pause|display/ ) || $target.is( "object" ) || $target.is( "video" ) ) {
 		this.player( "getPaused" ) || this.player( "getEnded" ) ? this.player( "play" ) : this.player( "pause" );
-	} else if ( className.match( /\bcc\b|-subtitles/ )  ) {
+	} else if ( className.match( /(^|\s)cc\b|-subtitles/ ) && !$target.attr( "disabled" ) && !$target.parent().attr( "disabled" ) ) {
 		this.player( "setCaptionsVisible", !this.player( "getCaptionsVisible" ) );
 	} else if ( className.match( /\bmute\b|-volume-(up|off)/ ) ) {
 		this.player( "setMuted", !this.player( "getMuted" ) );
@@ -7515,26 +8855,37 @@ $document.on( "input change", selector, function( event ) {
 	}
 } );
 
-$document.on( "keydown", selector, function( event ) {
-	var $this = $( event.currentTarget ),
-		playerTarget = event.currentTarget,
+$document.on( "keydown", dispCtrls, function( event ) {
+	var playerTarget = event.currentTarget.parentNode,
 		which = event.which,
-		ctrls = ".wb-mm-ctrls",
 		volume = 0,
-		step = 0.05;
+		step = 0.05,
+		$playerTarget = $( playerTarget );
 
 	if ( !( event.ctrlKey || event.altKey || event.metaKey ) ) {
 		switch ( which ) {
 		case 32:
-			$this.find( ctrls + " .playpause" ).trigger( "click" );
+
+			// Mute/unmute if focused on the mute/unmute button or volume input.
+			if ( $( event.target ).hasClass( "mute" ) || event.target.nodeName === "INPUT" ) {
+				$playerTarget.find( ".mute" ).trigger( "click" );
+			} else if ( $( event.target ).hasClass( "cc" ) ) {
+
+				// Show/hide captions if focused on the closed captions button.
+				$playerTarget.find( ".cc" ).trigger( "click" );
+			} else {
+
+				// Play/pause if focused on anything else (i.e. the video itself, play/pause button or progress bar).
+				$playerTarget.find( ".playpause" ).trigger( "click" );
+			}
 			break;
 
 		case 37:
-			playerTarget.player( "setCurrentTime", this.player( "getCurrentTime" ) - this.player( "getDuration" ) * 0.05 );
+			playerTarget.player( "setCurrentTime", this.parentNode.player( "getCurrentTime" ) - this.parentNode.player( "getDuration" ) * 0.05 );
 			break;
 
 		case 39:
-			playerTarget.player( "setCurrentTime", this.player( "getCurrentTime" ) + this.player( "getDuration" ) * 0.05 );
+			playerTarget.player( "setCurrentTime", this.parentNode.player( "getCurrentTime" ) + this.parentNode.player( "getDuration" ) * 0.05 );
 			break;
 
 		case 38:
@@ -7554,7 +8905,7 @@ $document.on( "keydown", selector, function( event ) {
 	}
 } );
 
-$document.on( "keyup", selector, function( event ) {
+$document.on( "keyup", ctrls, function( event ) {
 	if ( event.which === 32 && !( event.ctrlKey || event.altKey || event.metaKey ) ) {
 
 		// Allows the spacebar to be used for play/pause without double triggering
@@ -7563,7 +8914,14 @@ $document.on( "keyup", selector, function( event ) {
 } );
 
 $document.on( "wb-activate", selector, function() {
-    this.player( "play" );
+	this.player( "play" );
+} );
+
+$document.on( "closed.wb-overlay", ".wb-overlay", function( event ) {
+	var mltmdPlayer = event.currentTarget.querySelector( selector );
+	if ( mltmdPlayer ) {
+		mltmdPlayer.player( "pause" );
+	}
 } );
 
 $document.on( multimediaEvents, selector, function( event, simulated ) {
@@ -7593,9 +8951,9 @@ $document.on( multimediaEvents, selector, function( event, simulated ) {
 		$button
 			.attr( "title", buttonData )
 			.children( "span" )
-				.toggleClass( "glyphicon-play", !isPlay )
-				.toggleClass( "glyphicon-pause", isPlay )
-				.html( invStart + buttonData + invEnd );
+			.toggleClass( "glyphicon-play", !isPlay )
+			.toggleClass( "glyphicon-pause", isPlay )
+			.html( invStart + buttonData + invEnd );
 		break;
 
 	case "volumechange":
@@ -7609,9 +8967,9 @@ $document.on( multimediaEvents, selector, function( event, simulated ) {
 				"aria-pressed": isMuted
 			} )
 			.children( "span" )
-				.toggleClass( "glyphicon-volume-up", !isMuted )
-				.toggleClass( "glyphicon-volume-off", isMuted )
-				.html( invStart + buttonData + invEnd );
+			.toggleClass( "glyphicon-volume-up", !isMuted )
+			.toggleClass( "glyphicon-volume-off", isMuted )
+			.html( invStart + buttonData + invEnd );
 		$slider = $this.find( "input[type='range']" );
 		$slider[ 0 ].value = isMuted ? 0 : volume;
 		$slider.trigger( "wb-update.wb-slider" );
@@ -7644,8 +9002,8 @@ $document.on( multimediaEvents, selector, function( event, simulated ) {
 		// Skip to pointer from the querystring
 		skipTo = wb.pageUrlParts.params[ event.target.id ];
 		if ( skipTo ) {
-				skipTo = parseTime( skipTo );
-				eventTarget.player( "setCurrentTime", skipTo );
+			skipTo = parseTime( skipTo );
+			eventTarget.player( "setCurrentTime", skipTo );
 		}
 		break;
 
@@ -7657,11 +9015,15 @@ $document.on( multimediaEvents, selector, function( event, simulated ) {
 
 	case "ccloadfail":
 		if ( eventNamespace === componentName ) {
-			$this.find( ".wb-mm-cc" )
-				.append( "<p class='errmsg'><span>" + i18nText.cc_error + "</span></p>" )
-				.end()
-				.find( ".cc" )
-				.attr( "disabled", "" );
+			if ( !$this.hasClass( "errmsg" ) ) {
+				$this.addClass( "cc_on errmsg" )
+					.find( ".wb-mm-cc" )
+					.append( "<div>" + i18nText.cc_error + "</div>" )
+					.end()
+					.find( ".cc" )
+					.attr( "disabled", "" )
+					.removeAttr( "aria-pressed" );
+			}
 		}
 		break;
 
@@ -7687,6 +9049,7 @@ $document.on( multimediaEvents, selector, function( event, simulated ) {
 		break;
 
 	case "canplay":
+	case "seeked":
 		this.loading = clearTimeout( this.loading );
 		$this.removeClass( "waiting" );
 		break;
@@ -7784,11 +9147,11 @@ var componentName = "wb-navcurr",
 				menuLinksArray = [],
 				menuLinksUrlArray = [],
 				windowLocation = window.location,
-				pageUrl = windowLocation.hostname + windowLocation.pathname.replace( /^([^\/])/, "/$1" ),
+				pageUrl = windowLocation.hostname + windowLocation.pathname.replace( /^([^/])/, "/$1" ),
 				pageUrlQuery = windowLocation.search,
 				match = false,
 				className = classNameOverride ? classNameOverride : componentName,
-				len, i, j, link, linkHref, linkUrl, linkQuery, linkQueryLen,
+				child, len, i, j, link, linkHref, linkUrl, linkQuery, linkQueryLen,
 				localBreadcrumbLinks, localBreadcrumbLinksArray, localBreadcrumbLinksUrlArray,
 				localBreadcrumbQuery, localBreadcrumbLinkUrl;
 
@@ -7801,7 +9164,7 @@ var componentName = "wb-navcurr",
 					linkHref = link.getAttribute( "href" );
 					if ( linkHref !== null ) {
 						if ( linkHref.length !== 0 && linkHref.charAt( 0 ) !== "#" ) {
-							linkUrl = link.hostname + link.pathname.replace( /^([^\/])/, "/$1" );
+							linkUrl = link.hostname + link.pathname.replace( /^([^/])/, "/$1" );
 							linkQuery = link.search;
 							linkQueryLen = linkQuery.length;
 							if ( pageUrl.slice( -linkUrl.length ) === linkUrl && ( linkQueryLen === 0 || pageUrlQuery.slice( -linkQueryLen ) === linkQuery ) ) {
@@ -7823,14 +9186,15 @@ var componentName = "wb-navcurr",
 						// Pre-process the breadcrumb links
 						localBreadcrumbLinksArray = [];
 						localBreadcrumbLinksUrlArray = [];
-						localBreadcrumbLinks = ( breadcrumb.jquery ? breadcrumb[ 0 ] : breadcrumb ).getElementsByTagName( "a" );
+						localBreadcrumbLinks = ( breadcrumb.jquery ? breadcrumb[ 0 ] : breadcrumb ).getElementsByTagName( "li" );
 						len = localBreadcrumbLinks.length;
-						for ( i = 0; i !== len; i += 1 ) {
-							link = localBreadcrumbLinks[ i ];
-							linkHref = link.getAttribute( "href" );
-							if ( linkHref.length !== 0 && linkHref.charAt( 0 ) !== "#" ) {
-								localBreadcrumbLinksArray.push( link );
-								localBreadcrumbLinksUrlArray.push( link.hostname + link.pathname.replace( /^([^\/])/, "/$1" ) );
+						if ( len ) {
+							link = localBreadcrumbLinks[ len - 1 ];
+							child = link.firstChild;
+							linkHref = ( child && child.nodeName === "A" ) ? child.getAttribute( "href" ) : "";
+							if ( linkHref && linkHref.charAt( 0 ) !== "#" ) {
+								localBreadcrumbLinksArray.push( child );
+								localBreadcrumbLinksUrlArray.push( child.hostname + child.pathname.replace( /^([^/])/, "/$1" ) );
 							}
 						}
 
@@ -7906,6 +9270,7 @@ var componentName = "wb-overlay",
 	closeClass = "overlay-close",
 	linkClass = "overlay-lnk",
 	ignoreOutsideClass = "outside-off",
+	OverlayOpenFlag = "wb-overlay-dlg",
 	initialized = false,
 	sourceLinks = {},
 	setFocusEvent = "setfocus.wb",
@@ -7922,7 +9287,7 @@ var componentName = "wb-overlay",
 		// returns DOM object = proceed with init
 		// returns undefined = do not proceed with init (e.g., already initialized)
 		var elm = wb.init( event, componentName, selector ),
-			$elm, $header, closeText, overlayClose;
+			$elm, footer, $header, closeText, overlayClose;
 
 		if ( elm ) {
 			$elm = $( elm );
@@ -7937,6 +9302,41 @@ var componentName = "wb-overlay",
 					esc: i18n( "esc-key" ),
 					closeOverlay: i18n( closeClass )
 				};
+			}
+
+			// One left and right panels add close button
+			var isPanel = ( $elm.attr( "class" ).indexOf( "wb-panel" ) > -1 ) ? true : false,
+				isPopup = ( $elm.attr( "class" ).indexOf( "wb-popup" ) > -1 ) ? true : false;
+			if ( isPanel || isPopup ) {
+				footer = $elm.find( ".modal-footer" )[ 0 ];
+
+				var hasFooter = ( footer && footer.length !== 0 ) ? true : false,
+					hasButton = hasFooter && $( footer ).find( closeClass ).length !== 0,
+					closeClassFtr = ( $elm.hasClass( "wb-panel-l" ) ? "pull-right " : "pull-left " )  + closeClass,
+					closeTextFtr = i18nText.close,
+					spanTextFtr = i18nText.closeOverlay,
+					overlayCloseFtr;
+
+				if ( !hasButton ) {
+					if ( !hasFooter ) {
+						footer = document.createElement( "div" );
+						footer.setAttribute( "class", "modal-footer" );
+					}
+
+					if ( isPopup ) {
+						footer.style.border = "0";
+					}
+
+					overlayCloseFtr = "<button type='button' class='btn btn-sm btn-primary " + closeClassFtr +
+						"' title='" + spanTextFtr + "'>" +
+						closeTextFtr +
+						"<span class='wb-inv'>" + spanTextFtr + "</span></button>";
+
+					$( footer ).append( overlayCloseFtr );
+					if ( !hasFooter ) {
+						$elm.append( footer );
+					}
+				}
 			}
 
 			// Add close button
@@ -7968,6 +9368,11 @@ var componentName = "wb-overlay",
 			.addClass( "open" )
 			.attr( "aria-hidden", "false" );
 
+		if ( $overlay.hasClass( "wb-popup-full" ) || $overlay.hasClass( "wb-popup-mid" ) ) {
+			$overlay.attr( "data-pgtitle", document.getElementsByTagName( "H1" )[ 0 ].textContent );
+			$document.find( "body" ).addClass( OverlayOpenFlag );
+		}
+
 		if ( !noFocus ) {
 			$overlay
 				.scrollTop( 0 )
@@ -7981,6 +9386,8 @@ var componentName = "wb-overlay",
 				sourceLinks[ overlayId ] = null;
 			}, 1 );
 		}
+
+		$overlay.trigger( "opened" + selector );
 	},
 
 	closeOverlay = function( overlayId, noFocus, userClosed ) {
@@ -7990,6 +9397,10 @@ var componentName = "wb-overlay",
 		$overlay
 			.removeClass( "open" )
 			.attr( "aria-hidden", "true" );
+
+		if ( $overlay.hasClass( "wb-popup-full" ) || $overlay.hasClass( "wb-popup-mid" ) ) {
+			$document.find( "body" ).removeClass( OverlayOpenFlag );
+		}
 
 		if ( userClosed ) {
 			$overlay.addClass( "user-closed" );
@@ -8003,10 +9414,12 @@ var componentName = "wb-overlay",
 
 		// Delete the source link reference
 		delete sourceLinks[ overlayId ];
+
+		$overlay.trigger( "closed" + selector );
 	};
 
 $document.on( "timerpoke.wb " + initEvent + " keydown open" + selector +
-	" close" + selector, selector, function( event ) {
+" close" + selector, selector, function( event ) {
 
 	var eventType = event.type,
 		which = event.which,
@@ -8080,13 +9493,13 @@ $document.on( "click vclick", "." + closeClass, function( event ) {
 } );
 
 // Handler for clicking on a source link for the overlay
-$document.on( "click vclick", "." + linkClass, function( event ) {
+$document.on( "click vclick keydown", "." + linkClass, function( event ) {
 	var which = event.which,
 		sourceLink = event.currentTarget,
 		overlayId = sourceLink.hash.substring( 1 );
 
 	// Ignore if not initialized and middle/right mouse buttons
-	if ( initialized && ( !which || which === 1 ) ) {
+	if ( initialized && ( !which || which === 1 || which === 32 ) ) {
 		event.preventDefault();
 
 		// Introduce a delay to prevent outside activity detection
@@ -8207,12 +9620,12 @@ wb.add( selector );
 
 /**
  * @title WET-BOEW Prettify Plugin
- * @overview Wrapper for Google Code Prettify library: https://code.google.com/p/google-code-prettify/
+ * @overview Wrapper for Google Code Prettify library: https://github.com/google/code-prettify
  * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
  * @author @patheard
  */
 /*
- * Syntax highlighting of source code snippets in an html page using [google-code-prettify](http://code.google.com/p/google-code-prettify/).
+ * Syntax highlighting of source code snippets in an html page using [google-code-prettify](https://github.com/google/code-prettify).
  *
  * 1. Apply `class="prettyprint"` to a `pre` or `code` element to apply syntax highlighting. Alternatively use `class="all-pre"` to apply syntax highlighting to all `pre` elements on the page.
  * 2. Apply `class="linenums"` to a `pre` or `code` element to add line numbers. Alternatively use `class="all-linenums"` to all applicable `pre` elements. Specify the starting number by adding `linenums:#` before `linenums`.
@@ -8377,7 +9790,7 @@ var componentName = "wb-rsz",
 		largeview: 1200,
 		xlargeview: 1600
 	},
-	eventsAll, resizeTest, currentView,
+	resizeTest, currentView,
 
 	/**
 	 * @method init
@@ -8406,9 +9819,6 @@ var componentName = "wb-rsz",
 				window.innerWidth || $document.width(),
 				window.innerHeight || $document.height()
 			];
-
-			// Create a string containing all the events
-			eventsAll = events.join( " " );
 
 			// Determine the current view
 			viewChange( sizes[ 1 ] );
@@ -8533,8 +9943,8 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 		method: "POST",				/* the request method to use */
 		additionalData: null,		/* additional data to send with the request */
 		refreshCallback: function( response ) {	/* callback function used to check the server response */
-				return response.replace( /\s/g, "" ) === "true";
-			}
+			return response.replace( /\s/g, "" ) === "true";
+		}
 	},
 
 	/**
@@ -8622,11 +10032,11 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 			child, modal, temp;
 
 		if ( $document.find( modalID ).length === 0 ) {
-				modal = document.createDocumentFragment(),
-				temp = document.createElement( "div" );
+			modal = document.createDocumentFragment();
+			temp = document.createElement( "div" );
 
 			// Create the modal dialog.  A temp <div> element is used so that its innerHTML can be set as a string.
-			temp.innerHTML = "<a class='wb-lbx lbx-modal mfp-hide' href='#" + componentName + "-modal'></a>" +
+			temp.innerHTML = "<a class='wb-lbx lbx-modal mfp-hide' href='#" + componentName + "-modal'>" + i18nText.timeoutTitle + "</a>" +
 				"<section id='" + componentName + "-modal' class='mfp-hide modal-dialog modal-content overlay-def'>" +
 				"<header class='modal-header'><h2 class='modal-title'>" + i18nText.timeoutTitle + "</h2></header>" +
 				"<div class='modal-body'></div>" +
@@ -8634,7 +10044,7 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 				"</section>";
 
 			// Get the temporary <div>'s top level children and append to the fragment
-			while ( child = temp.firstChild ) {
+			while ( ( child = temp.firstChild ) !== null ) {
 				modal.appendChild( child );
 			}
 			document.body.appendChild( modal );
@@ -8710,8 +10120,8 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 						openModal( {
 							body: "<p>" + i18nText.timeoutAlready + "</p>",
 							buttons: $( "<button type='button' class='" + confirmClass +
-								" btn btn-primary'>" + i18nText.buttonSignin + "</button>" )
-									.data( "logouturl", settings.logouturl )
+								" btn btn-primary popup-modal-dismiss'>" + i18nText.buttonSignin + "</button>" )
+								.data( "logouturl", settings.logouturl )
 						} );
 					}
 				}
@@ -8738,12 +10148,12 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 		clearTimeout( $( event.target ).data( keepaliveEvent ) );
 
 		$buttonContinue = $( buttonStart + confirmClass +
-			" btn btn-primary'>" + i18nText.buttonContinue + buttonEnd )
-				.data( settings )
-				.data( "start", getCurrentTime() );
+			" btn btn-primary popup-modal-dismiss'>" + i18nText.buttonContinue + buttonEnd )
+			.data( settings )
+			.data( "start", getCurrentTime() );
 		$buttonEnd = $( buttonStart + confirmClass + " btn btn-default'>" +
 			i18nText.buttonEnd + buttonEnd )
-				.data( "logouturl", settings.logouturl );
+			.data( "logouturl", settings.logouturl );
 
 		openModal( {
 			body: "<p>" + timeoutBegin + "<br />" + i18nText.timeoutEnd + "</p>",
@@ -8855,7 +10265,7 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 				ks: 1000000
 			};
 
-		if ( value == null ) {
+		if ( value == null ) { //eslint-disable-line no-eq-null
 			return null;
 		}
 
@@ -8877,7 +10287,7 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 	getTime = function( milliseconds ) {
 		var time = { minutes: "", seconds: "" };
 
-		if ( milliseconds != null ) {
+		if ( milliseconds != null ) { //eslint-disable-line no-eq-null
 			time.minutes = parseInt( ( milliseconds / ( 1000 * 60 ) ) % 60, 10 );
 			time.seconds = parseInt( ( milliseconds / 1000 ) % 60, 10 );
 		}
@@ -8912,7 +10322,7 @@ var $modal, $modalLink, countdownInterval, i18n, i18nText,
 
 // Bind the plugin events
 $document.on( "timerpoke.wb " + initEvent + " " + keepaliveEvent + " " +
-	inactivityEvent + " " + resetEvent, selector, function( event, settings ) {
+inactivityEvent + " " + resetEvent, selector, function( event, settings ) {
 
 	var eventType = event.type;
 
@@ -8998,69 +10408,57 @@ var componentName = "wb-share",
 
 			// The definitions of the available bookmarking sites, in URL use
 			// '{u}' for the page URL, '{t}' for the page title, {i} for the image, and '{d}' for the description
-			bitly: {
-				name: "bitly",
-				url: "https://bitly.com/a/bitmarklet?u={u}"
-			},
 			blogger: {
 				name: "Blogger",
-				url: "http://www.blogger.com/blog_this.pyra?t=&amp;u={u}&amp;n={t}"
-			},
-			delicious: {
-				name: "Delicious",
-				url: "http://delicious.com/post?url={u}&amp;title={t}"
-			},
-			digg: {
-				name: "Digg",
-				url: "http://digg.com/submit?phase=2&amp;url={u}&amp;title={t}"
+				url: "https://www.blogger.com/blog_this.pyra?t=&amp;u={u}&amp;n={t}"
 			},
 			diigo: {
 				name: "Diigo",
-				url: "http://www.diigo.com/post?url={u}&amp;title={t}"
+				url: "https://www.diigo.com/post?url={u}&amp;title={t}"
 			},
 			facebook: {
 				name: "Facebook",
-				url: "http://www.facebook.com/sharer.php?u={u}&amp;t={t}"
+				url: "https://www.facebook.com/sharer.php?u={u}&amp;t={t}"
 			},
 			gmail: {
 				name: "Gmail",
 				url: "https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su={t}&body={u}%0A{d}"
 			},
-			googleplus: {
-				name: "Google+",
-				url: "https://plus.google.com/share?url={u}&amp;hl=" + document.documentElement.lang
-			},
 			linkedin: {
 				name: "LinkedIn®",
-				url: "http://www.linkedin.com/shareArticle?mini=true&amp;url={u}&amp;title={t}&amp;ro=false&amp;summary={d}&amp;source="
+				url: "https://www.linkedin.com/shareArticle?mini=true&amp;url={u}&amp;title={t}&amp;ro=false&amp;summary={d}&amp;source="
 			},
 			myspace: {
 				name: "MySpace",
-				url: "http://www.myspace.com/Modules/PostTo/Pages/?u={u}&amp;t={t}"
+				url: "https://www.myspace.com/Modules/PostTo/Pages/?u={u}&amp;t={t}"
 			},
 			pinterest: {
 				name: "Pinterest",
-				url: "http://www.pinterest.com/pin/create/button/?url={u}&amp;media={i}&amp;description={t}"
+				url: "https://www.pinterest.com/pin/create/button/?url={u}&amp;media={i}&amp;description={t}"
 			},
 			reddit: {
 				name: "reddit",
-				url: "http://reddit.com/submit?url={u}&amp;title={t}"
+				url: "https://reddit.com/submit?url={u}&amp;title={t}"
 			},
-			stumbleupon: {
-				name: "StumbleUpon",
-				url: "http://www.stumbleupon.com/submit?url={u}&amp;title={t}"
+			tinyurl: {
+				name: "TinyURL",
+				url: "https://tinyurl.com/create.php?url={u}"
 			},
 			tumblr: {
 				name: "tumblr",
-				url: "http://www.tumblr.com/share/link?url={u}&amp;name={t}&amp;description={d}"
+				url: "https://www.tumblr.com/share/link?url={u}&amp;name={t}&amp;description={d}"
 			},
 			twitter: {
 				name: "Twitter",
-				url: "http://twitter.com/home?status={t}%20{u}"
+				url: "https://twitter.com/intent/tweet?text={t}&url={u}"
 			},
 			yahoomail: {
 				name: "Yahoo! Mail",
-				url: "http://compose.mail.yahoo.com/?to=&subject={t}&body={u}%0A{d}"
+				url: "https://compose.mail.yahoo.com/?to=&subject={t}&body={u}%0A{d}"
+			},
+			whatsapp: {
+				name: "Whatsapp",
+				url: "https://api.whatsapp.com/send?text={t}%0A{d}%0A{u}"
 			}
 		}
 	},
@@ -9119,12 +10517,12 @@ var componentName = "wb-share",
 			id = "shr-pg" + ( pnlId.length !== 0 ? "-" + pnlId : panelCount );
 			pageHref = encodeURIComponent( settings.url );
 
-			regex = /\'|&#39;|&apos;/g;
+			regex = /'|&#39;|&apos;/g;
 			pageTitle = encodeURIComponent( settings.title )
-							.replace( regex, "%27" );
+				.replace( regex, "%27" );
 			pageImage = encodeURIComponent( settings.img );
 			pageDescription = encodeURIComponent( settings.desc )
-								.replace( regex, "%27" );
+				.replace( regex, "%27" );
 
 			// Don't create the panel for the second link (class="link-only")
 			if ( elm.className.indexOf( "link-only" ) === -1 ) {
@@ -9137,7 +10535,7 @@ var componentName = "wb-share",
 				if ( !filter || filter.length === 0 ) {
 					keys = [];
 					for ( key in sites ) {
-						if ( sites.hasOwnProperty( key ) ) {
+						if ( Object.prototype.hasOwnProperty.call( sites, key ) ) {
 							keys.push( key );
 						}
 					}
@@ -9156,13 +10554,13 @@ var componentName = "wb-share",
 					key = keys[ i ];
 					siteProperties = sites[ key ];
 					url = siteProperties.url
-							.replace( /\{u\}/, pageHref )
-							.replace( /\{t\}/, pageTitle )
-							.replace( /\{i\}/, pageImage )
-							.replace( /\{d\}/, pageDescription );
+						.replace( /\{u\}/, pageHref )
+						.replace( /\{t\}/, pageTitle )
+						.replace( /\{i\}/, pageImage )
+						.replace( /\{d\}/, pageDescription );
 					panel += "<li><a href='" + url + "' class='" + shareLink +
 						" " + ( siteProperties.isMailto ? "email" : key ) +
-						" btn btn-default' target='_blank'>" +
+						" btn btn-default' target='_blank' rel='noreferrer noopener'>" +
 						siteProperties.name + "</a></li>";
 				}
 
@@ -9196,12 +10594,241 @@ wb.add( selector );
 } )( jQuery, window, document, wb );
 
 /**
+ * @title WET-BOEW step form
+ * @overview Provide ability for a form to be broken into steps.
+ * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ * @author @kodecount
+ */
+( function( $, window, document, wb ) {
+"use strict";
+
+/*
+ * Variable and function definitions.
+ * These are global to the plugin - meaning that they will be initialized once per page,
+ * not once per instance of plugin on the page. So, this is a good place to define
+ * variables that are common to all instances of the plugin on a page.
+ */
+var componentName = "wb-steps",
+	selector = ".provisional." + componentName,
+	initEvent = "wb-init" + selector,
+	$document = wb.doc,
+	i18n, i18nText,
+	btnPrevious, btnNext, btnSubmit,
+
+	/**
+	 * @method init
+	 * @param {jQuery Event} evt Event that triggered the function call
+	 */
+	init = function( evt ) {
+
+		// Start initialization
+		// returns DOM object = proceed with init
+		// returns undefined = do not proceed with init (e.g., already initialized)
+		var elm = wb.init( evt, componentName, selector );
+
+		if ( elm ) {
+
+			// Ensure there is a unique id on the element
+			if ( !elm.id ) {
+				elm.id = wb.getId();
+			}
+
+			// Only initialize the i18nText once
+			if ( !i18nText ) {
+				i18n = wb.i18n;
+				i18nText = {
+					prv: i18n( "prv" ),
+					nxt: i18n( "nxt" )
+				};
+			}
+
+			/*
+			 * Variable and function definitions
+			 * These will be initialized once per instance of plugin.
+			 */
+			var form = elm.getElementsByTagName( "FORM" )[ 0 ],
+				fieldsets = ( form ) ? $( form ).children( "fieldset" ) : 0,
+				hasStepsInitialized;
+
+			// Initialize navigation buttons
+			btnPrevious = createStepsButton( "prev", "mrgn-rght-sm mrgn-bttm-md", i18nText.prv );
+			btnNext = createStepsButton( "next", "mrgn-bttm-md", i18nText.nxt );
+			btnSubmit = form.querySelector( "input[type=submit], button[type=submit]" );
+			btnSubmit.classList.add( "mrgn-bttm-md" );
+
+			/*
+			 * Determines if html is correctly formatted and initialize all fieldsets/legend combinations into steps.
+			 */
+			for ( var i = 0, len = fieldsets.length; i < len; i++ ) {
+
+				/*
+				 * Variable and function definitions
+				 * These well be initialized once per instance of each fieldset.
+				 * Determines the following business rules:
+				 *  -Only allow steps if elements are in proper order fieldset -> legend -> div
+				 *  -Only allow NEXT button on first step
+				 *  -Only allow final SUBMIT button on last step
+				 */
+				var fieldset = fieldsets[ i ],
+					isFirstFieldset = ( i === 0 ) ? true : false,
+					isLastFieldset = ( i === ( len - 1 ) ) ? true : false,
+					legend = fieldset.firstElementChild,
+					div = ( legend && legend.tagName === "LEGEND" ) ? legend.nextElementSibling : false,
+					buttonGroup = document.createElement( "div" ),
+					wrapper = document.createElement( "div" ),
+					buttonGroupClassList = buttonGroup.classList,
+					divClassList = div.classList;
+
+				buttonGroupClassList.add( "buttons" );
+				fieldset.parentNode.insertBefore( wrapper, fieldset );
+				wrapper.appendChild( fieldset );
+				wrapper.classList.add( "steps-wrapper" );
+
+				if ( div && div.tagName === "DIV" ) {
+					var btnClone;
+					hasStepsInitialized = true;
+
+					if ( !isFirstFieldset ) {
+						btnClone = btnPrevious.cloneNode( true );
+						setStepsBtnEvent( btnClone );
+						buttonGroup.appendChild( btnClone );
+						wrapper.appendChild( buttonGroup );
+					}
+
+					if ( !isLastFieldset ) {
+						btnClone = btnNext.cloneNode( true );
+						setStepsBtnEvent( btnClone );
+						buttonGroup.appendChild( btnClone );
+					} else {
+						buttonGroup.appendChild( btnSubmit );
+					}
+
+					wrapper.appendChild( buttonGroup );
+
+					fieldset.classList.add( "wb-tggle-fildst" );
+					divClassList.add( "hidden" );
+					buttonGroupClassList.add( "hidden" );
+
+					if ( isFirstFieldset ) {
+						legend.classList.add( "wb-steps-active" );
+						btnClone.classList.remove( "hidden" );
+						divClassList.remove( "hidden" );
+						buttonGroupClassList.remove( "hidden" );
+					}
+				}
+			}
+
+			/*
+			 * if steps has initialized hide any precreated submit or reset buttons
+			 */
+			if ( form && hasStepsInitialized ) {
+				$( form ).children( "input" ).hide();
+				wb.ready( $( elm ), componentName );
+			}
+		}
+	},
+
+	/**
+	 * @method createStepsButton
+	 * @param {string var} tagName, {string var} type, {boolean var} isPrimary, {string var} style, {string var} text
+	 * @returns {Object} A ready-to-use button element
+	 */
+	createStepsButton = function( type, style, text ) {
+		var control = document.createElement( "BUTTON" );
+
+		// set default attributes
+		control.className = ( type === "prev" ? "btn btn-md btn-default" : "btn btn-md btn-primary" ) + " " + style;
+		control.innerHTML = text;
+
+		return control;
+	},
+
+	/**
+	 * @method setStepsBtnEvent
+	 * @param {JavaScript element} elm
+	 */
+	setStepsBtnEvent = function( elm ) {
+		elm.addEventListener( "click", function( evt ) {
+			evt.preventDefault();
+			var classes = ( this.className ) ? this.className : false,
+				isNext = ( classes && classes.indexOf( "btn-primary" ) > -1 ),
+				isFormValid = true,
+				parentElement = this.parentElement,
+				parentParentElement = parentElement.parentElement,
+				parentPreviousClassList = parentElement.previousElementSibling.classList;
+
+			// confirm if form is valid
+			if ( isNext && jQuery.validator && jQuery.validator !== "undefined" ) {
+				isFormValid =  $( "#" + parentParentElement.parentElement.id ).valid();
+			}
+
+			// continue if valid
+			if ( isFormValid ) {
+				showSteps( parentParentElement, isNext );
+				if ( isNext ) {
+					parentPreviousClassList.remove( "wb-steps-error" );
+				}
+			} else if ( isNext && !isFormValid ) {
+				parentPreviousClassList.add( "wb-steps-error" );
+			}
+		} );
+	},
+
+	/**
+	 * @method showSteps
+	 * @param {JavaScript element} elm and {boolean var} isNext
+	 */
+	showSteps = function( elm, isNext ) {
+		var fieldsetElement = elm.getElementsByTagName( "FIELDSET" )[ 0 ],
+			fields = fieldsetElement.getElementsByTagName( "div" )[ 0 ],
+			legend = fieldsetElement.getElementsByTagName( "legend" )[ 0 ],
+			buttonGroup = elm.querySelector( "div.buttons" ),
+			fieldset;
+
+		if ( elm ) {
+			fields.classList.add( "hidden" );
+			buttonGroup.classList.add( "hidden" );
+
+			if ( legend ) {
+				legend.classList.remove( "wb-steps-active" );
+			}
+
+			fieldset = ( !isNext ) ? elm.previousElementSibling : elm.nextElementSibling;
+			if ( fieldset ) {
+				legend = fieldset.getElementsByTagName( "LEGEND" )[ 0 ];
+				elm = fieldset.getElementsByTagName( "DIV" )[ 0 ];
+				buttonGroup = fieldset.querySelector( "div.buttons" );
+				if ( legend ) {
+					legend.classList.add( "wb-steps-active" );
+					legend.tabIndex = 0;
+					legend.focus();
+					legend.tabIndex = -1;
+				}
+				if ( elm ) {
+					elm.classList.remove( "hidden" );
+				}
+				if ( buttonGroup ) {
+					buttonGroup.classList.remove( "hidden" );
+				}
+			}
+		}
+	};
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, window, document, wb );
+
+/**
  * @title WET-BOEW Tables
  * @overview Integrates the DataTables plugin into WET providing searching, sorting, filtering, pagination and other advanced features for tables.
  * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
  * @author @jeresiv
  */
- /*jshint scripturl:true*/
+/*jshint scripturl:true*/
 ( function( $, window, wb ) {
 "use strict";
 
@@ -9276,6 +10903,9 @@ var componentName = "wb-tables",
 
 			Modernizr.load( {
 				load: [ "site!deps/jquery.dataTables" + wb.getMode() + ".js" ],
+				testReady: function() {
+					return ( $.fn.dataTable && $.fn.dataTable.version );
+				},
 				complete: function() {
 					var $elm = $( "#" + elmId ),
 						dataTableExt = $.fn.dataTableExt;
@@ -9308,29 +10938,6 @@ var componentName = "wb-tables",
 						}
 					} );
 
-					/*
-					 * Extend type detection
-					 */
-
-					// Formatted numbers detection
-					// Based on: http://datatables.net/plug-ins/type-detection#formatted_numbers
-					dataTableExt.aTypes.unshift(
-						function( sData ) {
-
-							// Strip off HTML tags and all non-alpha-numeric characters (except minus sign)
-							var deformatted = sData.replace( /<[^>]*>/g, "" ).replace( /[^\d\-\/a-zA-Z]/g, "" );
-							if ( $.isNumeric( deformatted ) || deformatted === "-" ) {
-								return "formatted-num";
-							}
-							return null;
-						}
-					);
-
-					// Remove HTML tags before doing any filtering for formatted numbers
-					dataTableExt.type.search[ "formatted-num" ] = function( data ) {
-						return data.replace( /<[^>]*>/g, "" );
-					};
-
 					// Add the container or the sorting icons
 					$elm.find( "th" ).append( "<span class='sorting-cnt'><span class='sorting-icons'></span></span>" );
 
@@ -9345,32 +10952,268 @@ var componentName = "wb-tables",
 $document.on( "timerpoke.wb " + initEvent, selector, init );
 
 // Handle the draw.dt event
-$document.on( "init.dt draw.dt", selector, function( event, settings ) {
-	var $elm = $( event.target );
+$document.on( "draw.dt", selector, function( event, settings ) {
+	var $elm = $( event.target ),
+		pagination = $elm.next( ".bottom" ).find( "div:first-child" ),
+		paginate_buttons = $elm.next( ".bottom" ).find( ".paginate_button" ),
+		pbLength = paginate_buttons.length,
+		pHasLF = pagination.find( ".last, .first" ).length === 2,
+		pHasPN = pagination.find( ".previous, .next" ).length === 2,
+		ol = document.createElement( "OL" ),
+		li = document.createElement( "LI" );
 
-	// Update the aria-pressed properties on the pagination buttons
-	// Should be pushed upstream to DataTables
-	$elm.next( ".bottom" ).find( ".paginate_button" )
-		.attr( {
-			"role": "button",
-			"href": "javascript:;"
-		} )
-		.not( ".previous, .next" )
+	// Determine if Pagination required
+	if (
+		pbLength === 1 ||
+		(
+			pbLength === 3 &&
+			(
+				pHasLF ||
+				pHasPN
+			)
+		) ||
+		(
+			pbLength === 5 &&
+			pHasLF &&
+			pHasPN
+		)
+	) {
+		pagination.addClass( "hidden" );
+	} else {
+
+		// Make sure Pagination is visible
+		pagination.removeClass( "hidden" );
+
+		// Update Pagination List
+		for ( var i = 0; i < paginate_buttons.length; i++ ) {
+			var item = li.cloneNode( true );
+			item.appendChild( paginate_buttons[ i ] );
+			ol.appendChild( item );
+		}
+
+		ol.className = "pagination mrgn-tp-0 mrgn-bttm-0";
+		pagination.empty();
+		pagination.append( ol );
+
+		// Update the aria-pressed properties on the pagination buttons
+		// Should be pushed upstream to DataTables
+		$elm.next( ".bottom" ).find( ".paginate_button" )
+			.attr( {
+				"href": "#" + $elm.get( 0 ).id
+			} )
+
+			// This is required to override the datatable.js (v1.10.13) behavior to cancel the event propagation on anchor element.
+			.on( "keypress", function( evn ) {
+				if ( evn.keyCode === 13 ) {
+					window.location = evn.target.href;
+				}
+			} )
+
+			.not( ".previous, .next" )
 			.attr( "aria-pressed", "false" )
 			.html( function( index, oldHtml ) {
 				return "<span class='wb-inv'>" + i18nText.paginate.page + " </span>" + oldHtml;
 			} )
 			.filter( ".current" )
-				.attr( "aria-pressed", "true" );
-
-	if ( event.type === "init" ) {
-
-		// Identify that initialization has completed
-		wb.ready( $elm, componentName );
+			.attr( "aria-pressed", "true" );
 	}
 
 	// Identify that the table has been updated
 	$elm.trigger( "wb-updated" + selector, [ settings ] );
+} );
+
+// Identify that initialization has completed
+$document.on( "init.dt", function( event ) {
+	wb.ready( $( event.target ), componentName );
+} );
+
+// Handle the draw.dt event
+$document.on( "submit", ".wb-tables-filter", function( event ) {
+
+	event.preventDefault();
+
+	var $form = $( this ),
+		$datatable = $( "#" + $form.data( "bind-to" ) ).dataTable( { "retrieve": true } ).api(),
+		$toNumber = function stringToNumber( number ) {
+			number = number.replace( /[^0-9\-,.]+/g, "" );
+			if ( /[,]\d{1,2}$/.test( number ) ) {
+				number = number.replace( /(\d{2})$/, ".$1" );
+			}
+			number = number.replace( /,/g, "" );
+			return parseFloat( number );
+		},
+		$isDate = function isDate( date ) {
+			return date instanceof Date && !isNaN( date );
+		};
+
+	// Lets reset the search
+	$datatable.search( "" ).columns().search( "" ).draw();
+
+	// Lets loop throug all options
+	var $prevCol = -1, $cachedVal = "";
+	$form.find( "[name]" ).each( function() {
+		var $elm = $( this ),
+			$value = "",
+			$regex = "",
+			$column = parseInt( $elm.attr( "data-column" ), 10 ),
+			$isAopts = $elm.data( "aopts" ),
+			$aoptsSelector = "[data-aopts*='\"column\": \"" + $column + "\"']:checked",
+			$aopts = $( $aoptsSelector ),
+			$aoType = ( $aopts && $aopts.data( "aopts" ) ) ? $aopts.data( "aopts" ).type.toLowerCase() : "",
+			$fData;
+
+		// Ignore the advanced options fields
+		if ( $isAopts ) {
+			return;
+		}
+
+		// Verifies if filtering the same column
+		if ( $column !== $prevCol || $prevCol === -1 ) {
+			$cachedVal = "";
+		}
+		$prevCol = $column;
+
+		// Filters based on input type
+		if ( $elm.is( "select" ) ) {
+			$value = $elm.find( "option:selected" ).val();
+		} else if ( $elm.is( "input[type='number']" ) ) {
+			var $val = $elm.val(), $minNum, $maxNum;
+
+			// Retain minimum number (always the first number input)
+			if ( $cachedVal === "" ) {
+				$cachedVal = parseFloat( $val );
+				$cachedVal = ( $cachedVal ) ? $cachedVal : "-0";
+			}
+			$minNum = $cachedVal;
+
+			// Maximum number is always the current selected number
+			$maxNum = parseFloat( $val );
+
+			// Generates a list of numbers (within the min and max number)
+			if ( !isNaN( $minNum ) && !isNaN( $maxNum ) ) {
+				$fData = $datatable.column( $column ).data().filter( function( obj ) {
+					var $num = $toNumber( obj.toString() );
+
+					if ( !isNaN( $num ) ) {
+						if ( $aoType === "and" ) {
+							if ( $cachedVal !== $maxNum && $cachedVal !== "-0" && $num >= $minNum && $num <= $maxNum ) {
+								return true;
+							}
+						} else {
+							if ( $cachedVal === $maxNum && $num >= $minNum ) {
+								return true;
+							} else if ( $cachedVal === "-0" && $num <= $maxNum ) {
+								return true;
+							} else if ( $cachedVal !== "-0" && $num >= $minNum && $num <= $maxNum ) {
+								return true;
+							}
+						}
+					}
+					return false;
+				} );
+				$fData = $fData.join( "|" );
+
+				// If no numbers match set as -0, so no results return
+				$value = ( $fData ) ? $fData : "-0";
+				$regex = "(" + $value.replace( /&nbsp;|\s/g, "\\s" ).replace( /\$/g, "\\$" ) + ")";
+			}
+		} else if ( $elm.is( "input[type='date']" ) && $elm.val() ) {
+			var $minDate, $maxDate;
+
+			// Retain minimum date (always the first date input)
+			if ( $cachedVal === "" ) {
+				$cachedVal = new Date( $elm.val() );
+				$cachedVal.setDate( $cachedVal.getDate() + 1 );
+				$cachedVal.setHours( 0, 0, 0, 0 );
+			}
+			$minDate = $cachedVal;
+
+			// Maximum date is always the current selected date
+			$maxDate = new Date( $elm.val() );
+			$maxDate.setDate( $maxDate.getDate() + 1 );
+			$maxDate.setHours( 23, 59, 59, 999 );
+
+			// Generates a list of date strings (within the min and max date)
+			$fData = $datatable.column( $column ).data().filter( function( obj ) {
+				var $date = obj.replace( /[0-9]{2}\s[0-9]{2}:/g, function( e ) {
+					return e.replace( /\s/g, "T" );
+				} );
+				$date = new Date( $date );
+				$date.setHours( 0, 0, 0, 0 );
+
+				if ( !$isDate( $minDate ) || !$isDate( $maxDate ) || !$isDate( $date ) ) {
+					return;
+				}
+				return ( $date >= $minDate && $date <= $maxDate );
+			} );
+			$fData = $fData.join( "|" );
+
+			// If no dates match set as -1, so no results return
+			$value = ( $fData ) ? $fData : "-1";
+		} else if ( $elm.is( ":checkbox" ) ) {
+
+			// Verifies if checkbox is checked before setting value
+			if ( $elm.is( ":checked" ) ) {
+				if ( $aoType === "both" ) {
+					$cachedVal += "(?=.*\\b" + $elm.val() + "\\b)";
+				} else {
+					$cachedVal += ( $cachedVal.length > 0 ) ? "|" : "";
+					$cachedVal += $elm.val();
+				}
+
+				$value = $cachedVal;
+				$value = $value.replace( /\s/g, "\\s*" );
+
+				// Adjust regex based on advanced options
+				switch ( $aoType ) {
+				case "both":
+					$regex = "(" + $value + ").*";
+					break;
+				case "either":
+					$regex = "^(" + $value + ")$";
+					break;
+				case "and":
+					$regex = ( $value.indexOf( "|" ) > -1 ) ? "^(" + $value + "|[,\\s])(" + $value + "|[,\\s])+$" : "(" + $value + ")";
+					break;
+				case "any":
+				default:
+					$regex = "(" + $value + ")";
+					break;
+				}
+			}
+		} else {
+			$value = $elm.val();
+		}
+
+		if ( $value ) {
+
+			// Verifies if regex was preset, if not preset use 'contains value' as default
+			if ( !$regex ) {
+				$value = $value.replace( /\s/g, "\\s*" );
+				$regex = "(" + $value + ")";
+			}
+
+			$datatable.column( $column ).search( $regex, true ).draw();
+		}
+	} );
+
+	return false;
+} );
+
+$document.on( "click", ".wb-tables-filter [type='reset']", function( event ) {
+	event.preventDefault();
+
+	var $form = $( this ).closest( ".wb-tables-filter" ),
+		$datatable = $( "#" + $form.data( "bind-to" ) ).dataTable( { "retrieve": true } ).api();
+
+	$datatable.search( "" ).columns().search( "" ).draw();
+
+	$form.find( "select" ).prop( "selectedIndex", 0 );
+	$form.find( "input:checkbox" ).prop( "checked", false );
+	$form.find( "input:radio" ).prop( "checked", false );
+	$form.find( "input[type=date]" ).val( "" );
+
+	return false;
 } );
 
 // Add the timer poke to initialize the plugin
@@ -9402,8 +11245,6 @@ var componentName = "wb-tabs",
 	setFocusEvent = "setfocus.wb",
 	controls = selector + " ul[role=tablist] a, " + selector + " ul[role=tablist] .tab-count",
 	initialized = false,
-	equalHeightClass = "wb-eqht",
-	equalHeightOffClass = equalHeightClass + "-off",
 	tabsAccordionClass = "tabs-acc",
 	nestedTglPanelSelector = "> .tabpanels > details > .tgl-panel",
 	activePanel = "-activePanel",
@@ -9451,6 +11292,14 @@ var componentName = "wb-tabs",
 			$panels = $elm.find( "> .tabpanels > [role=tabpanel], > .tabpanels > details" );
 			$tablist = $elm.children( "[role=tablist]" );
 			isCarousel = $tablist.length !== 0;
+
+			// If a carousel contains only 1 panel, remove its controls, visually-hide its thumbnails and prevent it from attempting to play
+			if ( isCarousel && $panels.length === 1 ) {
+
+				$elm.removeClass( "show-thumbs playing" );
+				$elm.addClass( "exclude-controls" );
+			}
+
 			activeId = wb.jqEscape( wb.pageUrlParts.hash.substring( 1 ) );
 			hashFocus = activeId.length !== 0;
 			$openPanel = hashFocus ? $panels.filter( "#" + activeId ) : undefined;
@@ -9463,8 +11312,9 @@ var componentName = "wb-tabs",
 				defaults,
 				{
 					interval: $elm.hasClass( "slow" ) ?
-								9 : $elm.hasClass( "fast" ) ?
-									3 : defaults.interval,
+						9 : $elm.hasClass( "fast" ) ?
+							3 : defaults.interval,
+					excludeControls: $elm.hasClass( "exclude-controls" ),
 					excludePlay: $elm.hasClass( "exclude-play" ),
 					updateHash: $elm.hasClass( "update-hash" ),
 					playing: $elm.hasClass( "playing" ),
@@ -9504,10 +11354,14 @@ var componentName = "wb-tabs",
 						try {
 							sessionStorage.setItem( pagePath + elmId + activePanel, activeId );
 						} catch ( error ) {
+
+							/* swallow error */
 						}
 					}
 				}
 			} catch ( error ) {
+
+				/* swallow error */
 			}
 
 			// Determine the current view
@@ -9610,7 +11464,7 @@ var componentName = "wb-tabs",
 				$tablist.find( "a" )
 					.filter( "[href$='" + activeId + "']" )
 					.parent()
-						.addClass( "active" );
+					.addClass( "active" );
 			}
 
 			drizzleAria( $panels, $tablist );
@@ -9697,8 +11551,9 @@ var componentName = "wb-tabs",
 		var prevText = i18nText.prev,
 			nextText = i18nText.next,
 			spaceText = i18nText.space,
+			excludeControls = settings.excludeControls,
 			excludePlay = settings.excludePlay,
-			isPlaying = !excludePlay && settings.playing,
+			isPlaying = !excludeControls && !excludePlay && settings.playing,
 			state = isPlaying ? i18nText.pause : i18nText.play,
 			hidden = isPlaying ? i18nText.rotStop : i18nText.rotStart,
 			glyphiconStart = "<span class='glyphicon glyphicon-",
@@ -9731,8 +11586,11 @@ var componentName = "wb-tabs",
 				"</span>" + wbInvStart + spaceText + i18nText.hyphen + spaceText +
 				hidden + btnEnd;
 
-		$tablist.prepend( prevControl + tabCount + nextControl );
-		if ( !excludePlay ) {
+		if ( !excludeControls ) {
+			$tablist.prepend( prevControl + tabCount + nextControl );
+		}
+
+		if ( !excludeControls && !excludePlay ) {
 			$tablist.append( playControl );
 		}
 
@@ -9753,8 +11611,6 @@ var componentName = "wb-tabs",
 			listCounter = listItems.length - 1,
 			isDetails = $panels[ 0 ].nodeName.toLowerCase() === "details",
 			isActive, item, link, panelId, activeFound;
-
-		$panels.attr( "tabindex", "-1" );
 
 		for ( ; tabCounter !== -1; tabCounter -= 1 ) {
 			item = panels[ tabCounter ];
@@ -9854,17 +11710,17 @@ var componentName = "wb-tabs",
 
 		$controls
 			.find( ".active" )
-				.removeClass( "active" )
-				.children( "a" )
-					.attr( {
-						"aria-selected": "false",
-						tabindex: "-1"
-					} );
+			.removeClass( "active" )
+			.children( "a" )
+			.attr( {
+				"aria-selected": "false",
+				tabindex: "-1"
+			} );
 
 		// Update the Item x of n
 		$controls
 			.find( ".curr-index" )
-				.html( newIndex );
+			.html( newIndex );
 
 		$control
 			.attr( {
@@ -9872,7 +11728,7 @@ var componentName = "wb-tabs",
 				tabindex: "0"
 			} )
 			.parent()
-				.addClass( "active" );
+			.addClass( "active" );
 
 		// Update sessionStorage with the current active panel
 		if ( !tabSettings.ignoreSession ) {
@@ -9882,6 +11738,8 @@ var componentName = "wb-tabs",
 					$next.attr( "id" )
 				);
 			} catch ( error ) {
+
+				/* swallow error */
 			}
 		}
 
@@ -10019,10 +11877,10 @@ var componentName = "wb-tabs",
 								if ( !isInit ) {
 									$detailsElm
 										.children( "summary" )
-											.attr( {
-												"aria-expanded": isActive,
-												"aria-selected": isActive
-											} );
+										.attr( {
+											"aria-expanded": isActive,
+											"aria-selected": isActive
+										} );
 								}
 							}
 						} else if ( oldIsSmallView ) {
@@ -10039,25 +11897,21 @@ var componentName = "wb-tabs",
 									open: "open"
 								} )
 								.not( $openDetails )
-									.addClass( "fade out noheight wb-inv" )
-									.attr( {
-										"aria-hidden": "true",
-										"aria-expanded": "false"
-									} );
+								.addClass( "fade out noheight wb-inv" )
+								.attr( {
+									"aria-hidden": "true",
+									"aria-expanded": "false"
+								} );
 
 							$details.children( ".tgl-panel" ).removeAttr( "role" );
 
 							$openDetails
 								.addClass( "fade in" )
 								.attr( {
-										"aria-hidden": "false",
-										"aria-expanded": "true"
-									} );
+									"aria-hidden": "false",
+									"aria-expanded": "true"
+								} );
 						}
-
-						// Enable equal heights for large view or disable for small view
-						$elm.toggleClass( equalHeightClass, !isSmallView );
-						$elm.toggleClass( equalHeightOffClass, isSmallView );
 
 						$summary.attr( "aria-hidden", !isSmallView );
 						$tablist.attr( "aria-hidden", isSmallView );
@@ -10099,58 +11953,58 @@ var componentName = "wb-tabs",
 		}
 	};
 
- // Bind the init event of the plugin
- $document.on( "timerpoke.wb " + initEvent + " " + shiftEvent + " " + selectEvent, selector, function( event ) {
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent + " " + shiftEvent + " " + selectEvent, selector, function( event ) {
 	var eventTarget = event.target,
 		eventCurrentTarget = event.currentTarget,
 		$elm;
 
-		// Filter out any events triggered by descendants
-		if ( eventCurrentTarget === eventTarget ) {
-			switch ( event.type ) {
-			case "timerpoke":
-				$elm = $( eventTarget );
-				if ( !$elm.hasClass( componentName + "-inited" ) ) {
-					init( event );
-				} else if ( $elm.hasClass( "playing" ) ) {
-					onTimerPoke( $elm );
-				}
-				break;
-
-			/*
-			 * Init
-			 */
-			case "wb-init":
+	// Filter out any events triggered by descendants
+	if ( eventCurrentTarget === eventTarget ) {
+		switch ( event.type ) {
+		case "timerpoke":
+			$elm = $( eventTarget );
+			if ( !$elm.hasClass( componentName + "-inited" ) ) {
 				init( event );
-				break;
-
-			/*
-			 * Change tab panels by a delta
-			 */
-			case "wb-shift":
-				onShift( event, $( eventTarget ) );
-				break;
-
-			/*
-			 * Select a specific tab panel
-			 */
-			case "wb-select":
-				onSelect( event.id );
-				break;
+			} else if ( $elm.hasClass( "playing" ) ) {
+				onTimerPoke( $elm );
 			}
+			break;
+
+		/*
+		 * Init
+		 */
+		case "wb-init":
+			init( event );
+			break;
+
+		/*
+		 * Change tab panels by a delta
+		 */
+		case "wb-shift":
+			onShift( event, $( eventTarget ) );
+			break;
+
+		/*
+		 * Select a specific tab panel
+		 */
+		case "wb-select":
+			onSelect( event.id );
+			break;
 		}
+	}
 
 	/*
 	 * Since we are working with events we want to ensure that we are being passive about our control,
 	 * so returning true allows for events to always continue
 	 */
 	return true;
- } );
+} );
 
- /*
-  * Tabs, next, previous and play/pause
-  */
- $document.on( activateEvent, controls, function( event ) {
+/*
+ * Tabs, next, previous and play/pause
+ */
+$document.on( activateEvent, controls, function( event ) {
 	var which = event.which,
 		elm = event.currentTarget,
 		className = elm.className,
@@ -10174,7 +12028,7 @@ var componentName = "wb-tabs",
 		$elm = $( elm );
 		$sldr = $elm.closest( selector );
 		sldrId = $sldr[ 0 ].id;
-		isPlaying = $sldr.hasClass( "playing" ),
+		isPlaying = $sldr.hasClass( "playing" );
 		isPlayPause = className.indexOf( "plypause" ) !== -1;
 
 		// Reset ctime to 0
@@ -10261,8 +12115,8 @@ $document.on( activateEvent, selector + " [role=tabpanel]", function( event ) {
 		} else {
 			$( currentTarget )
 				.closest( selector )
-					.find( "[href$='#" + currentTarget.id + "']" )
-						.trigger( setFocusEvent );
+				.find( "[href$='#" + currentTarget.id + "']" )
+				.trigger( setFocusEvent );
 		}
 
 	// Left mouse button click or escape key
@@ -10322,6 +12176,8 @@ $document.on( activateEvent, selector + " > .tabpanels > details > summary", fun
 					details.id
 				);
 			} catch ( error ) {
+
+				/* swallow error */
 			}
 		}
 
@@ -10393,17 +12249,23 @@ var componentName = "wb-txthl",
 			} else if ( params && params.txthl ) {
 				searchCriteria = decodeURIComponent(
 					wb.pageUrlParts.params.txthl
-						.replace( /^\s+|\s+$|\|+|\"|\(|\)/g, "" ).replace( /\++/g, "|" )
+						.replace( /^\s+|\s+$|\|+|"|\(|\)/g, "" ).replace( /\++/g, "|" )
 				);
 			}
 
 			if ( searchCriteria ) {
 
+				// Strip html
+				var map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" };
+				searchCriteria = searchCriteria.replace( /[&<>"']/g, function( m ) {
+					return map[ m ];
+				} );
+
 				// Make sure that we're not checking for text within a tag; only the text outside of tags.
 				searchCriteria = "(?=([^>]*<))([\\s'])?(" + searchCriteria + ")(?!>)";
 
 				newText = elm.innerHTML.replace( new RegExp( searchCriteria, "gi" ), function( match, group1, group2, group3 ) {
-					return ( !group2 ? "" : group2 ) + "<mark class='txthl'>" + group3 + "</mark>";
+					return ( !group2 ? "" : group2 ) + "<mark>" + group3 + "</mark>";
 				} );
 				elm.innerHTML = newText;
 			}
@@ -10502,12 +12364,12 @@ var componentName = "wb-toggle",
 	 * @param {Object} data Simple key/value data object passed when the event was triggered
 	 */
 	initAria = function( link, data ) {
-		var i, len, elm, elms, parent, tabs, tab, panel, isOpen,
+		var i, len, elm, elms, parent, tabs, tab, panel, isOpen, wrapper,
 			ariaControls = "",
 			hasOpen = false;
 
 		// Group toggle elements with a parent are assumed to be a tablist
-		if ( data.group != null && data.parent != null ) {
+		if ( data.group != null && data.parent != null ) { //eslint-disable-line no-eq-null
 			parent = document.querySelector( data.parent );
 
 			// Check that the tablist widget hasn't already been initialized
@@ -10541,12 +12403,25 @@ var componentName = "wb-toggle",
 					if ( !tab.getAttribute( "id" ) ) {
 						tab.setAttribute( "id", wb.getId() );
 					}
-					tab.setAttribute( "role", "tab" );
-					tab.setAttribute( "aria-selected", isOpen );
-					tab.setAttribute( "tabindex", isOpen ? "0" : "-1" );
-					tab.setAttribute( "aria-posinset", i + 1 );
-					tab.setAttribute( "aria-setsize", len );
 
+					//Details and summary don't support aria roles and some aria attribute that is why they are wrapped in a div
+					if ( elm.nodeName.toLowerCase() === "details" && elm.parentNode.className.toLowerCase().indexOf( "accordion" ) > -1 ) {
+						wrapper = document.createElement( "div" );
+						wrapper.classList.add( "tgl-tab" );
+						wrapper.setAttribute( "role", "tab" );
+						wrapper.setAttribute( "aria-selected", isOpen );
+						wrapper.setAttribute( "tabindex", isOpen ? "0" : "-1" );
+						wrapper.setAttribute( "aria-posinset", i + 1 );
+						wrapper.setAttribute( "aria-setsize", len );
+						parent.replaceChild( wrapper, elm );
+						wrapper.appendChild( elm );
+					} else {
+						tab.setAttribute( "role", "tab" );
+						tab.setAttribute( "aria-selected", isOpen );
+						tab.setAttribute( "tabindex", isOpen ? "0" : "-1" );
+						tab.setAttribute( "aria-posinset", i + 1 );
+						tab.setAttribute( "aria-setsize", len );
+					}
 					panel.setAttribute( "role", "tabpanel" );
 					panel.setAttribute( "aria-labelledby", tab.getAttribute( "id" ) );
 					panel.setAttribute( "aria-expanded", isOpen );
@@ -10658,9 +12533,8 @@ var componentName = "wb-toggle",
 			if ( isGroup ) {
 
 				// Get the grouped elements using data.group as the CSS selector
-				// and filter to only retrieve currently open grouped elements
 				dataGroup = $.extend( {}, data, { selector: data.group } );
-				$elmsGroup = getElements( link, dataGroup ).filter( "." + data.stateOn + ", [open]" );
+				$elmsGroup = getElements( link, dataGroup );
 
 				// Set the toggle state to "off".  For tab lists, this is stored on the tab element
 				setState( isTablist ? $( data.parent ).find( selectorTab ) : $elmsGroup,
@@ -10695,6 +12569,12 @@ var componentName = "wb-toggle",
 				elms: $elms
 			} );
 
+			// Ensure that last focused element in the accordion remains keyboard focusable
+			// whether it is collapsed or not
+			if ( isGroup ) {
+				$elms.find( "summary" ).attr( { "tabindex": "0" } );
+			}
+
 			// Store the toggle link's current state if persistence is turned on.
 			// Try/catch is required to address exceptions thrown when using BB10 or
 			// private browsing in iOS.
@@ -10702,6 +12582,8 @@ var componentName = "wb-toggle",
 				try {
 					data.persist.setItem( data.persistKey, stateTo );
 				} catch ( error ) {
+
+					/* swallow error */
 				}
 			}
 		}
@@ -10732,7 +12614,7 @@ var componentName = "wb-toggle",
 			if ( data.isTablist ) {
 
 				// Set the required aria attributes
-				$elms.find( selectorTab ).attr( {
+				$elms.find( selectorTab ).parents( selectorTab ).attr( {
 					"aria-selected": isOn,
 					tabindex: isOn ? "0" : "-1"
 				} );
@@ -10788,9 +12670,19 @@ var componentName = "wb-toggle",
 		} else if ( !selector ) {
 			return $link.data( componentName + "-state" ) || data.stateOff;
 
+		// When toggling multiple <details> elements, state is "off" if any are collapsed
+		} else if ( selector === "details" && !type ) {
+			var anyCollapsed = false;
+			getElements( $link, data ).each( function() {
+				if ( !$( this ).attr( "open" ) ) {
+					anyCollapsed = true;
+				}
+			} );
+			return anyCollapsed ? data.stateOff : data.stateOn;
+
 		// Get the current on/off state of the elements specified by the selector and parent
-		} else if ( states.hasOwnProperty( selector ) ) {
-			return states[ selector ].hasOwnProperty( parent ) ?
+		} else if ( Object.prototype.hasOwnProperty.call( states, selector ) ) {
+			return Object.prototype.hasOwnProperty.call( states[ selector ], parent ) ?
 				states[ selector ][ parent ] :
 				states[ selector ].all;
 		}
@@ -10826,7 +12718,7 @@ var componentName = "wb-toggle",
 			// links that are restricted by parent.
 			} else {
 				for ( prop in elmsState ) {
-					if ( elmsState.hasOwnProperty( prop ) ) {
+					if ( Object.prototype.hasOwnProperty.call( elmsState, prop ) ) {
 						elmsState[ prop ] = state;
 					}
 				}
@@ -10839,7 +12731,7 @@ var componentName = "wb-toggle",
 
 // Bind the plugin's events
 $document.on( "timerpoke.wb " + initEvent + " " + toggleEvent +
-	" click", selector, function( event, data ) {
+" click", selector, function( event, data ) {
 
 	var eventType = event.type;
 
@@ -10909,7 +12801,7 @@ $document.on( "keydown", selectorTab, function( event ) {
 
 		$newPanel
 			.children( "summary" )
-				.trigger( setFocusEvent );
+			.trigger( setFocusEvent );
 	}
 } );
 
@@ -10921,7 +12813,7 @@ $document.on( "keydown", selectorPanel, function( event ) {
 		// Move focus to the summary element
 		$( event.currentTarget )
 			.prev()
-				.trigger( setFocusEvent );
+			.trigger( setFocusEvent );
 	}
 } );
 
@@ -11013,15 +12905,17 @@ var componentName = "wb-disable",
 			$html = wb.html,
 			i18n = wb.i18n,
 			pageUrl = wb.pageUrlParts,
-			li, param;
+			param,
+			noticeHeader = i18n( "disable-notice-h" ),
+			noticeBody = i18n( "disable-notice" ),
+			noticehtml = "<section",
+			noticehtmlend = "</a>.</p></section>";
 
 		if ( elm ) {
-			li = document.createElement( "li" );
-			li.className = "wb-slc";
 
 			// Rebuild the query string
 			for ( param in pageUrl.params ) {
-				if ( pageUrl.params.hasOwnProperty( param ) && param !== "wbdisable" ) {
+				if ( param && Object.prototype.hasOwnProperty.call( pageUrl.params, param ) && param !== "wbdisable" ) {
 					nQuery += param + "=" + pageUrl.params[ param ] + "&#38;";
 				}
 			}
@@ -11034,13 +12928,14 @@ var componentName = "wb-disable",
 
 						// Store preference for WET plugins and polyfills to be disabled in localStorage
 						localStorage.setItem( "wbdisable", "true" );
-					} catch ( e ) {}
+					} catch ( e ) {
 
-					// Append the Standard version link
-					li.innerHTML = "<a class='wb-sl' href='" + nQuery + "wbdisable=false'>" + i18n( "wb-enable" ) + "</a>";
+						/* swallow error */
+					}
 
-					// Add link to re-enable WET plugins and polyfills
-					elm.appendChild( li );
+					// Add notice and link to re-enable WET plugins and polyfills
+					noticehtml = noticehtml + " class='alert alert-warning text-center'><h2>" + noticeHeader + "</h2><p>" + noticeBody + "</p><p><a rel='alternate' property='significantLink' href='" + nQuery + "wbdisable=false'>" + i18n( "wb-enable" ) + noticehtmlend;
+					$( elm ).after( noticehtml );
 					return true;
 				} else {
 					$html.addClass( "wb-enable" );
@@ -11050,15 +12945,25 @@ var componentName = "wb-disable",
 						// Store preference for WET plugins and polyfills to be enabled in localStorage
 						localStorage.setItem( "wbdisable", "false" );
 					}
+
+					// Remove variable from URL
+					var lc = window.location.href.replace( "wbdisable=false", "" ).replace( "?#", "#" );
+					if ( lc.indexOf( "?" ) === ( lc.length - 1 ) ) {
+						lc = lc.replace( "?", "" );
+					}
+					window.history.replaceState( "", "", lc );
 				}
 			} catch ( error ) {
+
+				/* swallow error */
 			}
 
 			// Append the Basic HTML version link version
-			li.innerHTML = "<a class='wb-sl' href='" + nQuery + "wbdisable=true'>" + i18n( "wb-disable" ) + "</a>";
-
 			// Add link to disable WET plugins and polyfills
-			elm.appendChild( li );
+			wb.addSkipLink( i18n( "wb-disable" ), {
+				href: nQuery + "wbdisable=true",
+				rel: "alternate"
+			}, false, true );
 
 			// Identify that initialization has completed
 			wb.ready( $document, componentName );
@@ -11119,14 +13024,14 @@ $document.on( setFocusEvent, function( event ) {
 				$closedPanel = $closedPanels.eq( i );
 				$closedPanel.closest( ".wb-tabs" )
 					.find( "#" + $closedPanel.attr( "aria-labelledby" ) )
-						.trigger( "click" );
+					.trigger( "click" );
 			}
 		}
 
 		// Set the tabindex to -1 (as needed) to ensure the element is focusable
 		$elm
 			.filter( ":not([tabindex], a[href], button, input, textarea, select)" )
-				.attr( "tabindex", "-1" );
+			.attr( "tabindex", "-1" );
 
 		// Assigns focus to an element (delay allows for revealing of hidden content)
 		setTimeout( function() {
@@ -11161,7 +13066,7 @@ $document.on( clickEvents, linkSelector, function( event ) {
 	var testHref = event.currentTarget.getAttribute( "href" );
 
 	// Same page links only
-	if ( testHref.charAt( 0 ) === "#" && !event.isDefaultPrevented() &&
+	if ( testHref.length > 1 && testHref.charAt( 0 ) === "#" && !event.isDefaultPrevented() &&
 		( $linkTarget = $( "#" + wb.jqEscape( testHref.substring( 1 ) ) ) ).length !== 0 ) {
 		wb.ignoreHashChange = true;
 		$linkTarget.trigger( setFocusEvent );
@@ -11169,6 +13074,156 @@ $document.on( clickEvents, linkSelector, function( event ) {
 } );
 
 } )( jQuery, wb );
+
+/**
+ * @title WET-BOEW wb-postback
+ * @overview This plugin implements AJAX request for form data to submit on same page without refresh
+ * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ * @author @masterbee, @namjohn920, @GormFrank
+ **/
+( function( $, wb ) {
+"use strict";
+
+var $document = wb.doc,
+	componentName = "wb-postback",
+	selector = "." + componentName,
+	initEvent = "wb-init" + selector,
+	defaults = {},
+
+	init = function( event ) {
+		var elm = wb.init( event, componentName, selector );
+
+		if ( elm ) {
+			var $elm = $( elm ),
+				settings = $.extend(
+					true,
+					{},
+					defaults,
+					wb.getData( $elm, componentName )
+				),
+				attrEngaged = "data-wb-engaged",
+				$buttons = $( "[type=submit]", $elm ),
+				multiple = typeof $elm.data( componentName + "-multiple" ) !== "undefined",
+				classToggle = settings.toggle || "hide",
+				selectorSuccess = settings.success,
+				selectorFailure = settings.failure || selectorSuccess;
+
+			// Set "clicked" attribute on element that initiated the form submit
+			$buttons.on( "click", function() {
+				$buttons.removeAttr( attrEngaged );
+				$( this ).attr( attrEngaged, "" );
+			} );
+
+			elm.addEventListener( "submit", function( e ) {
+
+				// Prevent regular form submit
+				e.preventDefault();
+
+				if ( !$( this ).attr( attrEngaged ) ) {
+					var data = $elm.serializeArray(),
+						$btn = $( "[type=submit][name][" + attrEngaged + "]", $elm ),
+						$selectorSuccess = $( selectorSuccess ),
+						$selectorFailure = $( selectorFailure );
+
+					if ( $btn.length ) {
+						data.push( { name: $btn.attr( "name" ), value: $btn.val() } );
+					}
+					$( this ).attr( attrEngaged, true );
+
+					// Hide feedback messages
+					$selectorFailure.addClass( classToggle );
+					$selectorSuccess.addClass( classToggle );
+
+					$.ajax( {
+						type: this.method,
+						url: this.action,
+						data: $.param( data )
+					} )
+						.done( function() {
+							$selectorSuccess.removeClass( classToggle );
+						} )
+						.fail( function() {
+							$selectorFailure.removeClass( classToggle );
+						} )
+						.always( function() {
+
+							// Make the form submittable again if multiple submits are allowed or hide
+							if ( multiple ) {
+								$elm.removeAttr( attrEngaged );
+							} else {
+								$elm.addClass( classToggle );
+							}
+						} );
+				}
+			} );
+
+			wb.ready( $( elm ), componentName );
+		}
+	};
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, wb );
+
+/**
+ * @title WET-BOEW Randomize
+ * @overview This plugin randomly picks one of the child component to be shown on the browser.
+ * @license wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html
+ * @author @masterbee @namjohn920
+ */
+( function( $, window, wb ) {
+"use strict";
+
+var $document = wb.doc,
+	componentName = "wb-randomize",
+	selector = "[data-wb-randomize]",
+	initEvent = "wb-init" + selector,
+	defaults = {},
+
+	init = function( event ) {
+		var elm = wb.init( event, componentName, selector ),
+			$elm, settings, $selectedElm;
+
+		if ( elm ) {
+			$elm = $( elm );
+			settings = $.extend(
+				true,
+				{},
+				defaults,
+				window[ componentName ],
+				wb.getData( $elm, componentName )
+			);
+
+			$selectedElm = settings.selector ? $( settings.selector, $elm ) : $elm.children();
+
+			if ( !$selectedElm.length ) {
+				throw componentName + " selector setting is invalid or no children";
+			}
+
+			if ( settings.shuffle ) {
+				$selectedElm = wb.shuffleDOM( $selectedElm );
+			}
+
+			if ( settings.toggle ) {
+				$selectedElm = wb.pickElements( $selectedElm, settings.number );
+				$selectedElm.toggleClass( settings.toggle );
+			}
+
+			wb.ready( $elm, componentName );
+		}
+	};
+
+// Bind the init event of the plugin
+$document.on( "timerpoke.wb " + initEvent, selector, init );
+
+// Add the timer poke to initialize the plugin
+wb.add( selector );
+
+} )( jQuery, window, wb );
 
 /**
  * Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
@@ -11187,7 +13242,7 @@ $document.on( clickEvents, linkSelector, function( event ) {
  * not once per instance of plugin on the page. So, this is a good place to define
  * variables that are common to all instances of the plugin on a page.
  */
- var componentName = "wb-zebra",
+var componentName = "wb-zebra",
 	selector = "." + componentName,
 	hoverColClass = componentName + "-col-hover",
 	selectorHoverCol = "." + hoverColClass + " td, " + hoverColClass + " th",

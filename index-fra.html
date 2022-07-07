@@ -1,155 +1,172 @@
 <!--#include virtual="/includes/header-fra.html" -->
 <!-- MainContentStart -->
-<script>
-  $(function() {
-    $.getJSON("db_last_modified.pl", function(data) {
-      $('#last_modified').html(data.last_updated)
-    });
-  });
-</script>
-
 <aside class="prm-flpr">
-<div class="container">
-<div class="row">
-<h2 class="wb-inv">Avadepth</h2>
-<div class="wb-tabs carousel-s2 show-thumbs playing slow">
-<ul role="tablist">
-<li class="active">
-<a href="#tab1"><img src="/images/banners/fraser_port.png" alt=""><span class="wb-inv">Tab 1: Avadepth – Prévisions de la profondeur d'eau disponible pour les navires empruntant le chenal du bras sud du Fraser.</span></a>
-</li>
-<li>
-<a href="#tab2"><img src="/images/banners/frpa.png" alt=""><span class="wb-inv">Tab 2: Avadepth – Fourni toutes les deux semaines aux pilotes, à Port Metro Vancouver et aux compagnies de transport maritime pour les aider à déterminer le tirant d'eau maximum et les heures de navigation optimales sur le fleuve.</span></a>
-</li>
-<li>
-<a href="#tab3"><img src="/images/banners/pwgsc_profiler_ii.png" alt=""><span class="wb-inv">Tab 3: Le système informatisé de création de rapports prévoit le tirant d'eau disponible et la « fenêtre de circulation » correspondante pour les navires de haute mer qui doivent naviguer dans le chenal principal du bras sud du fleuve Fraser entre Sand Heads (kilomètre 0) et les quais du Fraser à Surrey (kilomètre 34).</span></a>
-</li>
-</ul>
-<div class="tabpanels">
-<div role="tabpanel" id="tab1" class="in fade carasoul-tab">
-<div class="carasoul-image">
-<img src="/images/banners/fraser_port.png" alt="">
-</div>
-<div class="carasoul-text">
-<p>Avadepth – Prévisions de la profondeur d'eau disponible pour les navires empruntant le chenal du bras sud du Fraser.</p>
-</div>
-</div>
-<div role="tabpanel" id="tab2" class="out fade carasoul-tab">
-<div class="carasoul-image">
-<img src="/images/banners/frpa.png" alt="">
-</div>
-<div class="carasoul-text">
-<p>Avadepth – Fourni toutes les deux semaines aux pilotes, à Port Metro Vancouver et aux compagnies de transport maritime pour les aider à déterminer le tirant d'eau maximum et les heures de navigation optimales sur le fleuve.</p>
-</div>
-</div>
-<div role="tabpanel" id="tab3" class="out fade carasoul-tab">
-<div class="carasoul-image">
-<img src="/images/banners/pwgsc_profiler_ii.png" alt="">
-</div>
-<div class="carasoul-text">
-<p>Le système informatisé de création de rapports prévoit le tirant d'eau disponible et la « fenêtre de circulation » correspondante pour les navires de haute mer qui doivent naviguer dans le chenal principal du bras sud du fleuve Fraser entre Sand Heads (kilomètre 0) et les quais du Fraser à Surrey (kilomètre 34).</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+  <div class="container">
+    <div class="row">
+      <h2 class="wb-inv">Avadepth</h2>
+      <div class="wb-tabs carousel-s2 show-thumbs playing slow">
+        <ul role="tablist">
+          <li class="active">
+            <a href="#tab1"><img src="/images/banners/fraser_port.png" alt=""><span class="wb-inv">Tab 1: Avadepth – Prévisions de la profondeur d'eau disponible pour les navires empruntant le chenal du bras sud du Fraser.</span></a>
+          </li>
+          <li>
+            <a href="#tab2"><img src="/images/banners/frpa.png" alt=""><span class="wb-inv">Tab 2: Avadepth – Fourni toutes les deux semaines aux pilotes, à Port Metro Vancouver et aux compagnies de transport maritime pour les aider à déterminer le tirant d'eau maximum et les heures de navigation optimales sur le fleuve.</span></a>
+          </li>
+          <li>
+            <a href="#tab3"><img src="/images/banners/pwgsc_profiler_ii.png" alt=""><span class="wb-inv">Tab 3: Le système informatisé de création de rapports prévoit le tirant d'eau disponible et la « fenêtre de circulation » correspondante pour les navires de haute mer qui doivent naviguer dans le chenal principal du bras sud du fleuve Fraser entre Sand Heads (kilomètre 0) et les quais du Fraser à Surrey (kilomètre 34).</span></a>
+          </li>
+        </ul>
+        <div class="tabpanels">
+          <div role="tabpanel" id="tab1" class="in fade carasoul-tab">
+            <div class="carasoul-image">
+              <img src="/images/banners/fraser_port.png" alt="">
+            </div>
+            <div class="carasoul-text">
+              <p>Avadepth – Prévisions de la profondeur d'eau disponible pour les navires empruntant le chenal du bras sud du Fraser.</p>
+            </div>
+          </div>
+          <div role="tabpanel" id="tab2" class="out fade carasoul-tab">
+            <div class="carasoul-image">
+              <img src="/images/banners/frpa.png" alt="">
+            </div>
+            <div class="carasoul-text">
+              <p>Avadepth – Fourni toutes les deux semaines aux pilotes, à Port Metro Vancouver et aux compagnies de transport maritime pour les aider à déterminer le tirant d'eau maximum et les heures de navigation optimales sur le fleuve.</p>
+            </div>
+          </div>
+          <div role="tabpanel" id="tab3" class="out fade carasoul-tab">
+            <div class="carasoul-image">
+              <img src="/images/banners/pwgsc_profiler_ii.png" alt="">
+            </div>
+            <div class="carasoul-text">
+              <p>Le système informatisé de création de rapports prévoit le tirant d'eau disponible et la « fenêtre de circulation » correspondante pour les navires de haute mer qui doivent naviguer dans le chenal principal du bras sud du fleuve Fraser entre Sand Heads (kilomètre 0) et les quais du Fraser à Surrey (kilomètre 34).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </aside>
-<h1 property="name" id="wb-cont" class="wb-inv">Bienvenue à Avadepth</h1>
-<section>
-<div class="row">
-<div class="col-md-12">
-<h2 class="h1">Bienvenue à Avadepth</h2>
-<p class="pagetag"> Avadepth – Système de création de rapports conçu pour aider les navigateurs et la navigation commerciale à calculer la profondeur d’eau maximale disponible et les heures de navigation optimales afin d’emprunter en toute sécurité le chenal du bras sud du fleuve Fraser, entre Sand Heads (kilomètre 0) et les quais Fraser Surrey (kilomètre 34).</p>
+
+<div class="container">
+  <h1 property="name" id="wb-cont" class="wb-inv">Bienvenue à Avadepth</h1>
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="h1">Bienvenue à Avadepth</h2>
+        <p class="pagetag"> Avadepth – Système de création de rapports conçu pour aider les navigateurs et la navigation commerciale à calculer la profondeur d’eau maximale disponible et les heures de navigation optimales afin d’emprunter en toute sécurité le chenal du bras sud du fleuve Fraser, entre Sand Heads (kilomètre 0) et les quais Fraser Surrey (kilomètre 34).</p>
+      </div>
+    </div>
+  </section>
 </div>
-</div>
-</section>
 
 <aside class="gc-nttvs container">
-<h2>Rapports Avadepth</h2>
-<div class="wb-eqht row">
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/Data/weekly/weekly.pdf?" target="_blank">Rapport hebdomadaire</a></h3>
-<p>Une prévision sur huit (8) jours des profondeurs d’eau disponibles dans le chenal de navigation du bras sud du fleuve Fraser. La Gestion des voies navigables des Aides à la navigation de la Région de l’Ouest de la Garde côtière canadienne publie ce rapport tous les vendredis pour la semaine suivante.</p><p>Voir la rubrique «<a href="/theory-theorie-fra.html">Contexte et théorie d’utilisation</a>»  pour de plus amples renseignements.</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=tw">Fenêtre de circulation</a></h3>
-<p>Affiche la « fenêtre de circulation » disponible pour une période donnée (jour, semaine et mois) à l’aide de deux méthodes : par la prescription d’une « profondeur » requise pour la navigation, ou par la prescription d’une « fenêtre de circulation » requise afin d’atteindre sa destination.
-</p><p>Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.
-</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=dd">Données quotidiennes sur la profondeur</a></h3>
-<p>Ces données permettent de tracer le graphique des profondeurs d’eau disponibles pour une date sélectionnée et de cerner l’emplacement et la profondeur du point de contrôle critique. Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=frh">Hydrographie du fleuve Fraser</a></h3>
-<p>L’hydrographie illustre les conditions de débit saisonnier du bas Fraser et elle aidera l’utilisateur à sélectionner le débit fluvial approprié pour calculer les profondeurs d’eau disponibles. Les conditions de débit historiques représentent approximativement 100 ans de données observées par la station de données hydrométriques en temps réel du fleuve Fraser de la Division des relevés hydrologiques du Canada, située à Hope (C.-B.).</p>
-</section>
-<section class="col-lg-12 col-md-12 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=pwl">Vélocités et niveaux prévus de l’eau</a></h3>
-<p>Cette fonction affiche les vélocités et niveaux d’eau prégénérés à partir d’un modèle hydrodynamique unidimensionnel et elle représente une vélocité et un niveau d’eau moyens pour chaque coupe transversale définie dans le modèle. Les calculs pour les modèles étaient effectués à intervalles de dix minutes et simulaient neuf différents scénarios de débit fluvial.</p><p>Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.
-</p>
-</section>
-<div class="clearfix visible-md"></div>
-<section class="col-lg-12 col-md-12 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=acv">Animation des courants</a></h3>
-<p>Cette fonction affiche les courants prégénérés à partir d’un modèle hydrodynamique bidimensionnel du chenal du bras sud du fleuve Fraser. Les valeurs du modèle représentent une condition de débit à profondeur moyenne au travers de la colonne d’eau à des nœuds prédéfinis dans l’axe des ordonnées et des abscisses, afin de permettre aux utilisateurs d’évaluer si les conditions de débit sont fortes, moyennes ou faibles ainsi que de connaître l’orientation de l’écoulement. Toutefois, les utilisateurs doivent être conscients qu’en période de faible débit du fleuve, de l’eau douce pourrait s’écouler au-dessus de l’eau salée en profondeur et créer des conditions stratifiées. C’est pour cette raison qu’il pourrait y avoir des différences considérables lors de la comparaison des valeurs prévues avec les courants de surface ou les courants en profondeur. Une comparaison des résultats modèles avec un moulinet hydrométrique acoustique situé dans le chenal Annieville a révélé une exactitude générale de +/- 10 %.
-</p><p>Les navires grands et profonds qui naviguent dans le chenal fluvial font face aux courants dans une grande partie de la colonne d’eau; ainsi, les moyennes des courants en fonction de la profondeur devraient fournir une indication raisonnable des effets d’ensemble des courants sur le navire.
-</p><p>Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.
-</p>
-</section>
-</div>
+  <h2>Rapports Avadepth</h2>
+  <div class="wb-eqht row">
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/Data/weekly/weekly.pdf?" target="_blank">Rapport hebdomadaire</a></h3>
+      <p>Une prévision sur huit (8) jours des profondeurs d’eau disponibles dans le chenal de navigation du bras sud du fleuve Fraser. La Gestion des voies navigables des Aides à la navigation de la Région de l’Ouest de la Garde côtière canadienne publie ce rapport tous les vendredis pour la semaine suivante.</p><p>Voir la rubrique «<a href="/theory-theorie-fra.html">Contexte et théorie d’utilisation</a>»  pour de plus amples renseignements.</p>
+    </section>
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=tw">Fenêtre de circulation</a></h3>
+      <p>Affiche la « fenêtre de circulation » disponible pour une période donnée (jour, semaine et mois) à l’aide de deux méthodes : par la prescription d’une « profondeur » requise pour la navigation, ou par la prescription d’une « fenêtre de circulation » requise afin d’atteindre sa destination.</p>
+      <p>Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.</p>
+    </section>
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=dd">Données quotidiennes sur la profondeur</a></h3>
+      <p>Ces données permettent de tracer le graphique des profondeurs d’eau disponibles pour une date sélectionnée et de cerner l’emplacement et la profondeur du point de contrôle critique. Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.</p>
+    </section>
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=frh">Hydrographie du fleuve Fraser</a></h3>
+      <p>L’hydrographie illustre les conditions de débit saisonnier du bas Fraser et elle aidera l’utilisateur à sélectionner le débit fluvial approprié pour calculer les profondeurs d’eau disponibles. Les conditions de débit historiques représentent approximativement 100 ans de données observées par la station de données hydrométriques en temps réel du fleuve Fraser de la Division des relevés hydrologiques du Canada, située à Hope (C.-B.).</p>
+    </section>
+    <section class="col-lg-12 col-md-12 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=pwl">Vélocités et niveaux prévus de l’eau</a></h3>
+      <p>Cette fonction affiche les vélocités et niveaux d’eau prégénérés à partir d’un modèle hydrodynamique unidimensionnel et elle représente une vélocité et un niveau d’eau moyens pour chaque coupe transversale définie dans le modèle. Les calculs pour les modèles étaient effectués à intervalles de dix minutes et simulaient neuf différents scénarios de débit fluvial.</p>
+      <p>Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.</p>
+    </section>
+    <div class="clearfix visible-md"></div>
+    <section class="col-lg-12 col-md-12 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=acv">Animation des courants</a></h3>
+      <p>
+        Cette fonction affiche les courants prégénérés à partir d’un modèle hydrodynamique bidimensionnel du chenal du bras sud du fleuve Fraser. Les valeurs du modèle représentent une condition de débit à profondeur moyenne au travers de la colonne d’eau à des nœuds prédéfinis dans l’axe des ordonnées et des abscisses, afin de permettre aux utilisateurs d’évaluer si les conditions de débit sont fortes, moyennes ou faibles ainsi que de connaître l’orientation de l’écoulement. Toutefois, les utilisateurs doivent être conscients qu’en période de faible débit du fleuve, de l’eau douce pourrait s’écouler au-dessus de l’eau salée en profondeur et créer des conditions stratifiées. C’est pour cette raison qu’il pourrait y avoir des différences considérables lors de la comparaison des valeurs prévues avec les courants de surface ou les courants en profondeur. Une comparaison des résultats modèles avec un moulinet hydrométrique acoustique situé dans le chenal Annieville a révélé une exactitude générale de +/- 10 %.
+      </p><p>
+        Les navires grands et profonds qui naviguent dans le chenal fluvial font face aux courants dans une grande partie de la colonne d’eau; ainsi, les moyennes des courants en fonction de la profondeur devraient fournir une indication raisonnable des effets d’ensemble des courants sur le navire.
+      </p><p>
+        Les variables définies par l’utilisateur sont sélectionnées à partir du menu déroulant des Paramètres.
+      </p>
+    </section>
+  </div>
 </aside>
 <br>
 <aside class="gc-nttvs container">
-<h2>Conditions au fond du chenal</h2>
-<div class="wb-eqht row">
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=ccc">Fleuve Fraser – Conditions actuelles du chenal du bras sud</a></h3>
-<p>Une copie des conditions au fond du chenal de navigation en haute mer du fleuve Fraser est imprimée chaque semaine.</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/Data/overview/FR_Overview_S.dwf?" target="_blank">Fleuve Fraser – Aperçu actuel du chenal du bras sud</a></h3>
-<p>Un dessin composite des plus récents levés et sondages du chenal de navigation principal entre Sand Heads (km 1,0) et New Westminster (km 35,0).</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/Data/overview/FSD_Overview.pdf?" target="_blank">Quais Fraser Surrey – Sondages des mouillages</a></h3>
-<p>Un dessin composite qui incorpore les plus récents sondages des mouillages et des chenaux d’approche des quais Fraser Surrey.</p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=sdb">Dessins de levé</a></h3>
-<p>Les utilisateurs ont accès aux dessins et aux feuilles de levé sur le terrain des principaux chenaux commerciaux surveillés par la Gestion des voies navigables de la Garde côtière canadienne. Les utilisateurs devront installer une visionneuse Autodesk DWF pour afficher et visionner les dessins de levé.</p>
-</section>
-</div>
+  <h2>Conditions au fond du chenal</h2>
+  <div class="wb-eqht row">
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=ccc">Fleuve Fraser – Conditions actuelles du chenal du bras sud</a></h3>
+      <p>Une copie des conditions au fond du chenal de navigation en haute mer du fleuve Fraser est imprimée chaque semaine.</p>
+      <h3 class="h5"><a href="/Data/overview/FSD_Overview.pdf?" target="_blank">Quais Fraser Surrey – Sondages des mouillages</a></h3>
+      <p>Un dessin composite qui incorpore les plus récents sondages des mouillages et des chenaux d’approche des quais Fraser Surrey.</p>
+      <h3 class="h5"><a href="/Data/overview/FR_Overview_S.dwf?" target="_blank">Fleuve Fraser – Aperçu actuel du chenal du bras sud</a></h3>
+      <p>Un dessin composite des plus récents levés et sondages du chenal de navigation principal entre Sand Heads (km 1,0) et New Westminster (km 35,0).</p>
+    </section>
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=sdb">Dessins de levé</a></h3>
+      <p>
+        Les utilisateurs ont accès aux dessins et aux feuilles de levé sur le
+        terrain des principaux chenaux commerciaux surveillés par la Gestion des voies
+        navigables de la Garde côtière canadienne. Les utilisateurs devront installer
+        une visionneuse Autodesk DWF pour afficher et visionner les dessins de levé.
+      </p>
+      <h3 class="h5"><a href="/Data/bMIO/FR_bMIO.zip">Télécharger – Calque d’information maritime bathymétrique du chenal du bras sud du fleuve Fraser</a></h3>
+      <p>
+        Le présent calque d’information maritime bathymétrique est une carte
+        électronique de navigation des récents sondages à utiliser avec la carte 3490
+        du Service hydrographique du Canada. Le calque affiche des renseignements
+        supplémentaires sur les profondeurs disponibles à la suite d’un dragage
+        d’entretien ou de la sédimentation survenue lors des écoulements printaniers,
+        soit une période où les profondeurs du chenal changent rapidement en raison du
+        débit du fleuve.
+      </p>
+    </section>
+  </div>
 </aside>
 <br>
 <aside class="gc-nttvs container">
-<h2>Analyse bathymétrique du chenal</h2>
-<div class="wb-eqht row">
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a>Carte Web de la bathymétrie du chenal (Beta)</a></h3>
-<p><i>À venir.</i></p>
-</section>
-<section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
-<h3 class="h5"><a href="/avdpth_srch-fra.html?page=isa" target="_blank">Analyse du remplissage et de l’affouillement du chenal</a></h3>
-<p>Analyse des données chronologiques du remplissage et de l’affouillement du chenal pour illustrer que le fond de la rivière peut être très dynamique pendant la crue nivale.</p>
-</section>
-</div>
+  <h2>Analyse bathymétrique du chenal</h2>
+  <div class="wb-eqht row">
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=cbw">Carte Web de la bathymétrie du chenal</a></h3>
+      <p>Un modèle bathymétrique des conditions actuelles du fond du chenal
+      du bras sud du fleuve Fraser est disponible en deux paramètres de
+      conception : 1) les profondeurs disponibles par rapport au faible niveau
+      des basses eaux (NBE) et 2) les contours de profondeur par rapport à la
+      pente du chenal pour un navire ayant un tirant d’eau de 11,5 m.</p>
+    </section>
+    <section class="col-lg-6 col-md-6 col-sm-12 gc-drmt">
+      <h3 class="h5"><a href="/avdpth_srch-fra.html?page=isa">Analyse du remplissage et de l’affouillement du chenal</a></h3>
+      <p>Analyse des données chronologiques du remplissage et de
+      l’affouillement du chenal pour illustrer que le fond de la rivière
+      peut être très dynamique pendant la crue nivale.</p>
+    </section>
+  </div>
 </aside>
 <br>
 <aside class="gc-nttvs container">
-<div class="span-2">
-<h2>Liens</h2>
-<ul>
-<li><a target="_blank" href="http://www.waterlevels.gc.ca/fra">Marées, courants et niveaux de l'eau – Service hydrographique du Canada</a></li>
-<li><a target="_blank" href="http://www.wateroffice.ec.gc.ca/index_f.html">Données hydrométriques en temps réel – Environnement Canada</a></li>
-<li><a target="_blank" href="http://www.ppa.gc.ca/">Administration de pilotage du Pacifique</a></li>
-<li><a target="_blank" href="http://www.portvancouver.com/fr/">Port de Vancouver</a></li>
-<li><a target="_blank" href="http://www.rupertport.com/">Port de Prince Rupert</a></li>
-<li><a target="_blank" href="http://www.npa.ca/fr">Administration portuaire de Nanaimo</a></li>
-</ul> 
-</div>
+  <div class="span-2">
+    <h2>Liens</h2>
+    <ul>
+      <li><a target="_blank" href="http://www.waterlevels.gc.ca/fra">Marées, courants et niveaux de l'eau – Service hydrographique du Canada</a></li>
+      <li><a target="_blank" href="http://www.wateroffice.ec.gc.ca/index_f.html">Données hydrométriques en temps réel – Environnement Canada</a></li>
+      <li><a target="_blank" href="http://www.ppa.gc.ca/">Administration de pilotage du Pacifique</a></li>
+      <li><a target="_blank" href="http://www.portvancouver.com/fr/">Port de Vancouver</a></li>
+      <li><a target="_blank" href="http://www.rupertport.com/">Port de Prince Rupert</a></li>
+      <li><a target="_blank" href="http://www.npa.ca/fr">Administration portuaire de Nanaimo</a></li>
+      <li><a target="_blank" href="https://nis.ccg-gcc.gc.ca/public/rest/messages/fr/search">Avertissements de navigation (AVNAVs)</a></li>
+      <li><a target="_blank" href="https://www.marinfo.gc.ca/e-nav/index-fr.php">Portail d’information maritime</a></li>
+    </ul>
+  </div>
 </aside>
 <br>
-<p style="float:right;margin-bottom:-10px">Database last updated: <span id="last_modified"></span> PST</p>
-<!--#include virtual="/includes/footer-fra.html" -->
+  <p style="float:right;margin-bottom:-10px">Dernière mise à jour de la base de données: <!--#include virtual="/Data/fupdated.inc" --> PST</p>
+  <!-- Footer End -->
+  <!--#include virtual="/includes/footer-fra.html" -->
