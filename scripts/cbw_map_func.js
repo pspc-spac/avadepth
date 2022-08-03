@@ -37,7 +37,8 @@ const TMSOptions = {
 
 let layerMap = new Map([
     ["channel", ["channel_cells", "channel_outline"]],
-    ["soundings", ["soundings"]]
+    ["soundings", ["soundings"]],
+    ["buoys", ["buoys"]]
 ]);
 const LayerNames = new Map([
     ["combined", {title: "Combined", name: "#_Surface_Depth.#_Combined"}],
@@ -45,11 +46,12 @@ const LayerNames = new Map([
     ["difference", {title: "Difference", name: "#_Surface_Difference.#_Difference"}],
     ["soundings", {title: "Depths", name: "#_Depth_Channel.#_Channel_Depths"}],
     ["channel_outline", {title: "Channel Extents", name: "#_Channel_Outline.#_Outline_Channel"}],
-    ["channel_cells", {title: "Channel Cells", name: "#_Channel_Cells.#_Outline_Cells"}]
+    ["channel_cells", {title: "Channel Cells", name: "#_Channel_Cells.#_Outline_Cells"}],
+    ["buoys", {title: "Buoys", name: "#_Buoys.#_Buoys"}]
 ]);
 const RiverSections = new Map([
     ["FRSA", {
-        layers: ["combined", "conformance", "difference", "soundings", "channel_cells", "channel_outline"],
+        layers: ["combined", "conformance", "difference", "soundings", "channel_cells", "channel_outline", "buoys"],
         extents: new OpenLayers.Bounds(-13730138, 6282692,-13677350, 6314133)
     }],
     ["FRSC", {

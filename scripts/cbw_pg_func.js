@@ -1,6 +1,7 @@
 let elementIds = [
     "chkLyrSounding",
-    "chkLyrSurface"
+    "chkLyrSurface",
+    "chkLyrBuoys"
 ]
 let channelIds = [
     "chkLyrChannel",
