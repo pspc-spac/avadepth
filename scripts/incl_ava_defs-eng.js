@@ -180,14 +180,21 @@ var padZero = function(num){
                     {tag: "input", attr: {type: "checkbox", id: "chkLyrCells", value: "cells", checked: "checked", disabled: true}},
                     " Show Cells",
                     {tag: "br" },
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrContributor", value: "contributor", checked: "checked" } },
+                    {tag: "div", attr: { class: "popup" }, child: [
+                        " Contributions:",
+                        { tag: "span", attr: { class: "popuptext" }, child: ["Areas of Recent Contributions"] }
+                      ] },
+                    {tag: "div", attr: {class: "optionIndent"}, child: [
+                        {tag: "label", attr: { for: "confTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["Slide to adjust colour intensity"] }] }]},
+                        {tag: "input", attr: {id: "confTrans", type: "range", min: "10", max: "100", value: "50"}},
+                    ]},
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSurface", value: "surface", checked: "checked" } },
                     {tag: "div", attr: { class: "popup" }, child: [
                         " Surface:",
                         { tag: "span", attr: { class: "popuptext" }, child: ["Bathymetry of recent PSPC soundings"] }
                     ] },
                     {tag: "div", attr: {class: "optionIndent"}, child: [
-                        {tag: "label", attr: { for: "surfTrans" }, child: [{ tag: "div", attr: { class: "popup" }, child: ["Layer Transparency", { tag: "span", attr: { class: "popuptext" }, child: ["Slide to adjust colour intensity"] }] }]},
-                      {tag: "input", attr: {id: "surfTrans", type: "range", min: "0", max: "100", value: "100"}},
                       "Surface Type:",
                       {tag: "div", attr: {class: "optionIndent"}, child: [
                           {tag: "input", attr: { type: "radio", name: "surface", value: "combined", checked: "checked" } },
