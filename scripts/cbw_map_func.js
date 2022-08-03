@@ -37,7 +37,8 @@ const TMSOptions = {
 
 let layerMap = new Map([
     ["channel", ["channel_cells", "channel_outline"]],
-    ["soundings", ["soundings"]]
+    ["soundings", ["soundings"]],
+    ["buoys", ["buoys"]]
 ]);
 const LayerNames = new Map([
     ["combined", {title: "Combined", name: "#_Surface_Depth.#_Combined"}],

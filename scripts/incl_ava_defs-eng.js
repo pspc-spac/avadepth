@@ -172,6 +172,10 @@ var padZero = function(num){
                       {tag: "option", attr: {value: "FRSC"}, child: ["Fraser River South Arm Channels"]},
                       {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
                     ]},
+                    {tag: "input", attr: { type: "checkbox", id: "chkLyrBuoys", value: "buoys", checked: "checked" } },
+                    //TODO: @wongrm Please correct the child text in this next line
+                    {tag: "div", attr: { class: "popup" }, child: [" Buoys", { tag: "span", attr: { class: "popuptext" }, child: ["S57 Buoy objects along the river channel"] }] },
+                    {tag: "br"},
                     {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
                     {tag: "div", attr: { class: "popup" }, child: [" Soundings", { tag: "span", attr: { class: "popuptext" }, child: ["Depths relative to local low water level (LLWL) chart datum"] }] },
                     {tag: "br"},

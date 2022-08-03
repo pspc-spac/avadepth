@@ -181,6 +181,15 @@ var padZero = function(num){
                       {tag: "option", attr: {value: "FRSC"}, child: ["chenals du Fraser River - chenal sud"]},
                       {tag: "option", attr: {value: "PIRI"}, child: ["Pitt River"]},
                     ]},
+                  {tag: "input", attr: { type: "checkbox", id: "chkLyrBuoys", value: "buoys", checked: "checked" } },
+
+                  //TODO: @wongrm SVP corrigés la texte suivante
+                  {tag: "div", attr: { class: "popup" }, child: [
+                      " bouées", {tag: "span", attr: { class: "popuptext" }, child: [
+                          " Profondeurs par rapport au zéro des cartes locales de niveau des basses eaux (NBE)"]
+                      }]
+                  },
+                  {tag: "br"},
                   {tag: "input", attr: { type: "checkbox", id: "chkLyrSounding", value: "soundings", checked: "checked" } },
                   {tag: "div", attr: { class: "popup" }, child: [
                           " sondages", {tag: "span", attr: { class: "popuptext" }, child: [
