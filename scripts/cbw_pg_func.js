@@ -156,14 +156,12 @@ avaIFaceJS.cbw_func = {
 
     setOpacity: function(ev) {
         let newOpacity = Math.max(10, ev.target.value) / 100;
-        avaIFaceJS.mapJS.cbw_func.wmts_layers.conformance&&avaIFaceJS.mapJS.cbw_func.wmts_layers.conformance.setOpacity(newOpacity);
-        avaIFaceJS.mapJS.cbw_func.wmts_layers.combined&&avaIFaceJS.mapJS.cbw_func.wmts_layers.combined.setOpacity(newOpacity);
-        avaIFaceJS.mapJS.cbw_func.wmts_layers.difference&&avaIFaceJS.mapJS.cbw_func.wmts_layers.difference.setOpacity(newOpacity);
+        avaIFaceJS.mapJS.cbw_func.wmts_layers.contributor && avaIFaceJS.mapJS.cbw_func.wmts_layers.contributor.setOpacity(newOpacity);
     },
 
     init: function() {
         addWatch();
-        document.getElementById("surfTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity);
+        document.getElementById("confTrans").addEventListener("input", avaIFaceJS.cbw_func.setOpacity);
         document.getElementById("surfLegend").innerHTML = avaIFaceJS.cbw_func.surfaceLayers.find(r => r.name === "combined").legend[page_lang];
         fetch("https://ava-proto.com/river_updates.json", {method: "GET"})
             .then(r => r.json())

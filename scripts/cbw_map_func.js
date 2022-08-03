@@ -43,13 +43,14 @@ const LayerNames = new Map([
     ["combined", {title: "Combined", name: "#_Surface_Depth.#_Combined"}],
     ["conformance", {title: "Conformance", name: "#_Surface_Conformance.#_Conformance"}],
     ["difference", {title: "Difference", name: "#_Surface_Difference.#_Difference"}],
+    ["contributor", {title: "Contributor", name: "#_Surface_Contributor.#_Contributor"}],
     ["soundings", {title: "Depths", name: "#_Depth_Channel.#_Channel_Depths"}],
     ["channel_outline", {title: "Channel Extents", name: "#_Channel_Outline.#_Outline_Channel"}],
     ["channel_cells", {title: "Channel Cells", name: "#_Channel_Cells.#_Outline_Cells"}]
 ]);
 const RiverSections = new Map([
     ["FRSA", {
-        layers: ["combined", "conformance", "difference", "soundings", "channel_cells", "channel_outline"],
+        layers: ["combined", "conformance", "difference", "contributor", "soundings", "channel_cells", "channel_outline"],
         extents: new OpenLayers.Bounds(-13730138, 6282692,-13677350, 6314133)
     }],
     ["FRSC", {
@@ -115,6 +116,7 @@ avaMapJS.cbw_func = {
         avaMapJS.cbw_func.wmts_layers.difference&&avaMapJS.cbw_func.wmts_layers.difference.setVisibility(false);
         avaMapJS.cbw_func.wmts_layers.conformance&&avaMapJS.cbw_func.wmts_layers.conformance.setVisibility(false);
         avaMapJS.cbw_func.wmts_layers.channel_cells&&avaMapJS.cbw_func.wmts_layers.channel_cells.setVisibility(false);
+        avaMapJS.cbw_func.wmts_layers.contributor&&avaMapJS.cbw_func.wmts_layers.contributor.setOpacity(.5);
         avaMapJS.map.addLayers(Object.keys(avaMapJS.cbw_func.wmts_layers).map(x => avaMapJS.cbw_func.wmts_layers[x]));
         avaMapJS.cbw_func.setLayer("surface", true);
     },
